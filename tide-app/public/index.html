@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Tide Visualizer</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --panel-bg: rgba(255, 255, 255, 0.85);
+      --border-color: rgba(0, 0, 0, 0.1);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.1), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.1), transparent 25%);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text; /* added for compatibility */
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    .header p { color: var(--text-muted); font-size: 1.1rem; }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="date"], input[type="week"], input[type="month"] {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-family: var(--font-family);
+      outline: none;
+      min-width: 160px;
+    }
+    
+    input::-webkit-calendar-picker-indicator { cursor: pointer; }
+    
+    .btn {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover { background: rgba(0, 0, 0, 0.1); }
+    .btn.active { background: var(--accent); border-color: var(--accent-hover); color: white; }
+
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-panel:hover { box-shadow: 0 15px 50px -10px rgba(0,0,0,0.2); }
+    
+    .chart-container { position: relative; height: 400px; width: 100%; }
+
+    .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; display: inline-block; margin-bottom: 4px; }
+    .badge-high { background: rgba(37, 99, 235, 0.1); color: #1d4ed8; border: 1px solid rgba(37, 99, 235, 0.2); }
+    .badge-low { background: rgba(16, 185, 129, 0.1); color: #047857; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .excel-table {
+      width: max-content;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.85rem;
+    }
+    .excel-table th, .excel-table td {
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      padding: 0.4rem;
+      text-align: center;
+      min-width: 50px;
+    }
+    .excel-table th {
+      background: #f1f5f9;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+    }
+    .excel-table th:first-child, .excel-table td:first-child {
+      border-left: 1px solid var(--border-color);
+    }
+    .excel-table th.sticky-col-1, .excel-table td.sticky-col-1 {
+      position: sticky;
+      left: 0;
+      width: 100px;
+      min-width: 100px;
+      max-width: 100px;
+      box-sizing: border-box;
+      background: #f8fafc;
+      font-weight: bold;
+      z-index: 11;
+      color: var(--text-muted);
+    }
+    .excel-table th.sticky-col-2, .excel-table td.sticky-col-2 {
+      position: sticky;
+      left: 100px;
+      width: 110px;
+      min-width: 110px;
+      max-width: 110px;
+      box-sizing: border-box;
+      background: #f8fafc;
+      font-weight: bold;
+      z-index: 11;
+      color: var(--text-main);
+      border-right: 2px solid rgba(0,0,0,0.1);
+      box-shadow: 4px 0 6px -2px rgba(0,0,0,0.05); /* gives a strong divider line */
+    }
+    .excel-table th.sticky-col-1, .excel-table th.sticky-col-2 {
+      z-index: 12;
+      background: #f1f5f9;
+    }
+    .excel-table tbody tr:nth-child(even) td {
+      background-color: rgba(241, 245, 249, 0.5);
+    }
+    .excel-table tbody tr:nth-child(even) td.sticky-col-1,
+    .excel-table tbody tr:nth-child(even) td.sticky-col-2 {
+      background-color: #f8fafc;
+    }
+    .excel-table tbody tr:hover td {
+      background-color: rgba(226, 232, 240, 0.5) !important;
+    }
+    .excel-table tbody tr:hover td.sticky-col-1,
+    .excel-table tbody tr:hover td.sticky-col-2 {
+      background-color: #f1f5f9 !important;
+    }
+    .editable-cell {
+      background: rgba(255, 255, 255, 0.5);
+      cursor: text;
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+    .editable-cell:hover, .editable-cell:focus {
+      background: #fff !important;
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+    .highlight-extreme {
+      background-color: rgba(239, 68, 68, 0.15) !important;
+      color: #ef4444 !important;
+      font-weight: 700 !important;
+    }
+    .highlight-custom {
+      background-color: rgba(37, 99, 235, 0.15) !important;
+      color: #1d4ed8 !important;
+      font-weight: 700 !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Tide Explorer</h1>
+    <p>Premium visualization of Vung Tau tidal extremes</p>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label style="font-weight: 500; color: #475569">Bộ chọn ngày:</label>
+      <input type="date" id="inputDay" value="2026-03-28" min="2026-01-01" max="2026-12-31">
+      <input type="week" id="inputWeek" value="2026-W13" min="2026-W01" max="2026-W52" style="display:none">
+      <input type="month" id="inputMonth" value="2026-03" min="2026-01" max="2026-12" style="display:none">
+      <span id="inputYear" style="display:none; font-weight:bold; color:var(--accent); padding:0.5rem">Năm 2026</span>
+    </div>
+    <div class="control-group" style="margin-left: auto;">
+      <button class="btn active" id="btnDay">Ngày</button>
+      <button class="btn" id="btnWeek">Tuần</button>
+      <button class="btn" id="btnMonth">Tháng</button>
+      <button class="btn" id="btnYear">Năm</button>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="glass-panel">
+      <h3 style="margin-bottom: 1rem" id="chartTitle">Biểu đồ Thủy triều Từng giờ (Ngày)</h3>
+      <div class="chart-container">
+        <canvas id="tideChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div id="tableWrapper" class="glass-panel" style="overflow: auto; max-height: 500px; margin-top: 2rem; width: 100%;">
+    <h3 style="margin-bottom: 1rem; position: sticky; left: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <span>Bảng Dữ Liệu Thô (Sửa số để biểu đồ chạy theo thời gian thực)</span>
+      <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.9rem; font-weight: normal;">
+        <label>Tô màu Cột giờ:</label>
+        <select id="hlHour" style="padding: 0.3rem; border-radius: 6px; border: 1px solid var(--border-color); outline: none;">
+          <option value="-1">Tất cả</option>
+          <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i}h</option>`);</script>
+        </select>
+        <label>Mực nước &lt;=</label>
+        <input type="number" id="hlVal" value="1.5" step="0.1" style="width: 70px; padding: 0.3rem; border-radius: 6px; border: 1px solid var(--border-color); outline: none;">
+        <button class="btn" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; margin-left: 1rem;" onclick="downloadCSV()">Lưu tệp CSV đã sửa</button>
+      </div>
+    </h3>
+    <table class="excel-table">
+      <thead>
+        <tr>
+          <th class="sticky-col-1">Thứ</th>
+          <th class="sticky-col-2">Ngày</th>
+          <script>for(let i=0; i<24; i++) document.write(`<th>${i}h</th>`);</script>
+          <th style="min-width: 75vw; border: none; background: transparent; pointer-events: none;"></th>
+        </tr>
+      </thead>
+      <tbody id="excelBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  let rawData = [];
+  let filterMode = 'day';
+  let chartInstance = null;
+  let userEdits = JSON.parse(localStorage.getItem('tideEdits') || '{}');
+
+  const inputDay = document.getElementById('inputDay');
+  const inputWeek = document.getElementById('inputWeek');
+  const inputMonth = document.getElementById('inputMonth');
+  const inputYear = document.getElementById('inputYear');
+  
+  const btnDay = document.getElementById('btnDay');
+  const btnWeek = document.getElementById('btnWeek');
+  const btnMonth = document.getElementById('btnMonth');
+  const btnYear = document.getElementById('btnYear');
+  
+  const hlVal = document.getElementById('hlVal');
+  const hlHour = document.getElementById('hlHour');
+  
+  const tableWrapper = document.getElementById('tableWrapper');
+
+  function loadSettings() {
+    const saved = localStorage.getItem('tideSettings');
+    if (saved) {
+      const s = JSON.parse(saved);
+      if (s.filterMode) filterMode = s.filterMode;
+      if (s.inputDay) inputDay.value = s.inputDay;
+      if (s.inputWeek) inputWeek.value = s.inputWeek;
+      if (s.inputMonth) inputMonth.value = s.inputMonth;
+      if (s.hlVal) hlVal.value = s.hlVal;
+      if (s.hlHour) hlHour.value = s.hlHour;
+      
+      [btnDay, btnWeek, btnMonth, btnYear].forEach(b => b.classList.remove('active'));
+      const map = { 'day': btnDay, 'week': btnWeek, 'month': btnMonth, 'year': btnYear };
+      if (map[filterMode]) map[filterMode].classList.add('active');
+      
+      inputDay.style.display = filterMode === 'day' ? 'block' : 'none';
+      inputWeek.style.display = filterMode === 'week' ? 'block' : 'none';
+      inputMonth.style.display = filterMode === 'month' ? 'block' : 'none';
+      inputYear.style.display = filterMode === 'year' ? 'block' : 'none';
+    }
+  }
+  loadSettings();
+
+  function saveSettings() {
+    const s = {
+      filterMode,
+      inputDay: inputDay.value,
+      inputWeek: inputWeek.value,
+      inputMonth: inputMonth.value,
+      hlVal: hlVal.value,
+      hlHour: hlHour.value
+    };
+    localStorage.setItem('tideSettings', JSON.stringify(s));
+  }
+
+  function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+      var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+      return weekNo;
+  }
+
+  function parseTime(t) { return (!t || t === '-' || t === '') ? null : t; }
+  function parseVal(v) {
+    if (!v || v === '-' || v === '') return null;
+    let n = parseFloat(v);
+    return isNaN(n) ? null : n;
+  }
+
+  function parseTextToJSON(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    const result = [];
+    let currentMonth = 0;
+    let hasMonthCol = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.startsWith('Ngày,0h') || line.startsWith('Ngay,0h')) {
+        currentMonth++;
+        hasMonthCol = false;
+        continue;
+      }
+      if (line.startsWith('Tháng,Ngày') || line.startsWith('Thang,Ngay')) {
+        hasMonthCol = true;
+        continue;
+      }
+
+      const parts = line.split(',');
+      if (parts.length < 25) continue;
+
+      let month = currentMonth;
+      let dayIdx = 0;
+
+      if (hasMonthCol) {
+        month = parseInt(parts[0], 10) || currentMonth;
+        dayIdx = 1;
+        currentMonth = month;
+      }
+
+      const day = parseInt(parts[dayIdx], 10);
+      if (isNaN(day)) continue;
+
+      const hours = [];
+      let hIdx = dayIdx + 1;
+      for (let h = 0; h < 24; h++) {
+        const val = parseFloat(parts[hIdx++]);
+        hours.push(isNaN(val) ? 0 : val);
+      }
+
+      const max1Time = hIdx < parts.length ? parseTime(parts[hIdx++]) : null;
+      const max1Val = hIdx < parts.length ? parseVal(parts[hIdx++]) : null;
+      const max2Time = hIdx < parts.length ? parseTime(parts[hIdx++]) : null;
+      const max2Val = hIdx < parts.length ? parseVal(parts[hIdx++]) : null;
+      const min1Time = hIdx < parts.length ? parseTime(parts[hIdx++]) : null;
+      const min1Val = hIdx < parts.length ? parseVal(parts[hIdx++]) : null;
+      const min2Time = hIdx < parts.length ? parseTime(parts[hIdx++]) : null;
+      const min2Val = hIdx < parts.length ? parseVal(parts[hIdx++]) : null;
+
+      const dateStr = `2026-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      const highTides = [];
+      if (max1Time) highTides.push({ time: max1Time, height: max1Val });
+      if (max2Time) highTides.push({ time: max2Time, height: max2Val });
+
+      const lowTides = [];
+      if (min1Time) lowTides.push({ time: min1Time, height: min1Val });
+      if (min2Time) lowTides.push({ time: min2Time, height: min2Val });
+
+      let dailyMax = -Infinity;
+      highTides.forEach(t => dailyMax = Math.max(dailyMax, t.height));
+
+      // Apply overrides before pushing
+      if (userEdits[dateStr]) {
+        for (let h in userEdits[dateStr]) {
+          hours[parseInt(h)] = userEdits[dateStr][h];
+        }
+      }
+
+      result.push({
+        date: dateStr,
+        month,
+        day,
+        hours,
+        highTides,
+        lowTides,
+        dailyMax: dailyMax === -Infinity ? null : dailyMax
+      });
+    }
+    return result;
+  }
+
+  async function fetchTideData() {
+    try {
+      const res = await fetch('data.csv');
+      if (!res.ok) throw new Error('File not found');
+      const text = await res.text();
+      rawData = parseTextToJSON(text);
+      render();
+      
+      // Restore scroll
+      setTimeout(() => {
+        const sLeft = localStorage.getItem('tideScrollLeft');
+        if (sLeft) tableWrapper.scrollLeft = parseInt(sLeft);
+        const sTop = localStorage.getItem('tideScrollTop');
+        if (sTop) window.scrollTo(0, parseInt(sTop));
+      }, 50);
+    } catch(e) {
+      console.error('Failed to fetch data', e);
+      document.getElementById('chartTitle').innerText = 'Could not load data.csv. Check docker component bindings.';
+    }
+  }
+
+  function render() {
+    let filtered = rawData.filter(d => {
+      if (filterMode === 'day') return d.date === inputDay.value;
+      if (filterMode === 'week') {
+        if(!inputWeek.value) return false;
+        const targetW = parseInt(inputWeek.value.split('-W')[1]);
+        const rowDate = new Date(d.date);
+        return getWeekNumber(rowDate) === targetW;
+      }
+      if (filterMode === 'month') {
+        if(!inputMonth.value) return false;
+        const targetM = parseInt(inputMonth.value.split('-')[1]);
+        return d.month === targetM;
+      }
+      if (filterMode === 'year') return true; 
+    });
+
+    renderChart(filtered);
+    renderExcel(filtered);
+  }
+
+  function downloadCSV() {
+    let csv = "Thứ,Ngày,0h,1h,2h,3h,4h,5h,6h,7h,8h,9h,10h,11h,12h,13h,14h,15h,16h,17h,18h,19h,20h,21h,22h,23h\n";
+    const daysArr = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    rawData.forEach(d => {
+      const thu = daysArr[new Date(d.date).getDay()];
+      const parts = d.date.split('-');
+      const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      csv += `${thu},${formattedDate},${d.hours.join(',')}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Tide_Data_Corrected.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function renderExcel(dataList) {
+    const tbody = document.getElementById('excelBody');
+    tbody.innerHTML = '';
+    
+    const thresh = parseFloat(hlVal.value);
+    const targetHr = parseInt(hlHour.value);
+    const daysArr = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+    dataList.forEach((d) => {
+      const tr = document.createElement('tr');
+      const thu = daysArr[new Date(d.date).getDay()];
+      
+      const parts = d.date.split('-');
+      const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      
+      let html = `<td class="sticky-col-1">${thu}</td><td class="sticky-col-2">${formattedDate}</td>`;
+      d.hours.forEach((val, cIdx) => {
+        let classes = ['editable-cell'];
+        if (val > 5) classes.push('highlight-extreme');
+        if (!isNaN(thresh) && val <= thresh && (targetHr === -1 || targetHr === cIdx)) {
+          classes.push('highlight-custom');
+        }
+        html += `<td class="${classes.join(' ')}" contenteditable="true" data-cidx="${cIdx}">${val}</td>`;
+      });
+      html += `<td style="border: none !important; background: transparent !important; pointer-events: none;"></td>`;
+      tr.innerHTML = html;
+      
+      tr.querySelectorAll('.editable-cell').forEach(cell => {
+        cell.addEventListener('input', function() {
+          const c = parseInt(this.getAttribute('data-cidx'));
+          let val = parseFloat(this.innerText);
+          if(!isNaN(val)) {
+            d.hours[c] = val; // mutate rawData directly
+            
+            if (!userEdits[d.date]) userEdits[d.date] = {};
+            userEdits[d.date][c] = val;
+            localStorage.setItem('tideEdits', JSON.stringify(userEdits));
+            
+            if (val > 5) this.classList.add('highlight-extreme');
+            else this.classList.remove('highlight-extreme');
+            
+            if (!isNaN(thresh) && val <= thresh && (targetHr === -1 || targetHr === c)) {
+              this.classList.add('highlight-custom');
+            } else {
+              this.classList.remove('highlight-custom');
+            }
+            
+            // Re-filter and re-render chart to see instant change
+            const filtered = rawData.filter(item => {
+              if (filterMode === 'day') return item.date === inputDay.value;
+              if (filterMode === 'week') {
+                if(!inputWeek.value) return false;
+                const targetW = parseInt(inputWeek.value.split('-W')[1]) || 1;
+                return getWeekNumber(new Date(item.date)) === targetW;
+              }
+              if (filterMode === 'month') {
+                if(!inputMonth.value) return false;
+                const targetM = parseInt(inputMonth.value.split('-')[1]) || 1;
+                return item.month === targetM;
+              }
+              if (filterMode === 'year') return true; 
+            });
+            renderChart(filtered);
+          }
+        });
+      });
+      
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderChart(data) {
+    const ctx = document.getElementById('tideChart').getContext('2d');
+    
+    let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(37, 99, 235, 0.4)');
+    gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+
+    let chartConfig = {};
+
+    if (filterMode === 'day') {
+      document.getElementById('chartTitle').innerText = 'Biểu đồ Thủy triều Từng giờ (Ngày)';
+      const labels = Array.from({length:24}, (_,i) => `${i}:00`);
+      
+      const dataset = data.length > 0 ? data[0].hours : [];
+      chartConfig = {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Mực nước (m)',
+            data: dataset,
+            fill: true,
+            backgroundColor: gradient,
+            borderColor: '#2563eb',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.4
+          }]
+        },
+        options: getChartOptions()
+      };
+    } else {
+      let modeTitle = '';
+      if (filterMode === 'week') {
+        const targetW = parseInt(inputWeek.value.split('-W')[1]) || 1;
+        modeTitle = `So sánh Thủy triều Khung 24h (Tuần ${targetW})`;
+      } else if (filterMode === 'month') {
+        const targetM = parseInt(inputMonth.value.split('-')[1]) || 1;
+        modeTitle = `So sánh Thủy triều Khung 24h (Tháng ${targetM})`;
+      } else if (filterMode === 'year') {
+        modeTitle = `So sánh Thủy triều Khung 24h (Năm 2026)`;
+      }
+      
+      document.getElementById('chartTitle').innerText = modeTitle;
+      
+      const labels = Array.from({length:24}, (_,i) => `${i}:00`);
+      
+      // Extended beautiful color palette
+      const colors = [
+        '239, 68, 68',   // red
+        '249, 115, 22',  // orange
+        '234, 179, 8',   // yellow
+        '34, 197, 94',   // green
+        '6, 182, 212',   // cyan
+        '59, 130, 246',  // blue
+        '139, 92, 246',  // purple
+        '236, 72, 153',  // pink
+        '168, 85, 247',  // fuchsia
+        '14, 165, 233',  // sky
+        '16, 185, 129',  // emerald
+        '245, 158, 11'   // amber
+      ];
+      const chartData = [...data].sort((a,b) => a.date.localeCompare(b.date));
+      
+      const isYear = filterMode === 'year';
+      
+      const datasets = chartData.map((d, index) => ({
+        label: d.date.slice(5),
+        data: d.hours,
+        fill: false,
+        borderColor: isYear ? `rgba(59, 130, 246, 0.15)` : `rgba(${colors[index % colors.length]}, 0.8)`,
+        backgroundColor: isYear ? `rgba(59, 130, 246, 0.15)` : `rgba(${colors[index % colors.length]}, 0.8)`,
+        baseColor: isYear ? '59, 130, 246' : colors[index % colors.length],
+        borderWidth: isYear ? 1 : 2,
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: isYear ? 0 : 5
+      }));
+
+      chartConfig = {
+        type: 'line',
+        data: { labels, datasets },
+        options: getChartOptions()
+      };
+    }
+
+    if(chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, chartConfig);
+  }
+
+  function getChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: filterMode === 'day' ? 'index' : 'nearest',
+        intersect: false,
+      },
+      plugins: {
+        legend: { 
+          display: filterMode !== 'year',
+          position: 'bottom',
+          labels: { color: '#64748b' },
+          onClick: function(e, legendItem, legend) {
+            const index = legendItem.datasetIndex;
+            const ci = legend.chart;
+            if (filterMode === 'day') return;
+            
+            const ds = ci.data.datasets[index];
+            const isHighlighted = ds.borderWidth === 5;
+            
+            if (isHighlighted) {
+               // Reset all
+               ci.data.datasets.forEach(d => {
+                 d.borderWidth = 2;
+                 d.borderColor = `rgba(${d.baseColor}, 0.8)`;
+               });
+            } else {
+               // Highlight only this one
+               ci.data.datasets.forEach((d, i) => {
+                 if (i === index) {
+                   d.borderWidth = 5;
+                   d.borderColor = `rgba(${d.baseColor}, 1)`;
+                 } else {
+                   d.borderWidth = 1.5;
+                   d.borderColor = `rgba(148, 163, 184, 0.25)`;
+                 }
+               });
+            }
+            ci.update();
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#475569' } },
+        y: { 
+          grid: { color: 'rgba(0,0,0,0.05)' }, 
+          ticks: { color: '#475569' },
+          min: 0,
+          max: 5
+        }
+      }
+    };
+  }
+
+  [inputDay, inputWeek, inputMonth].forEach(el => el.addEventListener('change', () => {
+    saveSettings();
+    render();
+  }));
+
+  function setActiveBtn(btn, mode) {
+    [btnDay, btnWeek, btnMonth, btnYear].forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    inputDay.style.display = mode === 'day' ? 'block' : 'none';
+    inputWeek.style.display = mode === 'week' ? 'block' : 'none';
+    inputMonth.style.display = mode === 'month' ? 'block' : 'none';
+    inputYear.style.display = mode === 'year' ? 'block' : 'none';
+
+    filterMode = mode;
+    saveSettings();
+    render();
+  }
+
+  btnDay.addEventListener('click', () => setActiveBtn(btnDay, 'day'));
+  btnWeek.addEventListener('click', () => setActiveBtn(btnWeek, 'week'));
+  btnMonth.addEventListener('click', () => setActiveBtn(btnMonth, 'month'));
+  btnYear.addEventListener('click', () => setActiveBtn(btnYear, 'year'));
+  
+  [hlVal, hlHour].forEach(el => el.addEventListener('input', () => {
+    saveSettings();
+    render();
+  }));
+  
+  tableWrapper.addEventListener('scroll', () => {
+    clearTimeout(tableWrapper.scrollTimeout);
+    tableWrapper.scrollTimeout = setTimeout(() => {
+      localStorage.setItem('tideScrollLeft', tableWrapper.scrollLeft);
+    }, 150);
+  });
+  
+  window.addEventListener('scroll', () => {
+    clearTimeout(window.scrollTimeout);
+    window.scrollTimeout = setTimeout(() => {
+      localStorage.setItem('tideScrollTop', window.scrollY);
+    }, 150);
+  });
+
+  fetchTideData();
+</script>
+
+</body>
+</html>
