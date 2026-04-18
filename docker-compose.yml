@@ -2,6 +2,7 @@ version: '3.8'
 services:
   tide-ui:
     image: nginx:alpine
+    restart: always
     ports:
       - "5174:80"
     volumes:

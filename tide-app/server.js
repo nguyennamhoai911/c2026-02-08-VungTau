@@ -97,7 +97,21 @@ app.get('/api/tides', (req, res) => {
   res.json(result);
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const PORT = 3132;
+const os = require('os');
+
+app.listen(PORT, '0.0.0.0', () => {
+  const nets = os.networkInterfaces();
+  let ip = '127.0.0.1';
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        ip = net.address;
+        break;
+      }
+    }
+  }
+  
+  console.log(`\n  ➜  Local:   http://localhost:${PORT}/`);
+  console.log(`  ➜  Network: http://${ip}:${PORT}/\n`);
 });
