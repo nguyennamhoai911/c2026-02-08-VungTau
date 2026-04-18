@@ -7,6 +7,6 @@ RUN npm install
 
 COPY tide-app/ ./
 
-EXPOSE 3000
+EXPOSE 3132
 
 CMD ["npm", "start"]
