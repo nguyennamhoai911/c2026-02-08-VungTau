@@ -8,15 +8,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #f8fafc;
-      --panel-bg: rgba(255, 255, 255, 0.85);
-      --border-color: rgba(0, 0, 0, 0.1);
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --glass-border: rgba(255, 255, 255, 0.5);
-      --shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+      --bg-color: #f4f7f9;
+      --panel-bg: rgba(255, 255, 255, 0.9);
+      --border-color: rgba(15, 23, 42, 0.09);
+      --text-main: #172033;
+      --text-muted: #657386;
+      --accent: #0f766e;
+      --accent-hover: #0b5f59;
+      --blue: #2563eb;
+      --sand: #f4c978;
+      --coral: #ef7d57;
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --shadow: 0 18px 46px -28px rgba(15, 23, 42, 0.34);
       --font-family: 'Inter', sans-serif;
     }
 
@@ -24,38 +27,37 @@
 
     body {
       background-color: var(--bg-color);
-      background-image: 
-        radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.1), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.1), transparent 25%);
+      background-image: linear-gradient(180deg, #eef7f6 0%, #f7fafc 40%, #f4f7f9 100%);
       color: var(--text-main);
       font-family: var(--font-family);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
+      padding: 1.5rem;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1180px;
       width: 100%;
     }
 
     .header {
-      margin-bottom: 2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
     
     .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa, #3b82f6);
-      -webkit-background-clip: text;
-      background-clip: text; /* added for compatibility */
-      -webkit-text-fill-color: transparent;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
       margin-bottom: 0.5rem;
     }
     
-    .header p { color: var(--text-muted); font-size: 1.1rem; }
+    .header p { color: var(--text-muted); font-size: 0.86rem; }
 
     .controls {
       display: flex;
@@ -85,7 +87,7 @@
     input::-webkit-calendar-picker-indicator { cursor: pointer; }
     
     .btn {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.72);
       border: 1px solid var(--border-color);
       color: var(--text-main);
       padding: 0.5rem 1rem;
@@ -109,6 +111,7 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .glass-panel:hover { box-shadow: 0 15px 50px -10px rgba(0,0,0,0.2); }
+    details.glass-panel summary::-webkit-details-marker { display: none; }
     
     .chart-container { position: relative; height: 400px; width: 100%; }
 
@@ -177,18 +180,37 @@
       z-index: 12;
       background: #f1f5f9;
     }
+    .excel-table th.sticky-col-3, .excel-table td.sticky-col-3 {
+      position: sticky;
+      left: 210px;
+      width: 92px;
+      min-width: 92px;
+      max-width: 92px;
+      box-sizing: border-box;
+      background: #f8fafc;
+      font-weight: bold;
+      z-index: 11;
+      color: var(--text-muted);
+      border-right: 2px solid rgba(0,0,0,0.08);
+    }
+    .excel-table th.sticky-col-3 {
+      z-index: 12;
+      background: #f1f5f9;
+    }
     .excel-table tbody tr:nth-child(even) td {
       background-color: rgba(241, 245, 249, 0.5);
     }
     .excel-table tbody tr:nth-child(even) td.sticky-col-1,
-    .excel-table tbody tr:nth-child(even) td.sticky-col-2 {
+    .excel-table tbody tr:nth-child(even) td.sticky-col-2,
+    .excel-table tbody tr:nth-child(even) td.sticky-col-3 {
       background-color: #f8fafc;
     }
     .excel-table tbody tr:hover td {
       background-color: rgba(226, 232, 240, 0.5) !important;
     }
     .excel-table tbody tr:hover td.sticky-col-1,
-    .excel-table tbody tr:hover td.sticky-col-2 {
+    .excel-table tbody tr:hover td.sticky-col-2,
+    .excel-table tbody tr:hover td.sticky-col-3 {
       background-color: #f1f5f9 !important;
     }
     .editable-cell {
@@ -212,16 +234,525 @@
       color: #1d4ed8 !important;
       font-weight: 700 !important;
     }
+    .home-panel {
+      background:
+        linear-gradient(140deg, rgba(255,255,255,0.97), rgba(229,247,244,0.92)),
+        #ffffff;
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 0.9rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .home-top {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1fr);
+      gap: 1.15rem;
+      align-items: center;
+    }
+    .home-kicker {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.45rem;
+    }
+    .home-title {
+      font-size: clamp(2.05rem, 5vw, 4.3rem);
+      line-height: 1;
+      margin-bottom: 0.55rem;
+      color: var(--text-main);
+      max-width: 760px;
+    }
+    .home-subtitle {
+      color: var(--text-muted);
+      line-height: 1.25;
+      max-width: 640px;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .home-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+    .home-status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+    }
+    .home-status-card {
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.95rem;
+      min-height: 112px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .home-status-card span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .home-status-card strong {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      font-size: 1.18rem;
+      margin-bottom: 0.35rem;
+    }
+    .home-status-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .signal-art {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      position: relative;
+      flex: 0 0 auto;
+    }
+    .signal-art.ball::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, #172033 0 4px, transparent 5px),
+        conic-gradient(from 20deg, #172033 0 26deg, #fff 26deg 78deg, #172033 78deg 112deg, #fff 112deg 178deg, #172033 178deg 214deg, #fff 214deg 360deg);
+      border: 2px solid #fff;
+      box-shadow: 0 6px 12px rgba(15,23,42,0.15);
+    }
+    .signal-art.crab::before {
+      content: "";
+      position: absolute;
+      left: 11px;
+      right: 11px;
+      top: 18px;
+      height: 18px;
+      border-radius: 16px 16px 9px 9px;
+      background: var(--coral);
+      box-shadow: inset 0 -4px 0 rgba(159,53,31,0.16);
+    }
+    .signal-art.crab::after {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 10px;
+      width: 34px;
+      height: 16px;
+      border-top: 3px solid #d95c38;
+      border-left: 3px solid #d95c38;
+      border-right: 3px solid #d95c38;
+      border-radius: 18px 18px 0 0;
+    }
+    .tide-illustration {
+      position: relative;
+      min-height: 360px;
+      border-radius: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, #bce9fb 0%, #e7f7fb 43%, #f9dd9a 44%, #efc270 100%);
+      border: 1px solid rgba(15, 118, 110, 0.12);
+      box-shadow: inset 0 -18px 38px rgba(159, 97, 24, 0.14);
+      isolation: isolate;
+    }
+    .tide-illustration::before {
+      content: "";
+      position: absolute;
+      inset: auto -10% -22px -10%;
+      height: 120px;
+      background: #e6b967;
+      border-radius: 50% 50% 0 0;
+      transform: rotate(-2deg);
+      z-index: 2;
+    }
+    .tide-sun {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffd166;
+      box-shadow: 0 0 0 12px rgba(255,209,102,0.22), 0 0 34px rgba(239,125,87,0.25);
+      z-index: 1;
+    }
+    .tide-water {
+      position: absolute;
+      left: -10%;
+      right: -10%;
+      bottom: 48px;
+      height: var(--water-level, 44%);
+      background: linear-gradient(180deg, rgba(42, 178, 214, 0.92), rgba(15, 118, 110, 0.95));
+      border-radius: 42% 48% 0 0;
+      z-index: 1;
+      transition: height 0.35s ease;
+    }
+    .tide-water::before {
+      content: "";
+      position: absolute;
+      left: -5%;
+      top: -14px;
+      width: 110%;
+      height: 28px;
+      background: radial-gradient(ellipse at 26px 16px, rgba(255,255,255,0.72) 0 17px, transparent 18px) 0 0 / 56px 28px repeat-x;
+    }
+    .tide-ball {
+      position: absolute;
+      left: 34px;
+      bottom: 44px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: conic-gradient(from 18deg, #111 0 16deg, #fff 16deg 74deg, #111 74deg 110deg, #fff 110deg 180deg, #111 180deg 215deg, #fff 215deg 360deg);
+      border: 2px solid white;
+      z-index: 3;
+      box-shadow: 0 12px 18px rgba(15, 23, 42, 0.18);
+    }
+    .tide-crab {
+      position: absolute;
+      right: 42px;
+      bottom: 40px;
+      width: 48px;
+      height: 26px;
+      border-radius: 22px 22px 12px 12px;
+      background: var(--coral);
+      z-index: 3;
+      box-shadow: inset 0 -5px 0 rgba(159, 53, 31, 0.16), 0 10px 16px rgba(15,23,42,0.13);
+    }
+    .tide-crab::before,
+    .tide-crab::after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      width: 13px;
+      height: 13px;
+      border: 3px solid #d95c38;
+      border-bottom: 0;
+      border-radius: 13px 13px 0 0;
+    }
+    .tide-crab::before { left: -10px; transform: rotate(-30deg); }
+    .tide-crab::after { right: -10px; transform: rotate(30deg); }
+    .visual-caption {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 4;
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .home-bottom {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 0.42fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .home-hours {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(74px, 1fr));
+      gap: 0.55rem;
+    }
+    .home-hour {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.7rem 0.45rem;
+      text-align: center;
+      display: grid;
+      gap: 0.35rem;
+    }
+    .home-hour b {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    .home-hour span {
+      display: block;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .hour-bar-track {
+      width: 18px;
+      height: 76px;
+      border-radius: 999px;
+      background: rgba(101, 115, 134, 0.15);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .hour-bar-fill {
+      width: 100%;
+      min-height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #67e8f9, var(--accent));
+    }
+    .home-hour small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      min-height: 1.2em;
+      margin-top: 0.2rem;
+    }
+    .home-hour.football {
+      border-color: rgba(34, 197, 94, 0.35);
+      background: rgba(220, 252, 231, 0.74);
+      color: #047857;
+    }
+    .home-hour.crab {
+      border-color: rgba(249, 115, 22, 0.35);
+      background: rgba(255, 237, 213, 0.78);
+      color: #b45309;
+    }
+    .home-next {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .section-label h3 {
+      font-size: 1rem;
+      margin: 0;
+    }
+    .section-label span {
+      color: var(--text-muted);
+      font-size: 0.84rem;
+    }
+    .home-next h3 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .next-list {
+      display: grid;
+      gap: 0.55rem;
+    }
+    .next-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding-bottom: 0.55rem;
+      color: var(--text-main);
+    }
+    .next-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .next-item small {
+      color: var(--text-muted);
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .insight-card {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 112px;
+    }
+    .insight-card span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .insight-card strong {
+      display: block;
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+    }
+    .insight-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .deal-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0 0.25rem;
+    }
+    .deal-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 999px;
+      padding: 0.45rem 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .deal-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .focus-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+    }
+    .focus-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .focus-table th,
+    .focus-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .focus-table th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .focus-table td:first-child,
+    .focus-table th:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      background: #fff;
+      z-index: 1;
+    }
+    .focus-table tr:last-child td { border-bottom: 0; }
+    .focus-table tbody tr { cursor: pointer; }
+    .focus-table tbody tr:hover td { background: #eff6ff; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.22rem 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .pill.good { background: #dcfce7; color: #047857; }
+    .pill.warn { background: #fef3c7; color: #b45309; }
+    .pill.bad { background: #fee2e2; color: #b91c1c; }
+    .focus-hour {
+      background-color: rgba(37, 99, 235, 0.08) !important;
+    }
+    .football-hour {
+      background-color: rgba(34, 197, 94, 0.16) !important;
+      color: #047857 !important;
+      font-weight: 800 !important;
+    }
+    .crab-hour {
+      background-color: rgba(249, 115, 22, 0.14) !important;
+      color: #b45309 !important;
+      font-weight: 800 !important;
+    }
+    @media (max-width: 720px) {
+      body { padding: 1rem; }
+      .header h1 { font-size: 2rem; }
+      .chart-container { height: 320px; }
+      .home-top,
+      .home-bottom {
+        grid-template-columns: 1fr;
+      }
+      .home-hours {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .home-status-grid {
+        grid-template-columns: 1fr;
+      }
+      .tide-illustration {
+        min-height: 210px;
+      }
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <h1>Tide Explorer</h1>
-    <p>Premium visualization of Vung Tau tidal extremes</p>
+    <h1>Lịch nước Vũng Tàu</h1>
+    <p>16h-21h</p>
   </div>
 
+  <section class="home-panel">
+    <div class="home-top">
+      <div>
+        <div class="home-kicker" id="homeDateLabel">Trang chủ</div>
+        <h2 class="home-title" id="homeHeadline">Đang tải tình hình hôm nay...</h2>
+        <p class="home-subtitle" id="homeSummary">17h -- · tối --</p>
+        <div class="home-actions">
+          <button class="btn" id="homeTodayBtn">Xem hôm nay</button>
+          <button class="btn" id="homeWeekBtn">Xem tuần này</button>
+          <button class="btn" id="homeComboBtn">Lọc ngày hợp cả hai</button>
+        </div>
+      </div>
+      <div class="tide-illustration" id="homeVisual" aria-hidden="true">
+        <div class="visual-caption" id="homeVisualPills"></div>
+        <div class="tide-sun"></div>
+        <div class="tide-water"></div>
+        <div class="tide-ball"></div>
+        <div class="tide-crab"></div>
+      </div>
+    </div>
+    <div class="home-status-grid" id="homeCards"></div>
+    <div class="home-bottom">
+      <div>
+        <div class="section-label">
+          <h3>Khung 16h-21h</h3>
+          <span>17h đá banh · 19-21h bắt ghẹ</span>
+        </div>
+        <div class="home-hours" id="homeHours"></div>
+      </div>
+      <aside class="home-next">
+        <h3>Ngày đẹp kế tiếp</h3>
+        <div class="next-list" id="homeNextList"></div>
+      </aside>
+    </div>
+  </section>
+
+  <details class="glass-panel">
+    <summary style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+      <div>
+        <h2 style="font-size:1.1rem; margin-bottom:0.2rem;">So sánh chi tiết</h2>
+        <p style="color:var(--text-muted); font-size:0.86rem;">Ngày · tuần · tháng · năm</p>
+      </div>
+      <span class="pill warn">Mở / đóng</span>
+    </summary>
   <div class="controls">
     <div class="control-group">
       <label style="font-weight: 500; color: #475569">Bộ chọn ngày:</label>
@@ -238,6 +769,39 @@
     </div>
   </div>
 
+  <div class="glass-panel">
+    <h3 style="margin-bottom: 0.4rem">Insight khung 16h-21h</h3>
+    <p id="insightSummary" style="color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+      Đang tải dữ liệu để so sánh các ngày.
+    </p>
+    <div class="insight-grid" id="bestCards"></div>
+    <div class="deal-filters" aria-label="Lọc theo kèo">
+      <button class="deal-btn active" data-deal="all">Tất cả ngày</button>
+      <button class="deal-btn" data-deal="football">17h đá banh được</button>
+      <button class="deal-btn" data-deal="crab">19-21h bắt ghẹ được</button>
+      <button class="deal-btn" data-deal="combo">Cả hai kèo</button>
+    </div>
+    <div class="focus-table-wrap">
+      <table class="focus-table">
+        <thead>
+          <tr>
+            <th>Ngày</th>
+            <th>Âm lịch</th>
+            <th>16h</th>
+            <th>17h đá banh</th>
+            <th>18h</th>
+            <th>19h</th>
+            <th>20h</th>
+            <th>21h</th>
+            <th>Đá banh</th>
+            <th>Bắt ghẹ</th>
+          </tr>
+        </thead>
+        <tbody id="focusBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="dashboard-grid">
     <div class="glass-panel">
       <h3 style="margin-bottom: 1rem" id="chartTitle">Biểu đồ Thủy triều Từng giờ (Ngày)</h3>
@@ -246,9 +810,10 @@
       </div>
     </div>
   </div>
+  </details>
 
-  <div id="tableWrapper" class="glass-panel" style="overflow: auto; max-height: 500px; margin-top: 2rem; width: 100%;">
-    <h3 style="margin-bottom: 1rem; position: sticky; left: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <details id="tableWrapper" class="glass-panel" style="overflow: auto; max-height: 500px; margin-top: 2rem; width: 100%;">
+    <summary style="margin-bottom: 1rem; position: sticky; left: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; cursor:pointer;">
       <span>Bảng Dữ Liệu Thô (Sửa số để biểu đồ chạy theo thời gian thực)</span>
       <div style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.9rem; font-weight: normal;">
         <label>Tô màu Cột giờ:</label>
@@ -257,29 +822,36 @@
           <script>for(let i=0; i<24; i++) document.write(`<option value="${i}">${i}h</option>`);</script>
         </select>
         <label>Mực nước &lt;=</label>
-        <input type="number" id="hlVal" value="1.5" step="0.1" style="width: 70px; padding: 0.3rem; border-radius: 6px; border: 1px solid var(--border-color); outline: none;">
+        <input type="number" id="hlVal" value="1.6" step="0.1" style="width: 70px; padding: 0.3rem; border-radius: 6px; border: 1px solid var(--border-color); outline: none;">
         <button class="btn" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; margin-left: 1rem;" onclick="downloadCSV()">Lưu tệp CSV đã sửa</button>
       </div>
-    </h3>
+    </summary>
     <table class="excel-table">
       <thead>
         <tr>
           <th class="sticky-col-1">Thứ</th>
           <th class="sticky-col-2">Ngày</th>
-          <script>for(let i=0; i<24; i++) document.write(`<th>${i}h</th>`);</script>
+          <th class="sticky-col-3">Âm lịch</th>
+          <script>for(let i=0; i<24; i++) document.write(`<th class="${i === 17 ? 'football-hour' : (i >= 19 && i <= 21 ? 'crab-hour' : (i >= 16 && i <= 21 ? 'focus-hour' : ''))}">${i}h</th>`);</script>
           <th style="min-width: 75vw; border: none; background: transparent; pointer-events: none;"></th>
         </tr>
       </thead>
       <tbody id="excelBody"></tbody>
     </table>
-  </div>
+  </details>
 </div>
 
 <script>
   let rawData = [];
   let filterMode = 'day';
+  let dealFilter = 'all';
   let chartInstance = null;
   let userEdits = JSON.parse(localStorage.getItem('tideEdits') || '{}');
+  const FOCUS_HOURS = [16, 17, 18, 19, 20, 21];
+  const FOOTBALL_HOUR = 17;
+  const FOOTBALL_LIMIT = 3;
+  const CRAB_HOURS = [19, 20, 21];
+  const CRAB_LIMIT = 1.6;
 
   const inputDay = document.getElementById('inputDay');
   const inputWeek = document.getElementById('inputWeek');
@@ -293,6 +865,21 @@
   
   const hlVal = document.getElementById('hlVal');
   const hlHour = document.getElementById('hlHour');
+  const homeDateLabel = document.getElementById('homeDateLabel');
+  const homeHeadline = document.getElementById('homeHeadline');
+  const homeSummary = document.getElementById('homeSummary');
+  const homeCards = document.getElementById('homeCards');
+  const homeVisual = document.getElementById('homeVisual');
+  const homeVisualPills = document.getElementById('homeVisualPills');
+  const homeHours = document.getElementById('homeHours');
+  const homeNextList = document.getElementById('homeNextList');
+  const homeTodayBtn = document.getElementById('homeTodayBtn');
+  const homeWeekBtn = document.getElementById('homeWeekBtn');
+  const homeComboBtn = document.getElementById('homeComboBtn');
+  const insightSummary = document.getElementById('insightSummary');
+  const bestCards = document.getElementById('bestCards');
+  const focusBody = document.getElementById('focusBody');
+  const dealButtons = document.querySelectorAll('.deal-btn');
   
   const tableWrapper = document.getElementById('tableWrapper');
 
@@ -301,6 +888,7 @@
     if (saved) {
       const s = JSON.parse(saved);
       if (s.filterMode) filterMode = s.filterMode;
+      if (s.dealFilter) dealFilter = s.dealFilter;
       if (s.inputDay) inputDay.value = s.inputDay;
       if (s.inputWeek) inputWeek.value = s.inputWeek;
       if (s.inputMonth) inputMonth.value = s.inputMonth;
@@ -310,6 +898,7 @@
       [btnDay, btnWeek, btnMonth, btnYear].forEach(b => b.classList.remove('active'));
       const map = { 'day': btnDay, 'week': btnWeek, 'month': btnMonth, 'year': btnYear };
       if (map[filterMode]) map[filterMode].classList.add('active');
+      dealButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.deal === dealFilter));
       
       inputDay.style.display = filterMode === 'day' ? 'block' : 'none';
       inputWeek.style.display = filterMode === 'week' ? 'block' : 'none';
@@ -322,6 +911,7 @@
   function saveSettings() {
     const s = {
       filterMode,
+      dealFilter,
       inputDay: inputDay.value,
       inputWeek: inputWeek.value,
       inputMonth: inputMonth.value,
@@ -337,6 +927,407 @@
       var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
       var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
       return weekNo;
+  }
+
+  function localIsoDate(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function isoWeekValue(dateStr) {
+    const d = new Date(`${dateStr}T12:00:00`);
+    return `${d.getFullYear()}-W${String(getWeekNumber(d)).padStart(2, '0')}`;
+  }
+
+  function getCurrentRangeData() {
+    return rawData.filter(d => {
+      if (filterMode === 'day') return d.date === inputDay.value;
+      if (filterMode === 'week') {
+        if(!inputWeek.value) return false;
+        const targetW = parseInt(inputWeek.value.split('-W')[1]);
+        const rowDate = new Date(d.date);
+        return getWeekNumber(rowDate) === targetW;
+      }
+      if (filterMode === 'month') {
+        if(!inputMonth.value) return false;
+        const targetM = parseInt(inputMonth.value.split('-')[1]);
+        return d.month === targetM;
+      }
+      if (filterMode === 'year') return true;
+      return true;
+    });
+  }
+
+  function heightText(value) {
+    return Number.isFinite(value) ? `${value.toFixed(1)}m` : '-';
+  }
+
+  function dateText(dateStr) {
+    const daysArr = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    const d = new Date(dateStr);
+    const parts = dateStr.split('-');
+    return `${daysArr[d.getDay()]} ${parts[2]}/${parts[1]}`;
+  }
+
+  function jdFromDate(dd, mm, yy) {
+    const a = Math.floor((14 - mm) / 12);
+    const y = yy + 4800 - a;
+    const m = mm + 12 * a - 3;
+    let jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+    if (jd < 2299161) {
+      jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - 32083;
+    }
+    return jd;
+  }
+
+  function jdToDate(jd) {
+    let a;
+    if (jd > 2299160) {
+      a = jd + 32044;
+      const b = Math.floor((4 * a + 3) / 146097);
+      const c = a - Math.floor((b * 146097) / 4);
+      const d = Math.floor((4 * c + 3) / 1461);
+      const e = c - Math.floor((1461 * d) / 4);
+      const m = Math.floor((5 * e + 2) / 153);
+      return {
+        day: e - Math.floor((153 * m + 2) / 5) + 1,
+        month: m + 3 - 12 * Math.floor(m / 10),
+        year: b * 100 + d - 4800 + Math.floor(m / 10)
+      };
+    }
+    const b = 0;
+    const c = jd + 32082;
+    const d = Math.floor((4 * c + 3) / 1461);
+    const e = c - Math.floor((1461 * d) / 4);
+    const m = Math.floor((5 * e + 2) / 153);
+    return {
+      day: e - Math.floor((153 * m + 2) / 5) + 1,
+      month: m + 3 - 12 * Math.floor(m / 10),
+      year: b * 100 + d - 4800 + Math.floor(m / 10)
+    };
+  }
+
+  function newMoon(k) {
+    const t = k / 1236.85;
+    const t2 = t * t;
+    const t3 = t2 * t;
+    const dr = Math.PI / 180;
+    let jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * t2 - 0.000000155 * t3;
+    jd1 += 0.00033 * Math.sin((166.56 + 132.87 * t - 0.009173 * t2) * dr);
+    const m = 359.2242 + 29.10535608 * k - 0.0000333 * t2 - 0.00000347 * t3;
+    const mpr = 306.0253 + 385.81691806 * k + 0.0107306 * t2 + 0.00001236 * t3;
+    const f = 21.2964 + 390.67050646 * k - 0.0016528 * t2 - 0.00000239 * t3;
+    let c1 = (0.1734 - 0.000393 * t) * Math.sin(m * dr) + 0.0021 * Math.sin(2 * dr * m);
+    c1 -= 0.4068 * Math.sin(mpr * dr) + 0.0161 * Math.sin(2 * dr * mpr);
+    c1 -= 0.0004 * Math.sin(3 * dr * mpr);
+    c1 += 0.0104 * Math.sin(2 * dr * f) - 0.0051 * Math.sin((m + mpr) * dr);
+    c1 -= 0.0074 * Math.sin((m - mpr) * dr) + 0.0004 * Math.sin((2 * f + m) * dr);
+    c1 -= 0.0004 * Math.sin((2 * f - m) * dr) - 0.0006 * Math.sin((2 * f + mpr) * dr);
+    c1 += 0.0010 * Math.sin((2 * f - mpr) * dr) + 0.0005 * Math.sin((2 * mpr + m) * dr);
+    const deltaT = t < -11 ? 0.001 + 0.000839 * t + 0.0002261 * t2 - 0.00000845 * t3 - 0.000000081 * t * t3 : -0.000278 + 0.000265 * t + 0.000262 * t2;
+    return jd1 + c1 - deltaT;
+  }
+
+  function sunLongitude(jdn) {
+    const t = (jdn - 2451545.0) / 36525;
+    const t2 = t * t;
+    const dr = Math.PI / 180;
+    const m = 357.52910 + 35999.05030 * t - 0.0001559 * t2 - 0.00000048 * t * t2;
+    const l0 = 280.46645 + 36000.76983 * t + 0.0003032 * t2;
+    let dl = (1.914600 - 0.004817 * t - 0.000014 * t2) * Math.sin(dr * m);
+    dl += (0.019993 - 0.000101 * t) * Math.sin(2 * dr * m) + 0.000290 * Math.sin(3 * dr * m);
+    let l = (l0 + dl) * dr;
+    l -= Math.PI * 2 * Math.floor(l / (Math.PI * 2));
+    return l;
+  }
+
+  function getNewMoonDay(k, timeZone) {
+    return Math.floor(newMoon(k) + 0.5 + timeZone / 24);
+  }
+
+  function getSunLongitude(dayNumber, timeZone) {
+    return Math.floor(sunLongitude(dayNumber - 0.5 - timeZone / 24) / Math.PI * 6);
+  }
+
+  function getLunarMonth11(yy, timeZone) {
+    const off = jdFromDate(31, 12, yy) - 2415021;
+    const k = Math.floor(off / 29.530588853);
+    let nm = getNewMoonDay(k, timeZone);
+    const sunLong = getSunLongitude(nm, timeZone);
+    if (sunLong >= 9) nm = getNewMoonDay(k - 1, timeZone);
+    return nm;
+  }
+
+  function getLeapMonthOffset(a11, timeZone) {
+    const k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+    let last = 0;
+    let i = 1;
+    let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    do {
+      last = arc;
+      i += 1;
+      arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    } while (arc !== last && i < 14);
+    return i - 1;
+  }
+
+  function convertSolarToLunar(dd, mm, yy, timeZone = 7) {
+    const dayNumber = jdFromDate(dd, mm, yy);
+    const k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+    let monthStart = getNewMoonDay(k + 1, timeZone);
+    if (monthStart > dayNumber) monthStart = getNewMoonDay(k, timeZone);
+    let a11 = getLunarMonth11(yy, timeZone);
+    let b11 = a11;
+    let lunarYear;
+    if (a11 >= monthStart) {
+      lunarYear = yy;
+      a11 = getLunarMonth11(yy - 1, timeZone);
+    } else {
+      lunarYear = yy + 1;
+      b11 = getLunarMonth11(yy + 1, timeZone);
+    }
+    const lunarDay = dayNumber - monthStart + 1;
+    const diff = Math.floor((monthStart - a11) / 29);
+    let lunarLeap = false;
+    let lunarMonth = diff + 11;
+    if (b11 - a11 > 365) {
+      const leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+      if (diff >= leapMonthDiff) {
+        lunarMonth = diff + 10;
+        if (diff === leapMonthDiff) lunarLeap = true;
+      }
+    }
+    if (lunarMonth > 12) lunarMonth -= 12;
+    if (lunarMonth >= 11 && diff < 4) lunarYear -= 1;
+    return { day: lunarDay, month: lunarMonth, year: lunarYear, leap: lunarLeap };
+  }
+
+  function lunarText(dateStr) {
+    const [yy, mm, dd] = dateStr.split('-').map(Number);
+    const lunar = convertSolarToLunar(dd, mm, yy);
+    return `${String(lunar.day).padStart(2, '0')}/${String(lunar.month).padStart(2, '0')}${lunar.leap ? ' nhuận' : ''}`;
+  }
+
+  function avg(values) {
+    const nums = values.filter(Number.isFinite);
+    return nums.length ? nums.reduce((sum, n) => sum + n, 0) / nums.length : null;
+  }
+
+  function assessDay(day) {
+    const footballHeight = day.hours[FOOTBALL_HOUR];
+    const footballOk = Number.isFinite(footballHeight) && footballHeight <= FOOTBALL_LIMIT;
+    const crabValues = CRAB_HOURS.map(hour => day.hours[hour]).filter(Number.isFinite);
+    const crabBest = crabValues.length ? Math.min(...crabValues) : null;
+    const crabAvg = avg(crabValues);
+    const crabOk = crabValues.some(value => value <= CRAB_LIMIT);
+    const crabGreat = crabValues.length === CRAB_HOURS.length && crabValues.every(value => value <= CRAB_LIMIT);
+    const comboOk = footballOk && crabOk;
+
+    return {
+      footballHeight,
+      footballOk,
+      crabBest,
+      crabAvg,
+      crabOk,
+      crabGreat,
+      comboOk,
+      score: (footballOk ? 3 : 0) + (crabOk ? 3 : 0) - (crabAvg || 9)
+    };
+  }
+
+  function passesDealFilter(day) {
+    const a = assessDay(day);
+    if (dealFilter === 'football') return a.footballOk;
+    if (dealFilter === 'crab') return a.crabOk;
+    if (dealFilter === 'combo') return a.comboOk;
+    return true;
+  }
+
+  function pickHomeDay() {
+    if (!rawData.length) return null;
+    const today = localIsoDate();
+    return rawData.find(day => day.date === today)
+      || rawData.find(day => day.date === inputDay.value)
+      || rawData[0];
+  }
+
+  function findNextFrom(dateStr, predicate) {
+    return rawData
+      .filter(day => day.date >= dateStr)
+      .map(day => ({ day, assessment: assessDay(day) }))
+      .filter(item => predicate(item.assessment))
+      .sort((a, b) => a.day.date.localeCompare(b.day.date))[0] || null;
+  }
+
+  function statusCard(label, ok, title, text, artClass) {
+    return `
+      <div class="home-status-card">
+        <div class="signal-art ${artClass}"></div>
+        <div>
+          <span>${label}</span>
+          <strong><span class="pill ${ok ? 'good' : 'bad'}">${ok ? 'Được' : 'Không'}</span> ${title}</strong>
+          <p>${text}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderHome() {
+    const day = pickHomeDay();
+    if (!day) return;
+
+    const a = assessDay(day);
+    const isToday = day.date === localIsoDate();
+    const dateLabel = `${isToday ? 'Hôm nay' : 'Ngày tham chiếu'} · ${dateText(day.date)} · Âm ${lunarText(day.date)}`;
+    homeDateLabel.textContent = dateLabel;
+
+    if (a.comboOk) {
+      homeHeadline.textContent = 'Đẹp cả hai';
+    } else if (a.footballOk) {
+      homeHeadline.textContent = 'Đá được';
+    } else if (a.crabOk) {
+      homeHeadline.textContent = 'Canh ghẹ';
+    } else {
+      homeHeadline.textContent = 'Chưa đẹp';
+    }
+
+    homeSummary.textContent = `17h ${heightText(a.footballHeight)} · tối thấp nhất ${heightText(a.crabBest)} · âm ${lunarText(day.date)}`;
+
+    homeCards.innerHTML = [
+      statusCard('Đá banh', a.footballOk, `17h ${heightText(a.footballHeight)}`, a.footballOk ? 'Bãi đủ thấp.' : 'Nước còn cao.', 'ball'),
+      statusCard('Bắt ghẹ', a.crabOk, `Tối ${heightText(a.crabBest)}`, a.crabOk ? 'Có cửa canh.' : 'Chưa đẹp.', 'crab')
+    ].join('');
+
+    const waterLevel = Math.max(18, Math.min(68, ((a.footballHeight || 0) / 5) * 68));
+    homeVisual.style.setProperty('--water-level', `${waterLevel}%`);
+    homeVisualPills.innerHTML = `
+      <span class="pill ${a.footballOk ? 'good' : 'bad'}">17h ${a.footballOk ? 'đá được' : 'cao'}</span>
+      <span class="pill ${a.crabOk ? 'good' : 'bad'}">tối ${a.crabOk ? 'canh ghẹ' : 'chưa đẹp'}</span>
+    `;
+
+    homeHours.innerHTML = FOCUS_HOURS.map(hour => {
+      const value = day.hours[hour];
+      const cls = hour === FOOTBALL_HOUR ? ' football' : CRAB_HOURS.includes(hour) ? ' crab' : '';
+      const note = hour === FOOTBALL_HOUR ? 'đá banh' : CRAB_HOURS.includes(hour) ? 'bắt ghẹ' : '';
+      const barHeight = Math.max(8, Math.min(76, ((value || 0) / 5) * 76));
+      return `<div class="home-hour${cls}"><b>${hour}h</b><div class="hour-bar-track"><div class="hour-bar-fill" style="height:${barHeight}px"></div></div><span>${heightText(value)}</span><small>${note}</small></div>`;
+    }).join('');
+
+    const nextFootball = findNextFrom(day.date, item => item.footballOk);
+    const nextCrab = findNextFrom(day.date, item => item.crabOk);
+    const nextCombo = findNextFrom(day.date, item => item.comboOk);
+    const nextItems = [
+      ['Đá banh', nextFootball, item => `17h ${heightText(item.assessment.footballHeight)}`],
+      ['Bắt ghẹ', nextCrab, item => `19-21h thấp nhất ${heightText(item.assessment.crabBest)}`],
+      ['Cả hai', nextCombo, item => `17h ${heightText(item.assessment.footballHeight)}, tối ${heightText(item.assessment.crabBest)}`]
+    ];
+
+    homeNextList.innerHTML = nextItems.map(([label, item, detail]) => {
+      if (!item) return `<div class="next-item"><div><strong>${label}</strong><small>Chưa thấy ngày phù hợp trong dữ liệu</small></div><span class="pill bad">-</span></div>`;
+      return `
+        <button class="next-item" data-date="${item.day.date}" style="width:100%; background:transparent; border:0; cursor:pointer; text-align:left; font:inherit;">
+          <div><strong>${label}: ${dateText(item.day.date)}</strong><small>Âm ${lunarText(item.day.date)} · ${detail(item)}</small></div>
+          <span class="pill good">Xem</span>
+        </button>
+      `;
+    }).join('');
+
+    homeNextList.querySelectorAll('[data-date]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        inputDay.value = btn.dataset.date;
+        setActiveBtn(btnDay, 'day');
+        document.getElementById('chartTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function bestBy(days, predicate, sorter) {
+    return days
+      .map(day => ({ day, assessment: assessDay(day) }))
+      .filter(item => predicate(item.assessment))
+      .sort(sorter)[0] || null;
+  }
+
+  function renderCard(label, item, fallback, detailFn) {
+    if (!item) {
+      return `<div class="insight-card"><span>${label}</span><strong>Chưa có ngày đẹp</strong><p>${fallback}</p></div>`;
+    }
+    return `<div class="insight-card"><span>${label}</span><strong>${dateText(item.day.date)}</strong><p>${detailFn(item.day, item.assessment)}</p></div>`;
+  }
+
+  function renderInsights(allDays, shownDays) {
+    const footballDays = allDays.map(assessDay).filter(a => a.footballOk).length;
+    const crabDays = allDays.map(assessDay).filter(a => a.crabOk).length;
+    const comboDays = allDays.map(assessDay).filter(a => a.comboOk).length;
+    const label = filterMode === 'day' ? 'ngày này' : `${allDays.length} ngày đang xem`;
+
+    insightSummary.textContent =
+      `Trong ${label}: ${footballDays} ngày đá banh được lúc 17h, ${crabDays} ngày có cửa bắt ghẹ trong 19-21h, ${comboDays} ngày hợp cả hai.`;
+
+    const bestFootball = bestBy(
+      allDays,
+      a => a.footballOk,
+      (a, b) => a.assessment.footballHeight - b.assessment.footballHeight
+    );
+    const bestCrab = bestBy(
+      allDays,
+      a => a.crabOk,
+      (a, b) => a.assessment.crabAvg - b.assessment.crabAvg
+    );
+    const bestCombo = bestBy(
+      allDays,
+      a => a.comboOk,
+      (a, b) => b.assessment.score - a.assessment.score
+    );
+
+    bestCards.innerHTML = [
+      renderCard('Đá banh 17h', bestFootball, 'Không có ngày nào dưới ngưỡng 3.0m lúc 17h.', (day, a) => `17h ${heightText(a.footballHeight)}. Càng thấp càng dễ chơi trên bãi.`),
+      renderCard('Bắt ghẹ 19-21h', bestCrab, 'Không có khung 19-21h nào xuống dưới 1.6m.', (day, a) => `Thấp nhất ${heightText(a.crabBest)}, trung bình ${heightText(a.crabAvg)} trong 19-21h.`),
+      renderCard('Ngày đang ưu tiên', bestCombo, 'Chưa có ngày nào hợp cả đá banh và bắt ghẹ trong vùng đang xem.', (day, a) => `17h ${heightText(a.footballHeight)}, 19-21h thấp nhất ${heightText(a.crabBest)}.`)
+    ].join('');
+
+    renderFocusTable(shownDays);
+  }
+
+  function renderFocusTable(days) {
+    const rows = [...days]
+      .sort((a, b) => {
+        const aa = assessDay(a);
+        const bb = assessDay(b);
+        return Number(bb.comboOk) - Number(aa.comboOk) || Number(bb.crabOk) - Number(aa.crabOk) || (aa.crabAvg || 9) - (bb.crabAvg || 9);
+      })
+      .slice(0, filterMode === 'year' ? 45 : 90);
+
+    if (!rows.length) {
+      focusBody.innerHTML = `<tr><td colspan="10">Không có ngày nào khớp bộ lọc này.</td></tr>`;
+      return;
+    }
+
+    focusBody.innerHTML = rows.map(day => {
+      const a = assessDay(day);
+      const footballTone = a.footballOk ? 'good' : 'bad';
+      const crabTone = a.crabGreat ? 'good' : a.crabOk ? 'warn' : 'bad';
+      const crabLabel = a.crabGreat ? 'Đẹp' : a.crabOk ? 'Canh được' : 'Không đẹp';
+      return `
+        <tr data-date="${day.date}" title="Bấm để xem riêng ngày này">
+          <td><strong>${dateText(day.date)}</strong></td>
+          <td>${lunarText(day.date)}</td>
+          ${FOCUS_HOURS.map(hour => `<td>${heightText(day.hours[hour])}</td>`).join('')}
+          <td><span class="pill ${footballTone}">${a.footballOk ? 'Được' : 'Không'}</span></td>
+          <td><span class="pill ${crabTone}">${crabLabel}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    focusBody.querySelectorAll('tr[data-date]').forEach(row => {
+      row.addEventListener('click', () => {
+        inputDay.value = row.dataset.date;
+        setActiveBtn(btnDay, 'day');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
   }
 
   function parseTime(t) { return (!t || t === '-' || t === '') ? null : t; }
@@ -450,22 +1441,11 @@
   }
 
   function render() {
-    let filtered = rawData.filter(d => {
-      if (filterMode === 'day') return d.date === inputDay.value;
-      if (filterMode === 'week') {
-        if(!inputWeek.value) return false;
-        const targetW = parseInt(inputWeek.value.split('-W')[1]);
-        const rowDate = new Date(d.date);
-        return getWeekNumber(rowDate) === targetW;
-      }
-      if (filterMode === 'month') {
-        if(!inputMonth.value) return false;
-        const targetM = parseInt(inputMonth.value.split('-')[1]);
-        return d.month === targetM;
-      }
-      if (filterMode === 'year') return true; 
-    });
+    const allInRange = getCurrentRangeData();
+    let filtered = allInRange.filter(passesDealFilter);
 
+    renderHome();
+    renderInsights(allInRange, filtered);
     renderChart(filtered);
     renderExcel(filtered);
   }
@@ -505,9 +1485,12 @@
       const parts = d.date.split('-');
       const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
       
-      let html = `<td class="sticky-col-1">${thu}</td><td class="sticky-col-2">${formattedDate}</td>`;
+      let html = `<td class="sticky-col-1">${thu}</td><td class="sticky-col-2">${formattedDate}</td><td class="sticky-col-3">${lunarText(d.date)}</td>`;
       d.hours.forEach((val, cIdx) => {
         let classes = ['editable-cell'];
+        if (FOCUS_HOURS.includes(cIdx)) classes.push('focus-hour');
+        if (cIdx === FOOTBALL_HOUR) classes.push('football-hour');
+        if (CRAB_HOURS.includes(cIdx)) classes.push('crab-hour');
         if (val > 5) classes.push('highlight-extreme');
         if (!isNaN(thresh) && val <= thresh && (targetHr === -1 || targetHr === cIdx)) {
           classes.push('highlight-custom');
@@ -537,21 +1520,10 @@
               this.classList.remove('highlight-custom');
             }
             
-            // Re-filter and re-render chart to see instant change
-            const filtered = rawData.filter(item => {
-              if (filterMode === 'day') return item.date === inputDay.value;
-              if (filterMode === 'week') {
-                if(!inputWeek.value) return false;
-                const targetW = parseInt(inputWeek.value.split('-W')[1]) || 1;
-                return getWeekNumber(new Date(item.date)) === targetW;
-              }
-              if (filterMode === 'month') {
-                if(!inputMonth.value) return false;
-                const targetM = parseInt(inputMonth.value.split('-')[1]) || 1;
-                return item.month === targetM;
-              }
-              if (filterMode === 'year') return true; 
-            });
+            const allInRange = getCurrentRangeData();
+            const filtered = allInRange.filter(passesDealFilter);
+            renderHome();
+            renderInsights(allInRange, filtered);
             renderChart(filtered);
           }
         });
@@ -572,9 +1544,10 @@
 
     if (filterMode === 'day') {
       document.getElementById('chartTitle').innerText = 'Biểu đồ Thủy triều Từng giờ (Ngày)';
-      const labels = Array.from({length:24}, (_,i) => `${i}:00`);
+      document.getElementById('chartTitle').innerText = 'Khung 16h-21h trong ngày';
+      const labels = FOCUS_HOURS.map(hour => `${hour}:00`);
       
-      const dataset = data.length > 0 ? data[0].hours : [];
+      const dataset = data.length > 0 ? FOCUS_HOURS.map(hour => data[0].hours[hour]) : [];
       chartConfig = {
         type: 'line',
         data: {
@@ -605,9 +1578,16 @@
         modeTitle = `So sánh Thủy triều Khung 24h (Năm 2026)`;
       }
       
+      if (filterMode === 'week') {
+        modeTitle = `So sánh khung 16h-21h (Tuần ${parseInt(inputWeek.value.split('-W')[1]) || 1})`;
+      } else if (filterMode === 'month') {
+        modeTitle = `So sánh khung 16h-21h (Tháng ${parseInt(inputMonth.value.split('-')[1]) || 1})`;
+      } else if (filterMode === 'year') {
+        modeTitle = 'So sánh khung 16h-21h (Năm 2026)';
+      }
       document.getElementById('chartTitle').innerText = modeTitle;
       
-      const labels = Array.from({length:24}, (_,i) => `${i}:00`);
+      const labels = FOCUS_HOURS.map(hour => `${hour}:00`);
       
       // Extended beautiful color palette
       const colors = [
@@ -630,7 +1610,7 @@
       
       const datasets = chartData.map((d, index) => ({
         label: d.date.slice(5),
-        data: d.hours,
+        data: FOCUS_HOURS.map(hour => d.hours[hour]),
         fill: false,
         borderColor: isYear ? `rgba(59, 130, 246, 0.15)` : `rgba(${colors[index % colors.length]}, 0.8)`,
         backgroundColor: isYear ? `rgba(59, 130, 246, 0.15)` : `rgba(${colors[index % colors.length]}, 0.8)`,
@@ -711,6 +1691,43 @@
     saveSettings();
     render();
   }));
+
+  dealButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      dealFilter = btn.dataset.deal;
+      dealButtons.forEach(item => item.classList.toggle('active', item === btn));
+      saveSettings();
+      render();
+    });
+  });
+
+  homeTodayBtn.addEventListener('click', () => {
+    const day = pickHomeDay();
+    if (!day) return;
+    inputDay.value = day.date;
+    dealFilter = 'all';
+    dealButtons.forEach(item => item.classList.toggle('active', item.dataset.deal === dealFilter));
+    setActiveBtn(btnDay, 'day');
+  });
+
+  homeWeekBtn.addEventListener('click', () => {
+    const day = pickHomeDay();
+    if (!day) return;
+    inputWeek.value = isoWeekValue(day.date);
+    dealFilter = 'all';
+    dealButtons.forEach(item => item.classList.toggle('active', item.dataset.deal === dealFilter));
+    setActiveBtn(btnWeek, 'week');
+    document.getElementById('chartTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  homeComboBtn.addEventListener('click', () => {
+    const day = pickHomeDay();
+    if (day) inputWeek.value = isoWeekValue(day.date);
+    dealFilter = 'combo';
+    dealButtons.forEach(item => item.classList.toggle('active', item.dataset.deal === dealFilter));
+    setActiveBtn(btnWeek, 'week');
+    document.getElementById('chartTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   function setActiveBtn(btn, mode) {
     [btnDay, btnWeek, btnMonth, btnYear].forEach(b => b.classList.remove('active'));
