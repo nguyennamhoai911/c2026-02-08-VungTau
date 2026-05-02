@@ -154,6 +154,14 @@
       font-size: 15px;
     }
 
+    .hero .quick-card:nth-of-type(2) {
+      order: 3;
+    }
+
+    .hero .quick-card:nth-of-type(3) {
+      order: 2;
+    }
+
     .quick-icon {
       width: 56px;
       height: 56px;
@@ -229,12 +237,45 @@
     }
 
     .date-pill {
-      display: inline-flex;
+      position: relative;
+      display: inline-grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
       gap: 8px;
+      max-width: calc(100% - 54px);
       color: #334766;
       font-size: 13px;
-      margin: 0 0 10px 54px;
+      font-weight: 800;
+      margin: 0 0 12px 54px;
+      padding: 10px 12px;
+      border: 1px solid #dce8f1;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(40, 75, 112, 0.08);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .date-pill:hover {
+      transform: translateY(-1px);
+      border-color: #b8d7e5;
+      box-shadow: 0 12px 24px rgba(40, 75, 112, 0.12);
+    }
+
+    .date-pill span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .date-pill input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
 
     .water-hero {
@@ -536,6 +577,100 @@
       position: relative;
     }
 
+    .tide-chart {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      grid-template-rows: 1fr 28px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff, #f8fcff);
+      border: 1px solid #e6eef5;
+    }
+
+    .tide-y-axis {
+      grid-row: 1;
+      grid-column: 1;
+      position: relative;
+      border-right: 1px solid #e2ebf3;
+      background: rgba(255, 255, 255, 0.96);
+      z-index: 2;
+    }
+
+    .tide-y-label {
+      position: absolute;
+      right: 7px;
+      transform: translateY(50%);
+      color: #5d6f87;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tide-corner {
+      grid-row: 2;
+      grid-column: 1;
+      border-top: 1px solid #e2ebf3;
+      border-right: 1px solid #e2ebf3;
+      background: rgba(255, 255, 255, 0.98);
+      display: grid;
+      place-items: center;
+      color: #6b7d92;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .tide-scroll {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(7, 150, 168, 0.55) transparent;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+    }
+
+    .tide-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .tide-scroll::-webkit-scrollbar-thumb {
+      background: rgba(7, 150, 168, 0.55);
+      border-radius: 999px;
+    }
+
+    .tide-inner {
+      width: 1152px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr 28px;
+    }
+
+    .tide-plot {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background:
+        linear-gradient(90deg, rgba(88, 112, 151, 0.1) 1px, transparent 1px) 0 0 / 48px 100%,
+        linear-gradient(180deg, rgba(88, 112, 151, 0.12) 1px, transparent 1px) 0 0 / 100% 25%;
+    }
+
+    .tide-time-row {
+      display: grid;
+      grid-template-columns: repeat(24, 48px);
+      align-items: center;
+      border-top: 1px solid #e2ebf3;
+      background: rgba(255, 255, 255, 0.98);
+    }
+
+    .tide-time-row span {
+      color: #5d6f87;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
     .detail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -666,6 +801,297 @@
 
     .legend-dot.bad {
       background: var(--danger);
+    }
+
+    .month-screen {
+      padding: 22px 16px 18px;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(7, 150, 168, 0.12), transparent 34%),
+        linear-gradient(180deg, #f7fcff 0%, #eef7fb 100%);
+    }
+
+    .month-screen .topbar {
+      grid-template-columns: 58px 1fr 58px;
+      margin: 0 0 24px;
+    }
+
+    .month-screen .topbar h2 {
+      font-size: 32px;
+      color: #0d2b58;
+      letter-spacing: 0;
+    }
+
+    .month-screen .icon-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(13, 43, 88, 0.08);
+      box-shadow: 0 12px 30px rgba(28, 65, 104, 0.12);
+      color: #092653;
+    }
+
+    .month-card {
+      display: grid;
+      grid-template-columns: 56px 1fr 56px;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(214, 227, 239, 0.9);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 42px rgba(40, 75, 112, 0.12);
+    }
+
+    .month-step {
+      width: 54px;
+      height: 54px;
+      border: 1px solid #dfe8f1;
+      border-radius: 12px;
+      background: #fff;
+      color: #0b2a57;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 18px rgba(33, 64, 96, 0.06);
+    }
+
+    .month-picker {
+      min-width: 0;
+      position: relative;
+      height: 56px;
+      display: grid;
+      grid-template-columns: 1fr 38px;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 0 20px;
+      border: 1px solid #dfe8f1;
+      border-radius: 12px;
+      background: #fff;
+      color: #0d2b58;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+    }
+
+    .month-title {
+      margin: 0;
+      text-align: center;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .month-picker input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .month-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: center;
+      gap: 0;
+      padding: 6px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(214, 227, 239, 0.9);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 42px rgba(40, 75, 112, 0.1);
+    }
+
+    .month-tabs button {
+      min-height: 60px;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      color: #5a6a82;
+      font-size: 16px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .month-tabs button.active {
+      color: #fff;
+      background: linear-gradient(135deg, #0ba9bc, #07839a);
+      box-shadow: 0 14px 26px rgba(5, 145, 165, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .month-tabs svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .month-calendar-card {
+      padding: 18px 14px 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(214, 227, 239, 0.9);
+      box-shadow: 0 18px 45px rgba(40, 75, 112, 0.12);
+    }
+
+    .month-screen .calendar {
+      gap: 8px 5px;
+    }
+
+    .month-screen .weekday {
+      min-height: 34px;
+      color: #0d2b58;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .month-screen .day-cell {
+      min-height: 70px;
+      border-radius: 13px;
+      color: #0d2b58;
+      gap: 3px;
+      padding: 8px 2px;
+      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .month-screen .day-cell:hover:not(:disabled) {
+      background: #eef9fb;
+      transform: translateY(-1px);
+    }
+
+    .month-screen .day-cell.muted {
+      color: #9aa7b8;
+    }
+
+    .month-screen .day-cell.selected {
+      color: #fff;
+      background: linear-gradient(180deg, #0faabd, #078398);
+      box-shadow: 0 12px 24px rgba(7, 139, 160, 0.28);
+      transform: translateY(-2px);
+    }
+
+    .month-screen .day-cell:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .month-screen .day-num {
+      font-size: 21px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .month-screen .day-score {
+      color: #52627a;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .month-screen .day-cell.selected .day-score {
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(226, 57, 66, 0.1);
+    }
+
+    .status-dot.good {
+      background: #2aa94f;
+      box-shadow: 0 0 0 3px rgba(42, 169, 79, 0.12);
+    }
+
+    .status-dot.medium {
+      background: #ef9200;
+      box-shadow: 0 0 0 3px rgba(239, 146, 0, 0.12);
+    }
+
+    .month-screen .day-cell.selected .status-dot {
+      background: #a8e04f;
+      box-shadow: none;
+    }
+
+    .month-legend-card {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(214, 227, 239, 0.9);
+      box-shadow: 0 18px 45px rgba(40, 75, 112, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .month-legend-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed #c9d7e4;
+    }
+
+    .month-legend-item {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 9px;
+      align-items: start;
+      color: #0d2b58;
+      font-weight: 800;
+      font-size: 15px;
+      min-width: 0;
+    }
+
+    .month-legend-item span:last-child {
+      color: #51627c;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .month-hint {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      gap: 14px;
+      padding-top: 16px;
+      color: #234169;
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .month-hint-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #d9f5f8;
+      color: #078da3;
+      font-weight: 800;
+    }
+
+    .month-wave {
+      position: absolute;
+      right: -12px;
+      bottom: -10px;
+      width: 128px;
+      height: 58px;
+      opacity: 0.35;
+      border: 4px solid #87dcea;
+      border-left: 0;
+      border-bottom: 0;
+      border-radius: 80% 20% 0 0;
+      transform: rotate(-8deg);
     }
 
     .badge {
@@ -951,7 +1377,7 @@
         <div class="quick-icon" aria-hidden="true">⚽</div>
         <div>
           <strong>Đá banh / hoạt động bãi biển</strong>
-          <span>Tốt trong khung 17h-18h, nước dưới 3m</span>
+          <span>Tốt trong khung 16:30-18:30, nước dưới 3m</span>
         </div>
       </div>
     </header>
@@ -965,10 +1391,12 @@
             <button class="icon-btn" type="button" aria-label="Thông báo"><i data-lucide="bell"></i></button>
           </div>
 
-          <div class="date-pill">
+          <label class="date-pill" aria-label="Chọn ngày xem lịch nước">
             <i data-lucide="calendar-days" aria-hidden="true"></i>
             <span id="homeDateLabel">Đang tải dữ liệu</span>
-          </div>
+            <i data-lucide="chevron-down" aria-hidden="true"></i>
+            <input id="homeDateInput" type="date" aria-label="Chọn ngày">
+          </label>
 
           <article class="water-hero" id="waterHero">
             <div>
@@ -980,9 +1408,11 @@
 
           <div class="stack" id="homeActivityCards"></div>
 
-          <h3 class="section-title">Tổng quan hôm nay</h3>
+          <h3 class="section-title">Biểu đồ mực nước hôm nay</h3>
           <div class="panel">
-            <div class="mini-timeline" id="miniTimeline"></div>
+            <div class="chart-box">
+              <div id="homeTideChart" class="tide-chart"></div>
+            </div>
           </div>
         </section>
 
@@ -1005,7 +1435,7 @@
 
           <div id="detailChartPanel" class="panel">
             <div class="chart-box">
-              <canvas id="tideChart"></canvas>
+              <div id="tideChart" class="tide-chart"></div>
             </div>
           </div>
 
@@ -1028,33 +1458,43 @@
           <div class="panel reason-list" id="reasonList"></div>
         </section>
 
-        <section id="screen-month" class="screen" data-screen="month">
+        <section id="screen-month" class="screen month-screen" data-screen="month">
           <div class="topbar">
-            <span></span>
+            <button class="icon-btn" type="button" data-action="go-home" aria-label="Quay lại"><i data-lucide="chevron-left"></i></button>
             <h2>Lịch tháng</h2>
             <button class="icon-btn" type="button" aria-label="Lọc"><i data-lucide="filter"></i></button>
           </div>
 
-          <div class="month-control">
-            <button class="icon-btn" type="button" data-month-step="-1" aria-label="Tháng trước"><i data-lucide="chevron-left"></i></button>
-            <input id="selectedMonthInput" type="month" aria-label="Chọn tháng">
-            <button class="icon-btn" type="button" data-month-step="1" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
+          <div class="month-card">
+            <button class="month-step" type="button" data-month-step="-1" aria-label="Tháng trước"><i data-lucide="chevron-left"></i></button>
+            <label class="month-picker">
+              <h3 class="month-title" id="monthTitle">Tháng 5 2026</h3>
+              <i data-lucide="calendar-days" aria-hidden="true"></i>
+              <input id="selectedMonthInput" type="month" aria-label="Chọn tháng">
+            </label>
+            <button class="month-step" type="button" data-month-step="1" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
           </div>
 
-          <div class="segmented three" role="tablist" aria-label="Hoạt động trong tháng">
-            <button class="active" type="button" data-month-activity="all">Tất cả</button>
+          <div class="month-tabs" role="tablist" aria-label="Hoạt động trong tháng">
+            <button class="active" type="button" data-month-activity="football">⚽ Đá banh</button>
             <button type="button" data-month-activity="crab">🦀 Bắt ghẹ</button>
-            <button type="button" data-month-activity="football">⚽ Đá banh</button>
           </div>
 
-          <div class="panel">
+          <div class="month-calendar-card">
             <div class="calendar" id="monthCalendar"></div>
           </div>
 
-          <div class="panel calendar-legend">
-            <div class="legend-item"><span class="legend-dot"></span> Tốt (từ 70%)</div>
-            <div class="legend-item"><span class="legend-dot medium"></span> Trung bình (40-69%)</div>
-            <div class="legend-item"><span class="legend-dot bad"></span> Kém (dưới 40%)</div>
+          <div class="month-legend-card">
+            <div class="month-legend-row">
+              <div class="month-legend-item"><span class="legend-dot"></span><div>Tốt<br><span>(từ 70%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(40-69%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot bad"></span><div>Kém<br><span>(dưới 40%)</span></div></div>
+            </div>
+            <div class="month-hint">
+              <div class="month-hint-icon">i</div>
+              <div>Chạm vào ngày để xem giờ nước đẹp và chi tiết hoạt động.</div>
+            </div>
+            <div class="month-wave" aria-hidden="true"></div>
           </div>
         </section>
 
@@ -1093,7 +1533,7 @@
               <div class="quick-icon" aria-hidden="true">⚽</div>
               <div>
                 <strong>Ngưỡng đá banh</strong>
-                <span>khung 17h-18h dưới <span data-setting-label="footballThreshold"></span></span>
+                <span>khung 16:30-18:30 dưới <span data-setting-label="footballThreshold"></span></span>
               </div>
               <div class="stepper">
                 <button type="button" data-step-setting="footballThreshold" data-delta="-0.1">-</button>
@@ -1171,15 +1611,19 @@
       selectedMonth: "",
       tab: "home",
       detailMode: "chart",
-      monthActivity: "all",
-      chart: null,
+      monthActivity: "football",
+      homeChart: null,
+      detailChart: null,
       settings: loadSettings()
     };
 
     const CRAB_TARGET_HOUR = 20;
     const CRAB_EVENING_HOURS = [18, 19, 20];
     const CRAB_EVENING_THRESHOLD = 2;
-    const FOOTBALL_HOURS = [17, 18];
+    const FOOTBALL_START_MINUTE = 16 * 60 + 30;
+    const FOOTBALL_END_MINUTE = 18 * 60 + 30;
+    const FOOTBALL_SAMPLE_MINUTES = [16 * 60 + 30, 17 * 60, 17 * 60 + 30, 18 * 60, 18 * 60 + 30];
+    const FOOTBALL_TABLE_HOURS = [17, 18];
 
     const ACTIVITY_META = {
       crab: {
@@ -1198,7 +1642,7 @@
         tone: "blue",
         thresholdKey: "footballThreshold",
         fallbackThreshold: 3,
-        description: "Chỉ phân tích khung 17h-18h, khi còn đủ sáng và nước dưới 3m."
+        description: "Chỉ phân tích khung 16:30-18:30 hằng ngày, khi còn đủ sáng và nước dưới 3m."
       },
       rocks: {
         title: "Đi bãi đá",
@@ -1364,7 +1808,7 @@
       }
 
       if (activityId === "football") {
-        return FOOTBALL_HOURS;
+        return FOOTBALL_TABLE_HOURS;
       }
 
       return [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
@@ -1382,6 +1826,17 @@
       const hours = Math.floor(normalized / 60);
       const mins = normalized % 60;
       return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+    }
+
+    function heightAtMinute(day, minute) {
+      const hour = Math.floor(minute / 60);
+      const nextHour = Math.min(23, hour + 1);
+      const base = day.hours[hour];
+      const next = day.hours[nextHour];
+      if (!Number.isFinite(base)) return null;
+      if (hour === nextHour || !Number.isFinite(next)) return base;
+      const ratio = (minute - hour * 60) / 60;
+      return base + ((next - base) * ratio);
     }
 
     function getBestLow(day) {
@@ -1424,6 +1879,7 @@
 
     function assessActivity(day, activityId) {
       if (activityId === "crab") return assessCrab(day);
+      if (activityId === "football") return assessFootball(day);
 
       const threshold = getThreshold(activityId);
       const hours = getPreferredHours(activityId);
@@ -1443,7 +1899,6 @@
       score = Math.round(Math.max(0, Math.min(100, score)));
       const bestLow = getBestLow(day);
       let window = bestWindowFromHours(day, activityId);
-      if (activityId === "football") window = "17:00 - 18:00";
       if (bestLow && bestLow.height <= threshold && activityId !== "football") {
         const center = timeToMinutes(bestLow.time);
         if (center !== null) window = `${minutesToTime(center - 75)} - ${minutesToTime(center + 75)}`;
@@ -1509,8 +1964,37 @@
       };
     }
 
+    function assessFootball(day) {
+      const threshold = getThreshold("football");
+      const samples = FOOTBALL_SAMPLE_MINUTES
+        .map(minute => ({ minute, height: heightAtMinute(day, minute) }))
+        .filter(sample => Number.isFinite(sample.height));
+      const values = samples.map(sample => sample.height);
+      const min = values.length ? Math.min(...values) : null;
+      const max = values.length ? Math.max(...values) : null;
+      const avgScore = values.length
+        ? values.reduce((sum, value) => sum + scoreBelow(value, threshold, 36), 0) / values.length
+        : 0;
+      const allOk = values.length === FOOTBALL_SAMPLE_MINUTES.length && values.every(value => value <= threshold);
+      let score = allOk ? 88 + Math.min(12, Math.max(0, threshold - max) * 8) : Math.min(69, avgScore);
+      score = Math.round(Math.max(0, Math.min(100, score)));
+
+      return {
+        activityId: "football",
+        threshold,
+        score,
+        min,
+        max,
+        bestLow: null,
+        window: `${minutesToTime(FOOTBALL_START_MINUTE)} - ${minutesToTime(FOOTBALL_END_MINUTE)}`,
+        frameText: `${formatHeight(min)} - ${formatHeight(max)}`,
+        tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+        label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận"
+      };
+    }
+
     function getOverallScore(day) {
-      const scores = ["crab", "football", "rocks"].map(id => assessActivity(day, id).score);
+      const scores = ["football", "crab", "rocks"].map(id => assessActivity(day, id).score);
       return Math.round(scores.reduce((sum, value) => sum + value, 0) / scores.length);
     }
 
@@ -1525,29 +2009,28 @@
       const fill = Math.max(22, Math.min(78, (current / 4.5) * 70));
 
       $("#homeDateLabel").textContent = dateLabel(day.date);
+      $("#homeDateInput").value = day.date;
       $("#currentWater").textContent = formatHeight(current);
       $("#waterHero").style.setProperty("--water-fill", `${fill}%`);
       $("#waterTrend").innerHTML = `${trendUp ? "Đang lên nhẹ" : "Đang xuống nhẹ"} <i data-lucide="${trendUp ? "arrow-up" : "arrow-down"}"></i>`;
 
-      $("#homeActivityCards").innerHTML = ["crab", "football"].map(id => activityCard(day, id)).join("");
-
-      const timelineHours = [0, 6, 12, 18, 23];
-      $("#miniTimeline").innerHTML = timelineHours.map(hour => `
-        <div class="mini-point">
-          <span>${String(hour).padStart(2, "0")}:00</span>
-          <span class="mini-dot"></span>
-          <strong>${formatHeight(day.hours[hour])}</strong>
-        </div>
-      `).join("");
+      $("#homeActivityCards").innerHTML = ["football", "crab"].map(id => activityCard(day, id)).join("");
+      renderTideChart(day, "homeTideChart", "homeChart", false);
     }
 
     function activityCard(day, activityId) {
       const meta = ACTIVITY_META[activityId];
       const assessment = assessActivity(day, activityId);
-      const secondFactLabel = activityId === "crab" ? "Mực nước lúc 20h" : "Mực nước thấp nhất";
-      const secondFactValue = activityId === "crab"
-        ? formatHeight(assessment.focusHeight)
-        : `${formatHeight(assessment.bestLow?.height)} lúc ${assessment.bestLow?.time || "--"}`;
+      let secondFactLabel = "Mực nước thấp nhất";
+      let secondFactValue = `${formatHeight(assessment.bestLow?.height)} lúc ${assessment.bestLow?.time || "--"}`;
+      if (activityId === "crab") {
+        secondFactLabel = "Mực nước lúc 20h";
+        secondFactValue = formatHeight(assessment.focusHeight);
+      }
+      if (activityId === "football") {
+        secondFactLabel = "Mực nước 16:30-18:30";
+        secondFactValue = assessment.frameText;
+      }
       return `
         <article class="activity-card ${meta.tone}" data-open-detail="${activityId}">
           <div class="activity-art" aria-hidden="true">${meta.icon}</div>
@@ -1569,10 +2052,10 @@
       const day = getDay();
       if (!day) return;
       $("#selectedDateInput").value = day.date;
-      renderChart(day);
+      renderTideChart(day, "tideChart", "detailChart", true);
       renderHourTable(day);
 
-      $("#detailActivityCards").innerHTML = ["crab", "football"].map(id => {
+      $("#detailActivityCards").innerHTML = ["football", "crab"].map(id => {
         const meta = ACTIVITY_META[id];
         const assessment = assessActivity(day, id);
         return `
@@ -1589,96 +2072,55 @@
       const low = getBestLow(day);
       $("#reasonList").innerHTML = `
         <div><span class="dot-ok">✓</span><span>Nước thấp nhất ${formatHeight(low?.height)} lúc ${low?.time || "--"}, thuận lợi nhất cho các hoạt động cần nước rút.</span></div>
+        <div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>
         <div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>
-        <div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung 17h-18h, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>
       `;
     }
 
-    function renderChart(day) {
-      const canvas = $("#tideChart");
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (state.chart) state.chart.destroy();
+    function renderTideChart(day, chartId) {
+      const root = $(`#${chartId}`);
+      if (!root) return;
 
-      const labels = Array.from({ length: 24 }, (_, hour) => `${String(hour).padStart(2, "0")}:00`);
+      const hourWidth = 48;
+      const width = hourWidth * 24;
+      const height = 220;
+      const maxY = 5;
+      const y = value => height - ((Math.max(0, Math.min(maxY, value || 0)) / maxY) * height);
+      const x = hour => (hour * hourWidth) + (hourWidth / 2);
+      const points = day.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const area = `M ${x(0)} ${height} L ${points.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
       const crabThreshold = getThreshold("crab");
       const footballThreshold = getThreshold("football");
+      const labels = [5, 4, 3, 2, 1, 0];
+      const timeLabels = Array.from({ length: 24 }, (_, hour) => `<span>${String(hour).padStart(2, "0")}h</span>`).join("");
+      const yLabels = labels.map(value => `
+        <span class="tide-y-label" style="bottom: ${(value / maxY) * 100}%">${formatHeight(value)}</span>
+      `).join("");
 
-      state.chart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Mực nước",
-              data: day.hours,
-              borderColor: "#176bd6",
-              backgroundColor: "rgba(23, 107, 214, 0.12)",
-              fill: true,
-              tension: 0.42,
-              pointRadius: 0,
-              borderWidth: 2.5
-            },
-            {
-              label: `20h dưới ${formatThreshold(crabThreshold)} (bắt ghẹ)`,
-              data: Array(24).fill(crabThreshold),
-              borderColor: "#25a550",
-              borderDash: [6, 5],
-              pointRadius: 0,
-              borderWidth: 1.5
-            },
-            {
-              label: `18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)}`,
-              data: Array(24).fill(CRAB_EVENING_THRESHOLD),
-              borderColor: "#f0a61a",
-              borderDash: [4, 5],
-              pointRadius: 0,
-              borderWidth: 1.2
-            },
-            {
-              label: `17h-18h dưới ${formatThreshold(footballThreshold)} (đá banh)`,
-              data: Array(24).fill(footballThreshold),
-              borderColor: "#176bd6",
-              borderDash: [6, 5],
-              pointRadius: 0,
-              borderWidth: 1.5
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: "top",
-              labels: {
-                usePointStyle: true,
-                boxWidth: 8,
-                font: { size: 10, family: "Inter" }
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ${formatHeight(context.parsed.y)}`
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: { maxTicksLimit: 5, font: { size: 10 } }
-            },
-            y: {
-              suggestedMin: 0,
-              suggestedMax: 4.5,
-              ticks: {
-                callback: value => formatHeight(value),
-                font: { size: 10 }
-              },
-              grid: { color: "rgba(88, 112, 151, 0.14)" }
-            }
-          }
-        }
+      root.innerHTML = `
+        <div class="tide-y-axis">${yLabels}</div>
+        <div class="tide-corner">${state.settings.unit}</div>
+        <div class="tide-scroll">
+          <div class="tide-inner">
+            <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước 24 giờ">
+              <path d="${area}" fill="rgba(23, 107, 214, 0.12)"></path>
+              <polyline points="${points}" fill="none" stroke="#176bd6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="2" stroke-dasharray="8 7"></line>
+              <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="2" stroke-dasharray="6 7"></line>
+              <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="2" stroke-dasharray="8 7"></line>
+              ${day.hours.map((value, hour) => `<circle cx="${x(hour)}" cy="${y(value)}" r="${hour >= 16 && hour <= 22 ? 4 : 2.6}" fill="#176bd6"></circle>`).join("")}
+              ${day.hours.map((value, hour) => `
+                <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#27466d" font-size="11" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
+              `).join("")}
+            </svg>
+            <div class="tide-time-row">${timeLabels}</div>
+          </div>
+        </div>
+      `;
+
+      const scroll = $(".tide-scroll", root);
+      requestAnimationFrame(() => {
+        if (scroll) scroll.scrollLeft = hourWidth * 16;
       });
     }
 
@@ -1687,7 +2129,7 @@
         const notes = [];
         if (CRAB_EVENING_HOURS.includes(hour) && Number.isFinite(height) && height <= CRAB_EVENING_THRESHOLD) notes.push("Nước rút bắt ghẹ");
         if (hour === CRAB_TARGET_HOUR && Number.isFinite(height) && height <= getThreshold("crab")) notes.push("20h đạt chuẩn bắt ghẹ");
-        if (FOOTBALL_HOURS.includes(hour) && Number.isFinite(height) && height <= getThreshold("football")) notes.push("Đá banh");
+        if (FOOTBALL_TABLE_HOURS.includes(hour) && Number.isFinite(height) && height <= getThreshold("football")) notes.push("Đá banh");
         return `
           <tr>
             <td>${String(hour).padStart(2, "0")}:00</td>
@@ -1702,6 +2144,9 @@
       if (!state.selectedMonth) return;
       $("#selectedMonthInput").value = state.selectedMonth;
       const [year, month] = state.selectedMonth.split("-").map(Number);
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const title = $("#monthTitle");
+      if (title) title.textContent = `${monthNames[month - 1]} ${year}`;
       const firstDay = new Date(year, month - 1, 1);
       const start = new Date(firstDay);
       const offset = (firstDay.getDay() + 6) % 7;
@@ -1717,11 +2162,12 @@
         const score = item ? monthScore(item) : null;
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
-        const scoreClass = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
-            <span class="day-score ${scoreClass}">${score !== null ? `${score}%` : "-"}</span>
+            <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
+            <span class="status-dot ${status}" aria-hidden="true"></span>
           </button>
         `;
       }
@@ -1737,14 +2183,14 @@
     function renderActivities() {
       const day = getDay();
       if (!day) return;
-      const cards = ["crab", "football", "rocks"].map(id => {
+      const cards = ["football", "crab", "rocks"].map(id => {
         const meta = ACTIVITY_META[id];
         const assessment = assessActivity(day, id);
         const badgeClass = id === "football" ? "blue" : id === "rocks" ? "orange" : "";
         const badgeText = id === "crab"
           ? `20h dưới ${formatThreshold(assessment.threshold)}`
           : id === "football"
-            ? `17h-18h dưới ${formatThreshold(assessment.threshold)}`
+            ? `16:30-18:30 dưới ${formatThreshold(assessment.threshold)}`
             : `Dưới ${formatThreshold(assessment.threshold)}`;
         return `
           <article class="activity-card compact ${meta.tone}" data-open-detail="${id}">
@@ -1813,6 +2259,14 @@
       $$("[data-action='go-home']").forEach(button => button.addEventListener("click", () => setTab("home")));
 
       $("#selectedDateInput").addEventListener("change", event => {
+        if (getDay(event.target.value)) {
+          state.selectedDate = event.target.value;
+          state.selectedMonth = event.target.value.slice(0, 7);
+          renderAll();
+        }
+      });
+
+      $("#homeDateInput").addEventListener("change", event => {
         if (getDay(event.target.value)) {
           state.selectedDate = event.target.value;
           state.selectedMonth = event.target.value.slice(0, 7);
@@ -1900,7 +2354,7 @@
       $$("[data-detail-mode]").forEach(button => button.classList.toggle("active", button.dataset.detailMode === mode));
       $("#detailChartPanel").hidden = mode !== "chart";
       $("#detailTablePanel").hidden = mode !== "table";
-      if (mode === "chart") renderChart(getDay());
+      if (mode === "chart") renderTideChart(getDay(), "tideChart", "detailChart", true);
     }
 
     async function init() {
