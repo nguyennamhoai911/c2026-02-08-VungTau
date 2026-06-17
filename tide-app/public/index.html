@@ -1809,13 +1809,7 @@
             <div class="datepicker-calendar" id="pickerCalendarGrid"></div>
           </div>
 
-          <article class="water-hero" id="waterHero">
-            <div>
-              <small>Mực nước hiện tại</small>
-              <div class="water-value" id="currentWater">--</div>
-              <div class="water-trend" id="waterTrend">Đang cập nhật</div>
-            </div>
-          </article>
+
 
           <div class="stack" id="homeActivityCards"></div>
 
@@ -2532,9 +2526,6 @@
       const nextBtn = $("#nextDayBtn");
       if (prevBtn) prevBtn.disabled = currentIndex <= 0;
       if (nextBtn) nextBtn.disabled = currentIndex === -1 || currentIndex >= state.data.length - 1;
-      $("#currentWater").textContent = formatHeight(current);
-      $("#waterHero").style.setProperty("--water-fill", `${fill}%`);
-      $("#waterTrend").innerHTML = `${trendUp ? "Đang lên nhẹ" : "Đang xuống nhẹ"} <i data-lucide="${trendUp ? "arrow-up" : "arrow-down"}"></i>`;
       const { year, month, day: dVal } = dateParts(day.date);
       const d = new Date(year, month - 1, dVal);
       const dayOfWeek = d.getDay();
