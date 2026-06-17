@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lịch Nước Vũng Tàu</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -34,14 +34,14 @@
       box-sizing: border-box;
     }
 
-    html {
-      min-height: 100%;
-      background: #f6fbfd;
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
     }
 
     body {
-      min-height: 100vh;
-      margin: 0;
       color: var(--ink);
       background:
         radial-gradient(circle at 8% 8%, rgba(15, 150, 168, 0.14), transparent 28%),
@@ -59,17 +59,14 @@
     }
 
     .page {
-      width: min(1440px, 100%);
-      margin: 0 auto;
-      padding: 28px 22px 36px;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
 
     .hero {
-      display: grid;
-      grid-template-columns: minmax(260px, 1fr) auto auto;
-      align-items: center;
-      gap: 28px;
-      margin-bottom: 32px;
+      display: none !important;
     }
 
     .brand {
@@ -175,26 +172,28 @@
     .device-wrap {
       display: flex;
       justify-content: center;
+      height: 100%;
+      width: 100%;
     }
 
     .phone {
-      width: min(420px, 100%);
-      height: 820px;
-      max-height: calc(100vh - 34px);
+      width: min(430px, 100%);
+      height: 100%;
+      height: 100dvh;
       background: var(--card);
-      border: 1px solid rgba(15, 42, 86, 0.1);
-      border-radius: 32px;
+      border-left: 1px solid rgba(15, 42, 86, 0.08);
+      border-right: 1px solid rgba(15, 42, 86, 0.08);
       box-shadow: var(--shadow);
       overflow: hidden;
       display: grid;
-      grid-template-rows: 1fr 72px;
+      grid-template-rows: 1fr auto;
       position: relative;
     }
 
     .screen {
       display: none;
       overflow-y: auto;
-      padding: 18px 14px 18px;
+      padding: 0 14px 18px;
       background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
     }
 
@@ -207,6 +206,17 @@
     }
 
     .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffff;
+      padding-top: 12px;
+      margin-left: -14px;
+      margin-right: -14px;
+      padding-left: 14px;
+      padding-right: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(217, 228, 238, 0.5);
       display: grid;
       grid-template-columns: 40px 1fr 40px;
       align-items: center;
@@ -236,18 +246,60 @@
       background: #eef7fb;
     }
 
+    .date-navigator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 0 0 16px 0;
+      width: 100%;
+    }
+
+    .nav-date-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid #dce8f1;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: #334766;
+      box-shadow: 0 8px 20px rgba(40, 75, 112, 0.08);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      padding: 0;
+    }
+
+    .nav-date-btn:hover {
+      transform: translateY(-1px);
+      border-color: #b8d7e5;
+      box-shadow: 0 12px 24px rgba(40, 75, 112, 0.12);
+      background: #f4fbff;
+    }
+
+    .nav-date-btn:active {
+      transform: translateY(0);
+    }
+
+    .nav-date-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+      border-color: #e2ecf5;
+      background: #fafcff;
+    }
+
     .date-pill {
       position: relative;
-      display: inline-grid;
-      grid-template-columns: auto 1fr auto;
+      display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      max-width: calc(100% - 54px);
       color: #334766;
       font-size: 13px;
       font-weight: 800;
-      margin: 0 0 12px 54px;
-      padding: 10px 12px;
+      padding: 10px 16px;
       border: 1px solid #dce8f1;
       border-radius: 999px;
       background: #fff;
@@ -262,11 +314,81 @@
       box-shadow: 0 12px 24px rgba(40, 75, 112, 0.12);
     }
 
+    /* Custom Datepicker Popover */
+    .custom-datepicker {
+      position: absolute;
+      top: 108px;
+      left: 14px;
+      right: 14px;
+      background: #ffffff;
+      border: 1px solid #d9e4ee;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(13, 43, 88, 0.16);
+      z-index: 100;
+      padding: 16px;
+      display: none;
+    }
+
+    .custom-datepicker.active {
+      display: block;
+    }
+
+    .datepicker-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .datepicker-title {
+      font-weight: 800;
+      color: #0d2b58;
+      font-size: 15px;
+    }
+
+    .datepicker-step {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(13, 43, 88, 0.08);
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: #0d2b58;
+    }
+
+    .datepicker-step:hover {
+      background: #f4f8fb;
+    }
+
+    .datepicker-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .datepicker-calendar .weekday {
+      font-size: 11px;
+      font-weight: 800;
+      color: #344b67;
+      min-height: 28px;
+    }
+
+    .datepicker-calendar .day-cell {
+      min-height: 52px;
+    }
+
     .date-pill span {
       min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .date-pill i {
+      pointer-events: none;
     }
 
     .date-pill input {
@@ -276,17 +398,18 @@
       height: 100%;
       opacity: 0;
       cursor: pointer;
+      z-index: 2;
     }
 
     .water-hero {
-      min-height: 174px;
+      min-height: 128px;
       color: #fff;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
       background: linear-gradient(160deg, #0c9bb5 0%, #086b91 100%);
       box-shadow: 0 16px 30px rgba(5, 126, 151, 0.24);
-      padding: 26px 18px;
+      padding: 16px 14px;
       display: grid;
       place-items: center;
       text-align: center;
@@ -312,14 +435,14 @@
 
     .water-hero small {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       opacity: 0.9;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-weight: 600;
     }
 
     .water-value {
-      font-size: 46px;
+      font-size: 36px;
       line-height: 1;
       font-weight: 800;
     }
@@ -328,8 +451,8 @@
       display: inline-flex;
       gap: 6px;
       align-items: center;
-      margin-top: 12px;
-      font-size: 14px;
+      margin-top: 8px;
+      font-size: 13px;
       font-weight: 700;
     }
 
@@ -337,6 +460,42 @@
       display: grid;
       gap: 12px;
       margin-top: 12px;
+    }
+
+    #homeActivityCards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    #homeActivityCards .activity-card {
+      grid-template-columns: 1fr;
+      padding: 12px 10px;
+      gap: 8px;
+    }
+
+    #homeActivityCards .activity-art {
+      min-height: 72px;
+      font-size: 38px;
+    }
+
+    #homeActivityCards .activity-title h3 {
+      font-size: 14px;
+    }
+
+    #homeActivityCards .score {
+      font-size: 26px;
+    }
+
+    #homeActivityCards .facts {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    #homeActivityCards .fact {
+      border-top: 1px solid #e7eef5;
+      padding-top: 6px;
     }
 
     .activity-card {
@@ -804,7 +963,7 @@
     }
 
     .month-screen {
-      padding: 22px 16px 18px;
+      padding: 0 16px 18px;
       background:
         radial-gradient(circle at 50% -10%, rgba(7, 150, 168, 0.12), transparent 34%),
         linear-gradient(180deg, #f7fcff 0%, #eef7fb 100%);
@@ -812,7 +971,13 @@
 
     .month-screen .topbar {
       grid-template-columns: 58px 1fr 58px;
-      margin: 0 0 24px;
+      background: #f7fcff;
+      padding-top: 12px;
+      margin-left: -16px;
+      margin-right: -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+      margin-bottom: 24px;
     }
 
     .month-screen .topbar h2 {
@@ -1272,12 +1437,12 @@
     }
 
     .bottom-nav {
-      height: 72px;
+      height: calc(72px + env(safe-area-inset-bottom, 0px));
       border-top: 1px solid #e5edf4;
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       background: rgba(255,255,255,0.96);
-      padding: 6px 8px 8px;
+      padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
     }
 
     .nav-btn {
@@ -1312,34 +1477,7 @@
       font-size: 13px;
     }
 
-    @media (min-width: 920px) {
-      .device-wrap {
-        min-height: 820px;
-      }
-    }
 
-    @media (max-width: 900px) {
-      body {
-        background: #fff;
-      }
-
-      .page {
-        padding: 0;
-      }
-
-      .hero {
-        display: none;
-      }
-
-      .phone {
-        width: 100%;
-        height: 100vh;
-        max-height: none;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
-      }
-    }
 
     @media (max-width: 360px) {
       .activity-card {
@@ -1353,6 +1491,223 @@
       .score {
         font-size: 28px;
       }
+    }
+
+    /* Chế độ so sánh ngày (Compare Mode) */
+    .compare-dates-selector {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .compare-date-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: grid;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04);
+    }
+
+    .compare-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .compare-date-box input {
+      border: 0;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      color: #27466d;
+      width: 100%;
+      outline: none;
+    }
+
+    .compare-divider {
+      color: var(--teal);
+      background: #edf9fb;
+      width: 30px;
+      height: 30px;
+      border-radius: 99px;
+      display: grid;
+      place-items: center;
+    }
+
+    .compare-divider svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .compare-chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4b607a;
+    }
+
+    .legend-line-color {
+      width: 16px;
+      height: 4px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    .legend-line-color.a {
+      background: #176bd6;
+    }
+
+    .legend-line-color.b {
+      background: #ff7e15;
+    }
+
+    .compare-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .compare-activity-row {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04);
+    }
+
+    .compare-activity-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid #f0f5fa;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    .compare-activity-header span {
+      font-size: 16px;
+    }
+
+    .compare-activity-header strong {
+      font-size: 13px;
+      color: #27466d;
+    }
+
+    .compare-activity-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-activity-col {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 2px;
+    }
+
+    .compare-score {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .compare-window {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .compare-vs {
+      font-size: 9px;
+      font-weight: 800;
+      color: #b0c2d6;
+      background: #f4f8fc;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px dashed #cfdeeb;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      text-align: left;
+    }
+
+    .compare-table th, .compare-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f0f5fa;
+    }
+
+    .compare-table th {
+      background: #f8fbfe;
+      color: #27466d;
+      font-weight: 800;
+    }
+
+    .col-a-text {
+      color: #176bd6;
+      font-weight: 700;
+    }
+
+    .col-b-text {
+      color: #ff7e15;
+      font-weight: 700;
+    }
+
+    /* Comparison Page Interactive Guides */
+    .compare-cursor-line {
+      position: absolute;
+      top: 0;
+      bottom: 28px;
+      width: 2px;
+      background: rgba(7, 150, 168, 0.3);
+      border-left: 1.5px dashed var(--teal);
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+    }
+
+    .compare-tooltip {
+      position: absolute;
+      top: 160px;
+      background: rgba(15, 42, 86, 0.95);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      pointer-events: none;
+      display: none;
+      z-index: 15;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(13, 27, 48, 0.25);
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: center;
+    }
+
+    .tide-inner-compare {
+      width: 1152px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
   </style>
 </head>
@@ -1386,17 +1741,35 @@
       <div class="phone" role="application" aria-label="Lịch Nước Vũng Tàu">
         <section id="screen-home" class="screen active" data-screen="home">
           <div class="topbar">
-            <button class="icon-btn" type="button" aria-label="Menu"><i data-lucide="menu"></i></button>
+            <span></span>
             <h2>Lịch Nước Vũng Tàu</h2>
-            <button class="icon-btn" type="button" aria-label="Thông báo"><i data-lucide="bell"></i></button>
+            <span></span>
           </div>
 
-          <label class="date-pill" aria-label="Chọn ngày xem lịch nước">
-            <i data-lucide="calendar-days" aria-hidden="true"></i>
-            <span id="homeDateLabel">Đang tải dữ liệu</span>
-            <i data-lucide="chevron-down" aria-hidden="true"></i>
-            <input id="homeDateInput" type="date" aria-label="Chọn ngày">
-          </label>
+          <div class="date-navigator">
+            <button class="nav-date-btn prev" id="prevDayBtn" aria-label="Ngày trước" type="button">
+              <i data-lucide="chevron-left"></i>
+            </button>
+            <div class="date-pill" id="homeDatePill" aria-label="Chọn ngày xem lịch nước">
+              <i data-lucide="calendar-days" aria-hidden="true"></i>
+              <span id="homeDateLabel">Đang tải dữ liệu</span>
+              <i data-lucide="chevron-down" aria-hidden="true"></i>
+              <input id="homeDateInput" type="hidden">
+            </div>
+            <button class="nav-date-btn next" id="nextDayBtn" aria-label="Ngày sau" type="button">
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Custom Datepicker Popover -->
+          <div class="custom-datepicker" id="customDatePicker">
+            <div class="datepicker-header">
+              <button class="datepicker-step" type="button" id="prevPickerMonth" aria-label="Tháng trước"><i data-lucide="chevron-left"></i></button>
+              <span class="datepicker-title" id="pickerMonthTitle">Tháng 6 2026</span>
+              <button class="datepicker-step" type="button" id="nextPickerMonth" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
+            </div>
+            <div class="datepicker-calendar" id="pickerCalendarGrid"></div>
+          </div>
 
           <article class="water-hero" id="waterHero">
             <div>
@@ -1408,7 +1781,7 @@
 
           <div class="stack" id="homeActivityCards"></div>
 
-          <h3 class="section-title">Biểu đồ mực nước hôm nay</h3>
+          <h3 class="section-title" id="homeChartTitle">Biểu đồ mực nước hôm nay</h3>
           <div class="panel">
             <div class="chart-box">
               <div id="homeTideChart" class="tide-chart"></div>
@@ -1593,12 +1966,70 @@
           </div>
         </section>
 
+        <section id="screen-compare" class="screen" data-screen="compare">
+          <div class="topbar">
+            <button class="icon-btn" type="button" data-action="go-home" aria-label="Quay lại"><i data-lucide="arrow-left"></i></button>
+            <h2>So sánh ngày</h2>
+            <button class="icon-btn" style="opacity: 0" disabled><i data-lucide="bell"></i></button>
+          </div>
+
+          <div class="compare-dates-selector">
+            <div class="compare-date-pill" id="comparePillA" style="position: relative; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04); cursor: pointer; flex: 1; min-width: 0; gap: 8px;">
+              <span id="compareDateLabelA" style="font-size: 13px; font-weight: 700; color: #27466d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</span>
+              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #607086; flex-shrink: 0;"></i>
+              <input id="compareDateA" type="date" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
+            </div>
+            <div class="compare-divider"><i data-lucide="arrow-left-right"></i></div>
+            <div class="compare-date-pill" id="comparePillB" style="position: relative; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04); cursor: pointer; flex: 1; min-width: 0; gap: 8px;">
+              <span id="compareDateLabelB" style="font-size: 13px; font-weight: 700; color: #27466d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</span>
+              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #607086; flex-shrink: 0;"></i>
+              <input id="compareDateB" type="date" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
+            </div>
+          </div>
+
+          <div class="panel" style="position: relative;">
+            <h3 class="section-title" style="margin-top: 0">So sánh mực nước</h3>
+            
+            <div id="compareHeaderA" style="font-size: 13px; font-weight: 800; color: #176bd6; margin: 12px 0 6px 4px;"></div>
+            <div class="chart-box" style="height: 178px; margin-bottom: 16px;">
+              <div id="compareTideChartA" class="tide-chart" style="height: 100%;"></div>
+            </div>
+
+            <div id="compareTooltip" class="compare-tooltip" style="top: 238px;"></div>
+
+            <div id="compareHeaderB" style="font-size: 13px; font-weight: 800; color: #ff7e15; margin: 12px 0 6px 4px;"></div>
+            <div class="chart-box" style="height: 178px; margin-bottom: 12px;">
+              <div id="compareTideChartB" class="tide-chart" style="height: 100%;"></div>
+            </div>
+
+            <div class="compare-chart-legend" id="compareChartLegend">
+              <span class="legend-item"><span class="legend-line-color a"></span>Ngày A</span>
+              <span class="legend-item"><span class="legend-line-color b"></span>Ngày B</span>
+            </div>
+          </div>
+
+          <h3 class="section-title">So sánh mức độ phù hợp</h3>
+          <div class="compare-list" id="compareActivities"></div>
+          
+          <h3 class="section-title">So sánh đỉnh triều cực trị</h3>
+          <div class="panel" style="padding: 0; overflow: hidden; margin-bottom: 14px;">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th>Đặc trưng</th>
+                  <th id="compareTableHeadA" class="col-a-text">Ngày A</th>
+                  <th id="compareTableHeadB" class="col-b-text">Ngày B</th>
+                </tr>
+              </thead>
+              <tbody id="compareExtremesBody"></tbody>
+            </table>
+          </div>
+        </section>
+
         <nav class="bottom-nav" aria-label="Điều hướng chính">
           <button class="nav-btn active" type="button" data-tab="home"><i data-lucide="home"></i><span>Hôm nay</span></button>
           <button class="nav-btn" type="button" data-tab="month"><i data-lucide="calendar-days"></i><span>Lịch tháng</span></button>
-          <button class="nav-btn" type="button" data-tab="activities"><i data-lucide="waves"></i><span>Hoạt động</span></button>
-          <button class="nav-btn" type="button" data-tab="settings"><i data-lucide="settings"></i><span>Cài đặt</span></button>
-          <button class="nav-btn" type="button" data-tab="detail"><i data-lucide="line-chart"></i><span>Chi tiết</span></button>
+          <button class="nav-btn" type="button" data-tab="compare"><i data-lucide="arrow-left-right"></i><span>So sánh</span></button>
         </nav>
       </div>
     </main>
@@ -1609,6 +2040,9 @@
       data: [],
       selectedDate: "",
       selectedMonth: "",
+      compareDateA: "",
+      compareDateB: "",
+      pickerMonth: "",
       tab: "home",
       detailMode: "chart",
       monthActivity: "football",
@@ -1768,6 +2202,26 @@
       return state.data.find(item => item.date === date) || state.data[0] || null;
     }
 
+    function setSelectedDate(date) {
+      if (!getDay(date)) return;
+      state.selectedDate = date;
+      state.selectedMonth = date.slice(0, 7);
+      localStorage.setItem("vungTauTideSelectedDate", state.selectedDate);
+      localStorage.setItem("vungTauTideSelectedMonth", state.selectedMonth);
+    }
+
+    function setCompareDateA(date) {
+      if (!getDay(date)) return;
+      state.compareDateA = date;
+      localStorage.setItem("vungTauTideCompareDateA", date);
+    }
+
+    function setCompareDateB(date) {
+      if (!getDay(date)) return;
+      state.compareDateB = date;
+      localStorage.setItem("vungTauTideCompareDateB", date);
+    }
+
     function dateParts(date) {
       const [year, month, day] = date.split("-").map(Number);
       return { year, month, day };
@@ -1782,8 +2236,11 @@
     }
 
     function shortDateLabel(date) {
-      const { day, month } = dateParts(date);
-      return `${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}`;
+      if (!date) return "";
+      const { year, month, day } = dateParts(date);
+      const d = new Date(year, month - 1, day);
+      const shortDays = ["CN", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+      return `${shortDays[d.getDay()]}, ${String(day).padStart(2, "0")}/${String(month).padStart(2, "0")}/${year}`;
     }
 
     function formatHeight(value) {
@@ -1836,7 +2293,8 @@
       if (!Number.isFinite(base)) return null;
       if (hour === nextHour || !Number.isFinite(next)) return base;
       const ratio = (minute - hour * 60) / 60;
-      return base + ((next - base) * ratio);
+      const cosRatio = (1 - Math.cos(ratio * Math.PI)) / 2;
+      return base + ((next - base) * cosRatio);
     }
 
     function getBestLow(day) {
@@ -1976,7 +2434,20 @@
         ? values.reduce((sum, value) => sum + scoreBelow(value, threshold, 36), 0) / values.length
         : 0;
       const allOk = values.length === FOOTBALL_SAMPLE_MINUTES.length && values.every(value => value <= threshold);
-      let score = allOk ? 88 + Math.min(12, Math.max(0, threshold - max) * 8) : Math.min(69, avgScore);
+      
+      let score;
+      if (allOk) {
+        score = 88 + Math.min(12, Math.max(0, threshold - max) * 8);
+      } else {
+        const belowCount = values.filter(value => value <= threshold).length;
+        if (belowCount >= 3) {
+          // If at least 3 samples (>= 1 hour) are playable
+          score = 70 + (belowCount / values.length) * 15;
+        } else {
+          // If less than 3 samples are playable, cap at 59% (Cân nhắc / Không thuận)
+          score = Math.min(59, avgScore);
+        }
+      }
       score = Math.round(Math.max(0, Math.min(100, score)));
 
       return {
@@ -2010,9 +2481,22 @@
 
       $("#homeDateLabel").textContent = dateLabel(day.date);
       $("#homeDateInput").value = day.date;
+
+      const currentIndex = state.data.findIndex(item => item.date === state.selectedDate);
+      const prevBtn = $("#prevDayBtn");
+      const nextBtn = $("#nextDayBtn");
+      if (prevBtn) prevBtn.disabled = currentIndex <= 0;
+      if (nextBtn) nextBtn.disabled = currentIndex === -1 || currentIndex >= state.data.length - 1;
       $("#currentWater").textContent = formatHeight(current);
       $("#waterHero").style.setProperty("--water-fill", `${fill}%`);
       $("#waterTrend").innerHTML = `${trendUp ? "Đang lên nhẹ" : "Đang xuống nhẹ"} <i data-lucide="${trendUp ? "arrow-up" : "arrow-down"}"></i>`;
+      const { year, month, day: dVal } = dateParts(day.date);
+      const d = new Date(year, month - 1, dVal);
+      const dayOfWeek = d.getDay();
+      const weekday = dayOfWeek === 0 ? "Chủ Nhật" : `thứ ${dayOfWeek + 1}`;
+      const dd = String(dVal).padStart(2, "0");
+      const mm = String(month).padStart(2, "0");
+      $("#homeChartTitle").textContent = `Biểu đồ mực nước ngày ${weekday} (${dd}/${mm}/${year})`;
 
       $("#homeActivityCards").innerHTML = ["football", "crab"].map(id => activityCard(day, id)).join("");
       renderTideChart(day, "homeTideChart", "homeChart", false);
@@ -2021,28 +2505,14 @@
     function activityCard(day, activityId) {
       const meta = ACTIVITY_META[activityId];
       const assessment = assessActivity(day, activityId);
-      let secondFactLabel = "Mực nước thấp nhất";
-      let secondFactValue = `${formatHeight(assessment.bestLow?.height)} lúc ${assessment.bestLow?.time || "--"}`;
-      if (activityId === "crab") {
-        secondFactLabel = "Mực nước lúc 20h";
-        secondFactValue = formatHeight(assessment.focusHeight);
-      }
-      if (activityId === "football") {
-        secondFactLabel = "Mực nước 16:30-18:30";
-        secondFactValue = assessment.frameText;
-      }
       return `
-        <article class="activity-card ${meta.tone}" data-open-detail="${activityId}">
+        <article class="activity-card ${meta.tone}">
           <div class="activity-art" aria-hidden="true">${meta.icon}</div>
           <div>
             <div class="activity-title">
               <h3>${meta.title}</h3>
             </div>
             <div><span class="score ${assessment.tone}">${assessment.score}%</span> <span class="fit-text">phù hợp</span></div>
-            <div class="facts">
-              <div class="fact"><span>Thời gian đẹp nhất</span><strong>${assessment.window}</strong></div>
-              <div class="fact"><span>${secondFactLabel}</span><strong>${secondFactValue}</strong></div>
-            </div>
           </div>
         </article>
       `;
@@ -2097,6 +2567,9 @@
         <span class="tide-y-label" style="bottom: ${(value / maxY) * 100}%">${formatHeight(value)}</span>
       `).join("");
 
+      const h1730 = heightAtMinute(day, 1050);
+      const label1730 = `17:30${h1730 !== null ? ` - ${formatHeight(h1730)}` : ""}`;
+
       root.innerHTML = `
         <div class="tide-y-axis">${yLabels}</div>
         <div class="tide-corner">${state.settings.unit}</div>
@@ -2108,6 +2581,8 @@
               <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="2" stroke-dasharray="8 7"></line>
               <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="2" stroke-dasharray="6 7"></line>
               <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="2" stroke-dasharray="8 7"></line>
+              <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4 4"></line>
+              <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730}</text>
               ${day.hours.map((value, hour) => `<circle cx="${x(hour)}" cy="${y(value)}" r="${hour >= 16 && hour <= 22 ? 4 : 2.6}" fill="#176bd6"></circle>`).join("")}
               ${day.hours.map((value, hour) => `
                 <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#27466d" font-size="11" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
@@ -2138,6 +2613,305 @@
           </tr>
         `;
       }).join("");
+    }
+
+    function renderCompare() {
+      if (!state.compareDateA) {
+        state.compareDateA = state.selectedDate || todayIso();
+      }
+      if (!state.compareDateB) {
+        const dateA = new Date(state.compareDateA);
+        dateA.setDate(dateA.getDate() + 1);
+        const y = dateA.getFullYear();
+        const m = String(dateA.getMonth() + 1).padStart(2, "0");
+        const d = String(dateA.getDate()).padStart(2, "0");
+        state.compareDateB = `${y}-${m}-${d}`;
+      }
+
+      $("#compareDateA").value = state.compareDateA;
+      $("#compareDateB").value = state.compareDateB;
+
+      const pillLabelA = $("#compareDateLabelA");
+      const pillLabelB = $("#compareDateLabelB");
+      if (pillLabelA) pillLabelA.textContent = shortDateLabel(state.compareDateA);
+      if (pillLabelB) pillLabelB.textContent = shortDateLabel(state.compareDateB);
+
+      const dayA = getDay(state.compareDateA);
+      const dayB = getDay(state.compareDateB);
+
+      if (!dayA || !dayB) {
+        $("#compareActivities").innerHTML = `<div class="empty">Không tìm thấy dữ liệu cho một trong hai ngày.</div>`;
+        $("#compareTideChart").innerHTML = "";
+        $("#compareExtremesBody").innerHTML = "";
+        return;
+      }
+
+      renderCompareTideChart(dayA, dayB);
+
+      const labelA = shortDateLabel(state.compareDateA);
+      const labelB = shortDateLabel(state.compareDateB);
+
+      const compHeaderA = $("#compareHeaderA");
+      const compHeaderB = $("#compareHeaderB");
+      if (compHeaderA) compHeaderA.textContent = labelA;
+      if (compHeaderB) compHeaderB.textContent = labelB;
+
+      const chartLegend = $("#compareChartLegend");
+      if (chartLegend) {
+        chartLegend.innerHTML = `
+          <span class="legend-item"><span class="legend-line-color a"></span>${labelA}</span>
+          <span class="legend-item"><span class="legend-line-color b"></span>${labelB}</span>
+        `;
+      }
+
+      const tableHeadA = $("#compareTableHeadA");
+      const tableHeadB = $("#compareTableHeadB");
+      if (tableHeadA) tableHeadA.textContent = labelA;
+      if (tableHeadB) tableHeadB.textContent = labelB;
+
+      const activities = ["football", "crab", "rocks"];
+      $("#compareActivities").innerHTML = activities.map(id => {
+        const meta = ACTIVITY_META[id];
+        const assessA = assessActivity(dayA, id);
+        const assessB = assessActivity(dayB, id);
+        
+        return `
+          <div class="compare-activity-row">
+            <div class="compare-activity-header">
+              <span>${meta.icon}</span>
+              <strong>${meta.title}</strong>
+            </div>
+            <div class="compare-activity-body">
+              <div class="compare-activity-col col-a">
+                <span class="compare-score ${assessA.tone}">${assessA.score}%</span>
+                <span class="compare-window">${assessA.window}</span>
+              </div>
+              <div class="compare-vs">VS</div>
+              <div class="compare-activity-col col-b">
+                <span class="compare-score ${assessB.tone}">${assessB.score}%</span>
+                <span class="compare-window">${assessB.window}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const formatTidesList = tides => tides.map(t => `${t.time} (${formatHeight(t.height)})`).join("<br>") || "-";
+      $("#compareExtremesBody").innerHTML = `
+        <tr>
+          <td><strong>Nước lớn (High Tides)</strong></td>
+          <td class="col-a-text">${formatTidesList(dayA.highTides)}</td>
+          <td class="col-b-text">${formatTidesList(dayB.highTides)}</td>
+        </tr>
+        <tr>
+          <td><strong>Nước ròng (Low Tides)</strong></td>
+          <td class="col-a-text">${formatTidesList(dayA.lowTides)}</td>
+          <td class="col-b-text">${formatTidesList(dayB.lowTides)}</td>
+        </tr>
+      `;
+    }
+
+    function renderCompareTideChart(dayA, dayB) {
+      const rootA = $("#compareTideChartA");
+      const rootB = $("#compareTideChartB");
+      if (!rootA || !rootB) return;
+
+      const hourWidth = 48;
+      const width = hourWidth * 24;
+      const height = 150;
+      const maxY = 5;
+      const y = value => height - ((Math.max(0, Math.min(maxY, value || 0)) / maxY) * height);
+      const x = hour => (hour * hourWidth) + (hourWidth / 2);
+
+      const pointsA = dayA.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const areaA = `M ${x(0)} ${height} L ${pointsA.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
+
+      const pointsB = dayB.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const areaB = `M ${x(0)} ${height} L ${pointsB.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
+
+      const crabThreshold = getThreshold("crab");
+      const footballThreshold = getThreshold("football");
+
+      const labels = [5, 4, 3, 2, 1, 0];
+      const timeLabels = Array.from({ length: 24 }, (_, hour) => `<span>${String(hour).padStart(2, "0")}h</span>`).join("");
+      const yLabels = labels.map(value => `
+        <span class="tide-y-label" style="bottom: ${(value / maxY) * 100}%">${formatHeight(value)}</span>
+      `).join("");
+
+      const h1730A = heightAtMinute(dayA, 1050);
+      const label1730A = `17:30${h1730A !== null ? ` - ${formatHeight(h1730A)}` : ""}`;
+
+      const h1730B = heightAtMinute(dayB, 1050);
+      const label1730B = `17:30${h1730B !== null ? ` - ${formatHeight(h1730B)}` : ""}`;
+
+      // Render Chart A
+      rootA.innerHTML = `
+        <div class="tide-y-axis">${yLabels}</div>
+        <div class="tide-corner">${state.settings.unit}</div>
+        <div class="tide-scroll">
+          <div class="tide-inner-compare-single" style="width: 1152px; height: 100%; position: relative;">
+            <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước ngày A" style="height: 150px; display: block; overflow: visible;">
+              <path d="${areaA}" fill="rgba(23, 107, 214, 0.08)"></path>
+              <polyline points="${pointsA}" fill="none" stroke="#176bd6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="1.5" stroke-dasharray="6 7" opacity="0.6"></line>
+              <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7"></line>
+              <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730A}</text>
+              <line id="compareGuideLineA" x1="0" x2="0" y1="0" y2="${height}" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;"></line>
+              ${dayA.hours.map((value, hour) => `<circle class="compare-dot-a compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="#176bd6"></circle>`).join("")}
+              ${dayA.hours.map((value, hour) => `
+                <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#27466d" font-size="10" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
+              `).join("")}
+            </svg>
+            <div class="tide-time-row" style="margin-top: 4px;">${timeLabels}</div>
+          </div>
+        </div>
+      `;
+
+      // Render Chart B
+      rootB.innerHTML = `
+        <div class="tide-y-axis">${yLabels}</div>
+        <div class="tide-corner">${state.settings.unit}</div>
+        <div class="tide-scroll">
+          <div class="tide-inner-compare-single" style="width: 1152px; height: 100%; position: relative;">
+            <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước ngày B" style="height: 150px; display: block; overflow: visible;">
+              <path d="${areaB}" fill="rgba(255, 126, 21, 0.08)"></path>
+              <polyline points="${pointsB}" fill="none" stroke="#ff7e15" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="1.5" stroke-dasharray="6 7" opacity="0.6"></line>
+              <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7"></line>
+              <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730B}</text>
+              <line id="compareGuideLineB" x1="0" x2="0" y1="0" y2="${height}" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;"></line>
+              ${dayB.hours.map((value, hour) => `<circle class="compare-dot-b compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="#ff7e15"></circle>`).join("")}
+              ${dayB.hours.map((value, hour) => `
+                <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#804415" font-size="10" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
+              `).join("")}
+            </svg>
+            <div class="tide-time-row" style="margin-top: 4px;">${timeLabels}</div>
+          </div>
+        </div>
+      `;
+
+      // Set up scrolling synchronization
+      const scrollA = $(".tide-scroll", rootA);
+      const scrollB = $(".tide-scroll", rootB);
+      let isSyncing = false;
+
+      if (scrollA && scrollB) {
+        scrollA.addEventListener("scroll", () => {
+          if (!isSyncing) {
+            isSyncing = true;
+            scrollB.scrollLeft = scrollA.scrollLeft;
+            requestAnimationFrame(() => isSyncing = false);
+          }
+        });
+
+        scrollB.addEventListener("scroll", () => {
+          if (!isSyncing) {
+            isSyncing = true;
+            scrollA.scrollLeft = scrollB.scrollLeft;
+            requestAnimationFrame(() => isSyncing = false);
+          }
+        });
+
+        // Initialize scroll position
+        requestAnimationFrame(() => {
+          scrollA.scrollLeft = hourWidth * 16;
+          scrollB.scrollLeft = hourWidth * 16;
+        });
+      }
+
+      // Interaction listeners
+      const innerA = $(".tide-inner-compare-single", rootA);
+      const innerB = $(".tide-inner-compare-single", rootB);
+      const tooltip = $("#compareTooltip");
+      const panel = $("#screen-compare .panel");
+
+      function handlePointer(event, activeInner, activeScroll) {
+        const rect = activeInner.getBoundingClientRect();
+        const clientX = (event.touches && event.touches[0]) ? event.touches[0].clientX : event.clientX;
+        const xRel = clientX - rect.left;
+        const hour = Math.floor(xRel / 48);
+        const normalizedHour = Math.max(0, Math.min(23, hour));
+        const lineX = normalizedHour * 48 + 24;
+
+        // Update SVG line positions
+        const lineA = $("#compareGuideLineA", rootA);
+        const lineB = $("#compareGuideLineB", rootB);
+        if (lineA) {
+          lineA.setAttribute("x1", lineX);
+          lineA.setAttribute("x2", lineX);
+          lineA.style.display = "block";
+        }
+        if (lineB) {
+          lineB.setAttribute("x1", lineX);
+          lineB.setAttribute("x2", lineX);
+          lineB.style.display = "block";
+        }
+
+        // Highlight circles
+        $$(".compare-dot-a, .compare-dot-b").forEach(dot => {
+          dot.setAttribute("r", "3");
+          dot.removeAttribute("stroke");
+        });
+        $$(`.compare-dot-${normalizedHour}`).forEach(dot => {
+          dot.setAttribute("r", "5.5");
+          dot.setAttribute("stroke", "#ffffff");
+          dot.setAttribute("stroke-width", "1.5");
+        });
+
+        // Update tooltip content
+        const valA = dayA.hours[normalizedHour];
+        const valB = dayB.hours[normalizedHour];
+        const labelA = shortDateLabel(state.compareDateA);
+        const labelB = shortDateLabel(state.compareDateB);
+
+        tooltip.innerHTML = `
+          <div style="font-weight: 800; margin-bottom: 3px; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 2px;">
+            ${String(normalizedHour).padStart(2, "0")}:00
+          </div>
+          <div style="display: flex; gap: 8px; font-size: 10px;">
+            <span style="color: #88c0ff;">${labelA}: <strong>${formatHeight(valA)}</strong></span>
+            <span style="color: #ffb380;">${labelB}: <strong>${formatHeight(valB)}</strong></span>
+          </div>
+        `;
+
+        // Position tooltip relative to panel
+        if (panel) {
+          const panelRect = panel.getBoundingClientRect();
+          const screenX = rect.left + lineX - activeScroll.scrollLeft;
+          tooltip.style.left = `${screenX - panelRect.left}px`;
+          tooltip.style.display = "block";
+        }
+      }
+
+      function clearPointer() {
+        const lineA = $("#compareGuideLineA", rootA);
+        const lineB = $("#compareGuideLineB", rootB);
+        if (lineA) lineA.style.display = "none";
+        if (lineB) lineB.style.display = "none";
+        tooltip.style.display = "none";
+        $$(".compare-dot-a, .compare-dot-b").forEach(dot => {
+          dot.setAttribute("r", "3");
+          dot.removeAttribute("stroke");
+        });
+      }
+
+      [
+        { inner: innerA, scroll: scrollA },
+        { inner: innerB, scroll: scrollB }
+      ].forEach(({ inner, scroll }) => {
+        if (inner && scroll) {
+          inner.addEventListener("mousemove", e => handlePointer(e, inner, scroll));
+          inner.addEventListener("mouseleave", clearPointer);
+          inner.addEventListener("touchstart", e => handlePointer(e, inner, scroll), { passive: true });
+          inner.addEventListener("touchmove", e => handlePointer(e, inner, scroll), { passive: true });
+          inner.addEventListener("touchend", clearPointer);
+          inner.addEventListener("touchcancel", clearPointer);
+        }
+      });
     }
 
     function renderMonth() {
@@ -2180,6 +2954,43 @@
       return assessActivity(day, state.monthActivity).score;
     }
 
+    function renderCustomDatePicker() {
+      if (!state.pickerMonth) {
+        state.pickerMonth = state.selectedDate.slice(0, 7) || todayIso().slice(0, 7);
+      }
+      const [year, month] = state.pickerMonth.split("-").map(Number);
+      const title = $("#pickerMonthTitle");
+      if (title) title.textContent = `Tháng ${month} ${year}`;
+
+      const firstDay = new Date(year, month - 1, 1);
+      const start = new Date(firstDay);
+      const offset = (firstDay.getDay() + 6) % 7;
+      start.setDate(firstDay.getDate() - offset);
+
+      const weekdays = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+      let html = weekdays.map(day => `<div class="weekday">${day}</div>`).join("");
+
+      for (let index = 0; index < 42; index += 1) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + index);
+        const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        const item = getDay(iso);
+        const score = item ? getOverallScore(item) : null;
+        const selected = iso === state.selectedDate ? " selected" : "";
+        const muted = d.getMonth() !== month - 1 ? " muted" : "";
+        const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        html += `
+          <button class="day-cell${selected}${muted}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
+            <span class="day-num">${d.getDate()}</span>
+            <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
+            <span class="status-dot ${status}" aria-hidden="true"></span>
+          </button>
+        `;
+      }
+
+      $("#pickerCalendarGrid").innerHTML = html;
+    }
+
     function renderActivities() {
       const day = getDay();
       if (!day) return;
@@ -2193,14 +3004,13 @@
             ? `16:30-18:30 dưới ${formatThreshold(assessment.threshold)}`
             : `Dưới ${formatThreshold(assessment.threshold)}`;
         return `
-          <article class="activity-card compact ${meta.tone}" data-open-detail="${id}">
+          <article class="activity-card compact ${meta.tone}">
             <div class="activity-art" aria-hidden="true">${meta.icon}</div>
             <div>
               <h3 style="margin: 0 0 8px; font-size: 17px;">${meta.title}</h3>
               <span class="badge ${badgeClass}">${badgeText}</span>
               <p style="margin: 10px 0 0; color: #5c6d83; font-size: 12px; line-height: 1.45;">${meta.description}</p>
             </div>
-            <i data-lucide="chevron-right" aria-hidden="true"></i>
           </article>
         `;
       }).join("");
@@ -2241,11 +3051,13 @@
       renderMonth();
       renderActivities();
       renderSettings();
+      renderCompare();
       if (window.lucide) lucide.createIcons();
     }
 
     function setTab(tab) {
       state.tab = tab;
+      localStorage.setItem("vungTauTideActiveTab", tab);
       $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === tab));
       $$(".nav-btn").forEach(button => button.classList.toggle("active", button.dataset.tab === tab));
       renderAll();
@@ -2258,19 +3070,109 @@
 
       $$("[data-action='go-home']").forEach(button => button.addEventListener("click", () => setTab("home")));
 
+      $$("[data-action='go-compare']").forEach(button => button.addEventListener("click", () => setTab("compare")));
+
+      $("#compareDateA").addEventListener("change", event => {
+        setCompareDateA(event.target.value);
+        renderCompare();
+      });
+
+      $("#compareDateB").addEventListener("change", event => {
+        setCompareDateB(event.target.value);
+        renderCompare();
+      });
+
       $("#selectedDateInput").addEventListener("change", event => {
-        if (getDay(event.target.value)) {
-          state.selectedDate = event.target.value;
-          state.selectedMonth = event.target.value.slice(0, 7);
+        setSelectedDate(event.target.value);
+        renderAll();
+      });
+
+      $("#homeDatePill").addEventListener("click", event => {
+        event.stopPropagation();
+        const picker = $("#customDatePicker");
+        const active = picker.classList.toggle("active");
+        if (active) {
+          state.pickerMonth = state.selectedDate.slice(0, 7) || todayIso().slice(0, 7);
+          renderCustomDatePicker();
+        }
+      });
+
+      $("#prevDayBtn").addEventListener("click", event => {
+        event.stopPropagation();
+        const currentIndex = state.data.findIndex(item => item.date === state.selectedDate);
+        if (currentIndex > 0) {
+          setSelectedDate(state.data[currentIndex - 1].date);
           renderAll();
         }
       });
 
-      $("#homeDateInput").addEventListener("change", event => {
-        if (getDay(event.target.value)) {
-          state.selectedDate = event.target.value;
-          state.selectedMonth = event.target.value.slice(0, 7);
+      $("#nextDayBtn").addEventListener("click", event => {
+        event.stopPropagation();
+        const currentIndex = state.data.findIndex(item => item.date === state.selectedDate);
+        if (currentIndex !== -1 && currentIndex < state.data.length - 1) {
+          setSelectedDate(state.data[currentIndex + 1].date);
           renderAll();
+        }
+      });
+
+      $("#prevPickerMonth").addEventListener("click", event => {
+        event.stopPropagation();
+        const [year, month] = state.pickerMonth.split("-").map(Number);
+        const next = new Date(year, month - 2, 1);
+        state.pickerMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
+        renderCustomDatePicker();
+      });
+
+      $("#nextPickerMonth").addEventListener("click", event => {
+        event.stopPropagation();
+        const [year, month] = state.pickerMonth.split("-").map(Number);
+        const next = new Date(year, month, 1);
+        state.pickerMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
+        renderCustomDatePicker();
+      });
+
+      $("#pickerCalendarGrid").addEventListener("click", event => {
+        const cell = event.target.closest("[data-picker-date]");
+        if (!cell) return;
+        setSelectedDate(cell.dataset.pickerDate);
+        $("#customDatePicker").classList.remove("active");
+        renderAll();
+      });
+
+      document.addEventListener("click", event => {
+        const picker = $("#customDatePicker");
+        const pill = $("#homeDatePill");
+        if (picker && !picker.contains(event.target) && !pill.contains(event.target)) {
+          picker.classList.remove("active");
+        }
+      });
+
+      document.addEventListener("keydown", event => {
+        if (state.tab !== "home") return;
+
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.isContentEditable)) {
+          return;
+        }
+
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          const currentIndex = state.data.findIndex(item => item.date === state.selectedDate);
+          if (currentIndex > 0) {
+            setSelectedDate(state.data[currentIndex - 1].date);
+            const picker = $("#customDatePicker");
+            if (picker) picker.classList.remove("active");
+            renderAll();
+          }
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          const currentIndex = state.data.findIndex(item => item.date === state.selectedDate);
+          if (currentIndex !== -1 && currentIndex < state.data.length - 1) {
+            setSelectedDate(state.data[currentIndex + 1].date);
+            const picker = $("#customDatePicker");
+            if (picker) picker.classList.remove("active");
+            renderAll();
+          }
         }
       });
 
@@ -2302,8 +3204,7 @@
       $("#monthCalendar").addEventListener("click", event => {
         const cell = event.target.closest("[data-date]");
         if (!cell || !getDay(cell.dataset.date)) return;
-        state.selectedDate = cell.dataset.date;
-        state.selectedMonth = cell.dataset.date.slice(0, 7);
+        setSelectedDate(cell.dataset.date);
         setTab("detail");
       });
 
@@ -2364,9 +3265,34 @@
         if (!response.ok) throw new Error("Không tải được data.csv");
         const text = await response.text();
         state.data = parseTideCSV(text);
-        const today = todayIso();
-        state.selectedDate = getDay(today) ? today : state.data[0]?.date || "";
+
+        // Restore active dates from localStorage or fallback
+        const savedDate = localStorage.getItem("vungTauTideSelectedDate");
+        if (savedDate && getDay(savedDate)) {
+          state.selectedDate = savedDate;
+        } else {
+          const today = todayIso();
+          state.selectedDate = getDay(today) ? today : state.data[0]?.date || "";
+        }
         state.selectedMonth = state.selectedDate.slice(0, 7);
+
+        const savedCompareA = localStorage.getItem("vungTauTideCompareDateA");
+        if (savedCompareA && getDay(savedCompareA)) {
+          state.compareDateA = savedCompareA;
+        }
+        const savedCompareB = localStorage.getItem("vungTauTideCompareDateB");
+        if (savedCompareB && getDay(savedCompareB)) {
+          state.compareDateB = savedCompareB;
+        }
+
+        // Restore active tab from localStorage
+        const savedTab = localStorage.getItem("vungTauTideActiveTab");
+        if (savedTab) {
+          state.tab = savedTab;
+          $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === state.tab));
+          $$(".nav-btn").forEach(button => button.classList.toggle("active", button.dataset.tab === state.tab));
+        }
+
         renderAll();
       } catch (error) {
         console.error(error);
