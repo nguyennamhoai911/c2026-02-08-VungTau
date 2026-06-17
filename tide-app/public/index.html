@@ -333,6 +333,40 @@
       display: block;
     }
 
+    .picker-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(214, 227, 239, 0.7);
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .picker-tabs button {
+      height: 32px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #5a6a82;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .picker-tabs button.active {
+      color: #fff;
+      background: linear-gradient(135deg, #0ba9bc, #07839a);
+      box-shadow: 0 4px 10px rgba(5, 145, 165, 0.2);
+    }
+
     .datepicker-header {
       display: flex;
       justify-content: space-between;
@@ -1768,6 +1802,10 @@
               <span class="datepicker-title" id="pickerMonthTitle">Tháng 6 2026</span>
               <button class="datepicker-step" type="button" id="nextPickerMonth" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
             </div>
+            <div class="picker-tabs" role="tablist" aria-label="Bộ lọc lịch nhỏ">
+              <button class="active" type="button" data-picker-act="football">⚽ Đá banh</button>
+              <button type="button" data-picker-act="crab">🦀 Bắt ghẹ</button>
+            </div>
             <div class="datepicker-calendar" id="pickerCalendarGrid"></div>
           </div>
 
@@ -2046,6 +2084,7 @@
       tab: "home",
       detailMode: "chart",
       monthActivity: "football",
+      pickerActivity: "football",
       homeChart: null,
       detailChart: null,
       settings: loadSettings()
@@ -2348,7 +2387,8 @@
 
       if (values.length) {
         if (below > 0) {
-          score = 70 + (below / values.length) * 30;
+          const avgBelow = values.filter(v => v <= threshold).reduce((sum, v) => sum + v, 0) / below;
+          score = 70 + (below / values.length) * 30 + (threshold - avgBelow) * 8;
         } else {
           score = 65 - ((min - threshold) * 32);
         }
@@ -2397,7 +2437,10 @@
         const margin = Math.max(0, threshold - targetHeight) * 8 + Math.max(0, CRAB_EVENING_THRESHOLD - maxEvening) * 3;
         score = 90 + Math.min(10, margin);
       } else {
-        score = Math.min(69, (targetScore * 0.62) + (eveningScore * 0.38));
+        const rawScore = (targetScore * 0.62) + (eveningScore * 0.38);
+        const avgEvening = eveningValues.reduce((sum, v) => sum + v, 0) / eveningValues.length;
+        const heightPenalty = avgEvening * 4;
+        score = 55 + (rawScore - heightPenalty - 55) * 0.35;
       }
 
       score = Math.round(Math.max(0, Math.min(100, score)));
@@ -2442,7 +2485,9 @@
         const belowCount = values.filter(value => value <= threshold).length;
         if (belowCount >= 3) {
           // If at least 3 samples (>= 1 hour) are playable
-          score = 70 + (belowCount / values.length) * 15;
+          const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
+          const margin = threshold - avgValue;
+          score = 70 + (belowCount / values.length) * 15 + margin * 5;
         } else {
           // If less than 3 samples are playable, cap at 59% (Cân nhắc / Không thuận)
           score = Math.min(59, avgScore);
@@ -2975,7 +3020,14 @@
         d.setDate(start.getDate() + index);
         const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
         const item = getDay(iso);
-        const score = item ? getOverallScore(item) : null;
+        let score = null;
+        if (item) {
+          if (state.pickerActivity === "all") {
+            score = getOverallScore(item);
+          } else {
+            score = assessActivity(item, state.pickerActivity).score;
+          }
+        }
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
         const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
@@ -3145,6 +3197,17 @@
         if (picker && !picker.contains(event.target) && !pill.contains(event.target)) {
           picker.classList.remove("active");
         }
+      });
+
+      $$("[data-picker-act]").forEach(button => {
+        button.addEventListener("click", event => {
+          event.stopPropagation();
+          state.pickerActivity = button.dataset.pickerAct;
+          $$("[data-picker-act]").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.pickerAct === state.pickerActivity);
+          });
+          renderCustomDatePicker();
+        });
       });
 
       document.addEventListener("keydown", event => {
