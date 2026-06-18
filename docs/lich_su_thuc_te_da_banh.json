@@ -1,0 +1,46 @@
+[
+  {
+    "date": "2026-06-17",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-17T21:17:59+07:00",
+    "tide_data_reference": {
+      "16:00": 3.6,
+      "17:00": 3.3,
+      "18:00": 2.7,
+      "19:00": 1.9
+    },
+    "observations": [
+      {
+        "time": "17:15",
+        "tide_height_interpolated_m": 3.15,
+        "playability": "marginal",
+        "description": "Biển bắt đầu rút lộ bãi cát, vừa đủ diện tích để bắt đầu đá bóng."
+      },
+      {
+        "time": "17:35",
+        "tide_height_interpolated_m": 2.95,
+        "playability": "good",
+        "description": "Nước rút hoàn toàn dưới ngưỡng 3.0m, bãi cát rộng rãi, đá được bình thường."
+      }
+    ]
+  },
+  {
+    "date": "2026-06-18",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-18T21:31:41+07:00",
+    "tide_data_reference": {
+      "16:00": 3.5,
+      "17:00": 3.1,
+      "18:00": 2.5,
+      "19:00": 1.8
+    },
+    "observations": [
+      {
+        "time": "17:45",
+        "tide_height_interpolated_m": 2.59,
+        "playability": "good",
+        "description": "Nước rút đủ rộng như hôm qua, bãi cát rộng rãi chơi thoải mái."
+      }
+    ]
+  }
+]
