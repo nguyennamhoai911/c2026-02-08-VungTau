@@ -3334,13 +3334,15 @@
         const text = await response.text();
         state.data = parseTideCSV(text);
 
-        // Restore active dates from localStorage or fallback
-        const savedDate = localStorage.getItem("vungTauTideSelectedDate");
-        if (savedDate && getDay(savedDate)) {
-          state.selectedDate = savedDate;
+        // Prioritize today's date if it exists in the tide data, fallback to localStorage/first date
+        const today = todayIso();
+        const todayExists = state.data.some(item => item.date === today);
+        if (todayExists) {
+          state.selectedDate = today;
         } else {
-          const today = todayIso();
-          state.selectedDate = getDay(today) ? today : state.data[0]?.date || "";
+          const savedDate = localStorage.getItem("vungTauTideSelectedDate");
+          const savedExists = savedDate && state.data.some(item => item.date === savedDate);
+          state.selectedDate = savedExists ? savedDate : (state.data[0]?.date || "");
         }
         state.selectedMonth = state.selectedDate.slice(0, 7);
 
