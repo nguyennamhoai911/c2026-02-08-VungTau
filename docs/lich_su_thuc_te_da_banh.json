@@ -42,5 +42,62 @@
         "description": "Nước rút đủ rộng như hôm qua, bãi cát rộng rãi chơi thoải mái."
       }
     ]
+  },
+  {
+    "date": "2026-06-19",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-21T19:31:51+07:00",
+    "tide_data_reference": {
+      "16:00": 3.5,
+      "17:00": 3.3,
+      "18:00": 3.0,
+      "19:00": 2.4
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 3.15,
+        "playability": "bad",
+        "description": "Thực tế hoàn toàn không thể đá bóng (0%), bãi cát bị ngập sâu."
+      }
+    ]
+  },
+  {
+    "date": "2026-06-20",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-21T19:31:51+07:00",
+    "tide_data_reference": {
+      "16:00": 3.2,
+      "17:00": 3.3,
+      "18:00": 3.1,
+      "19:00": 2.9
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 3.2,
+        "playability": "bad",
+        "description": "Thực tế hoàn toàn không thể đá bóng (0%), nước ngập sát bờ suốt khung giờ."
+      }
+    ]
+  },
+  {
+    "date": "2026-06-22",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-23T14:58:35+07:00",
+    "tide_data_reference": {
+      "16:00": 2.4,
+      "17:00": 2.6,
+      "18:00": 2.7,
+      "19:00": 2.8
+    },
+    "observations": [
+      {
+        "time": "18:00",
+        "tide_height_interpolated_m": 2.7,
+        "playability": "bad",
+        "description": "Thực tế hoàn toàn không thể đá bóng (0%), lúc 6h chiều bãi chỉ rộng khoảng nửa mét do triều đang dâng."
+      }
+    ]
   }
 ]

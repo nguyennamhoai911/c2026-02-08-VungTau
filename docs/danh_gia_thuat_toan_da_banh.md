@@ -10,7 +10,7 @@ Thuật toán dự báo đá banh bãi biển (`assessFootball`) được thiế
 
 ### Các thông số cốt lõi (Core Parameters):
 - **Khung giờ phân tích (Target Window)**: 16:30 - 18:30 hằng ngày. Đây là thời điểm lý tưởng vì trời mát mẻ, còn đủ ánh sáng tự nhiên và là giờ tan tầm phổ biến cho các hoạt động thể thao ngoài trời.
-- **Ngưỡng nước giới hạn (Threshold)**: Dưới `3.0m` (mực nước mặc định, có thể tùy chỉnh trong Settings). Nếu nước trên 3.0m, bãi cát sẽ bị thu hẹp hoặc ngập hoàn toàn, không thể đá bóng.
+- **Ngưỡng nước giới hạn (Threshold)**: Mặc định dưới `3.0m` (có thể tùy chỉnh). Đặc biệt, nếu **triều đang dâng** trong khung giờ chơi (mực nước lúc 18:30 > 16:30), ngưỡng nước giới hạn sẽ tự động giảm đi `0.5m` (xuống còn `2.5m`) do sóng triều dâng lấn bãi mạnh hơn.
 - **Tần suất lấy mẫu (Sampling)**: Lấy mẫu tại 5 thời điểm cách nhau 30 phút: `16:30`, `17:00`, `17:30`, `18:00`, `18:30`.
 
 ---
@@ -42,14 +42,18 @@ $$\text{Score} = 88 + \min(12, (\text{Threshold} - H_{max}) \times 8)$$
 - Nếu nước rút cực thấp (ví dụ tối đa chỉ $1.5m$): Điểm thưởng đạt tối đa $+12 \implies$ **Điểm cuối cùng = 100%**.
 - Nếu nước mấp mé ngưỡng giới hạn (ví dụ tối đa $2.9m$): Điểm thưởng nhỏ $\implies$ **Điểm cuối cùng $\approx$ 88% - 89%**.
 
-#### **Trường hợp B: Có ít nhất một điểm mẫu vượt ngưỡng ($H > 3.0m$)**
-Đây là trường hợp bãi cát sẽ bị ngập ở một số thời điểm trong khung giờ chơi. 
+#### **Trường hợp B: Có ít nhất một điểm mẫu vượt ngưỡng ($H > \text{Threshold}$)**
+Đây là trường hợp bãi cát sẽ bị ngập ở một số thời điểm trong khung giờ chơi.
 Thay vì chặn cứng điểm tối đa ở mức `69%` (Cân nhắc), thuật toán mới sử dụng **cơ chế chấm điểm mềm dẻo dựa trên số giờ chơi được thực tế** (`belowCount` - số điểm mẫu dưới ngưỡng trong tổng số 5 điểm lấy mẫu):
 - **Nếu chơi được $\ge 1$ tiếng (tương đương `belowCount >= 3`)**: Ngày đó vẫn được đánh giá là khá tốt vì người chơi chỉ cần lùi giờ đá lại một chút. Điểm số nằm trong vùng **Rất đáng đi (Green, 70% - 85%)**:
-  $$\text{Score} = 70 + \left(\frac{belowCount}{\text{totalSamples}}\right) \times 15$$
-  *Ví dụ: Hôm nay có 3/5 điểm đạt yêu cầu $\implies \text{Score} = 70 + 0.6 \times 15 = 79\%$ (Vùng xanh lá, Rất đáng đi).*
-- **Nếu chơi được < 1 tiếng (tương đương `belowCount < 3`)**: Thời gian chơi quá ngắn, ngày đó bị chặn điểm tối đa ở mức **`59%`** (Cân nhắc / Không thuận):
-  $$\text{Score} = \min(59, \text{avgScore})$$
+  $$\text{Score} = 70 + \left(\frac{belowCount}{\text{totalSamples}}\right) \times 15 + \text{margin} \times 5$$
+  *Ví dụ: Hôm nay có 3/5 điểm đạt yêu cầu $\implies \text{Score} = 70 + 0.6 \times 15 + \text{margin} \times 5 = 79\% - 80\%$ (Vùng xanh lá, Rất đáng đi).*
+- **Nếu chơi được < 1 tiếng (tương đương `belowCount < 3`)**: Thời gian chơi quá ngắn, ngày đó bị đánh giá thấp và phạt điểm sâu hơn dựa trên số lượng mẫu đạt chuẩn:
+  - **Nếu `belowCount === 2`**: Phạt điểm về vùng dưới 25% (Không thuận):
+    $$\text{Score} = 25 \times \left(\frac{\text{avgScore}}{100}\right)$$
+  - **Nếu `belowCount === 1`**: Phạt điểm về vùng dưới 5% (Không thuận):
+    $$\text{Score} = 5 \times \left(\frac{\text{avgScore}}{100}\right)$$
+  - **Nếu `belowCount === 0`**: Đạt `0%` (Không thuận).
 
 ---
 
@@ -105,3 +109,9 @@ Hệ thống đã lưu lại dữ liệu thực tế ngày 17/06/2026 làm mốc
 
 - **Ngày 18/06/2026**:
   - **17:45 (Nước nội suy 2.59m)**: Nước rút đủ rộng tương tự như hôm qua (`good`). Quan sát thực tế cho thấy bãi cát rộng rãi trễ hơn hôm qua khoảng 10 phút do sự lệch pha tự nhiên của đỉnh triều.
+- **Ngày 19/06/2026**:
+  - **17:30 (Nước nội suy 3.15m)**: Bãi cát ngập sâu hoàn toàn không thể đá bóng (`bad`). Thực tế 0%. Kết quả thuật toán mới: **23%** (Không thuận).
+- **Ngày 20/06/2026**:
+  - **17:30 (Nước nội suy 3.20m)**: Nước ngập sát bờ suốt cả khung giờ, hoàn toàn không thể đá bóng (`bad`). Thực tế 0%. Kết quả thuật toán mới: **5%** (Không thuận).
+- **Ngày 22/06/2026** (Thứ Hai):
+  - **18:00 (Nước nội suy 2.7m - triều đang dâng)**: Thực tế hoàn toàn không thể đá bóng (0%), bãi cát chỉ rộng khoảng nửa mét. Triều đang dâng từ 2.4m lên 2.8m khiến sóng biển đánh sát tường kè. Kết quả thuật toán mới (áp dụng giảm ngưỡng dâng 0.5m còn 2.5m và phạt belowCount = 1): **5%** (Không thuận).

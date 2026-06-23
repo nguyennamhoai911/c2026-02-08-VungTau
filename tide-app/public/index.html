@@ -2460,13 +2460,21 @@
     }
 
     function assessFootball(day) {
-      const threshold = getThreshold("football");
+      let threshold = getThreshold("football");
       const samples = FOOTBALL_SAMPLE_MINUTES
         .map(minute => ({ minute, height: heightAtMinute(day, minute) }))
         .filter(sample => Number.isFinite(sample.height));
       const values = samples.map(sample => sample.height);
       const min = values.length ? Math.min(...values) : null;
       const max = values.length ? Math.max(...values) : null;
+
+      const hStart = heightAtMinute(day, FOOTBALL_START_MINUTE);
+      const hEnd = heightAtMinute(day, FOOTBALL_END_MINUTE);
+      const isRising = Number.isFinite(hStart) && Number.isFinite(hEnd) && hEnd > hStart;
+      if (isRising) {
+        threshold -= 0.5;
+      }
+
       const avgScore = values.length
         ? values.reduce((sum, value) => sum + scoreBelow(value, threshold, 36), 0) / values.length
         : 0;
@@ -2483,8 +2491,14 @@
           const margin = threshold - avgValue;
           score = 70 + (belowCount / values.length) * 15 + margin * 5;
         } else {
-          // If less than 3 samples are playable, cap at 59% (Cân nhắc / Không thuận)
-          score = Math.min(59, avgScore);
+          // If less than 3 samples are playable: scale down dramatically
+          if (belowCount === 2) {
+            score = 25 * (avgScore / 100);
+          } else if (belowCount === 1) {
+            score = 5 * (avgScore / 100);
+          } else {
+            score = 0;
+          }
         }
       }
       score = Math.round(Math.max(0, Math.min(100, score)));
