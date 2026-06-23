@@ -99,5 +99,24 @@
         "description": "Thực tế hoàn toàn không thể đá bóng (0%), lúc 6h chiều bãi chỉ rộng khoảng nửa mét do triều đang dâng."
       }
     ]
+  },
+  {
+    "date": "2026-06-23",
+    "activity": "football",
+    "feedback_timestamp": "2026-06-23T21:11:21+07:00",
+    "tide_data_reference": {
+      "16:00": 2.0,
+      "17:00": 2.1,
+      "18:00": 2.3,
+      "19:00": 2.5
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 2.2,
+        "playability": "good",
+        "description": "Bãi cát rộng khoảng 5m, đá bóng khá thoải mái dù triều đang dâng nhẹ."
+      }
+    ]
   }
 ]
