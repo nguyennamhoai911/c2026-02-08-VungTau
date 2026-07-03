@@ -1474,9 +1474,45 @@
       height: calc(72px + env(safe-area-inset-bottom, 0px));
       border-top: 1px solid #e5edf4;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       background: rgba(255,255,255,0.96);
       padding: 6px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .dot-bad {
+      width: 14px;
+      height: 14px;
+      margin-top: 1px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      background: var(--danger);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .day-cell-note-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+    
+    .day-cell.selected .day-cell-note-dot {
+      background: #fff;
+    }
+    
+    .activity-card.disabled-activity {
+      opacity: 0.65;
+      border-left: 4px solid var(--danger);
+      background: #fff5f5;
+    }
+    
+    .small-card.disabled-card {
+      opacity: 0.65;
+      border: 1px solid #ffccd0;
+      background: #fff8f8;
     }
 
     .nav-btn {
@@ -1811,6 +1847,7 @@
 
 
 
+          <div id="homeNotePanel" hidden></div>
           <div class="stack" id="homeActivityCards"></div>
 
           <h3 class="section-title" id="homeChartTitle">Biểu đồ mực nước hôm nay</h3>
@@ -1998,6 +2035,33 @@
           </div>
         </section>
 
+        <section id="screen-notes" class="screen" data-screen="notes">
+          <div class="topbar">
+            <span></span>
+            <h2>Ghi Chú Hoạt Động</h2>
+            <span></span>
+          </div>
+
+          <div class="panel" style="margin: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(12,24,44,0.05);">
+            <div class="date-row" style="margin: 0; padding: 0; background: transparent; border: none; display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="calendar-days" style="color: var(--teal); width: 18px; height: 18px;"></i>
+              <input id="noteDateInput" type="date" aria-label="Ngày ghi chú" style="flex: 1; border: 1px solid #dce5ef; border-radius: 8px; padding: 8px; font-size: 14px; color: var(--ink);">
+            </div>
+            
+            <textarea id="noteTextInput" placeholder="Nhập ghi chú (ví dụ: hôm nay không đá được được, và có thể mai cũng vậy)..." style="width: 100%; height: 100px; border: 1px solid #dce5ef; border-radius: 8px; padding: 12px; font-size: 14px; resize: none; font-family: inherit; box-sizing: border-box;" aria-label="Nội dung ghi chú"></textarea>
+            
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+              <button id="saveNoteBtn" type="button" class="btn" style="background: var(--teal); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="save" style="width: 16px; height: 16px;"></i> Lưu ghi chú
+              </button>
+            </div>
+          </div>
+
+          <h3 class="section-title" style="margin: 16px 12px 8px;">Lịch sử ghi chú</h3>
+          <div id="notesHistoryList" style="display: flex; flex-direction: column; gap: 10px; padding: 0 12px 24px; overflow-y: auto; max-height: calc(100vh - 360px);">
+          </div>
+        </section>
+
         <section id="screen-compare" class="screen" data-screen="compare">
           <div class="topbar">
             <button class="icon-btn" type="button" data-action="go-home" aria-label="Quay lại"><i data-lucide="arrow-left"></i></button>
@@ -2061,6 +2125,7 @@
         <nav class="bottom-nav" aria-label="Điều hướng chính">
           <button class="nav-btn active" type="button" data-tab="home"><i data-lucide="home"></i><span>Hôm nay</span></button>
           <button class="nav-btn" type="button" data-tab="month"><i data-lucide="calendar-days"></i><span>Lịch tháng</span></button>
+          <button class="nav-btn" type="button" data-tab="notes"><i data-lucide="file-text"></i><span>Ghi chú</span></button>
           <button class="nav-btn" type="button" data-tab="compare"><i data-lucide="arrow-left-right"></i><span>So sánh</span></button>
         </nav>
       </div>
@@ -2081,8 +2146,21 @@
       pickerActivity: "football",
       homeChart: null,
       detailChart: null,
-      settings: loadSettings()
+      settings: loadSettings(),
+      notes: loadNotes()
     };
+
+    function loadNotes() {
+      try {
+        return JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveNotes() {
+      localStorage.setItem("vungTauTideNotes", JSON.stringify(state.notes));
+    }
 
     const CRAB_TARGET_HOUR = 20;
     const CRAB_EVENING_HOURS = [18, 19, 20];
@@ -2241,6 +2319,15 @@
       state.selectedMonth = date.slice(0, 7);
       localStorage.setItem("vungTauTideSelectedDate", state.selectedDate);
       localStorage.setItem("vungTauTideSelectedMonth", state.selectedMonth);
+      
+      const dateInput = $("#noteDateInput");
+      if (dateInput) {
+        dateInput.value = date;
+        const textInput = $("#noteTextInput");
+        if (textInput) {
+          textInput.value = state.notes[date] || "";
+        }
+      }
     }
 
     function setCompareDateA(date) {
@@ -2459,6 +2546,33 @@
       };
     }
 
+    function isFootballDisabled(dateStr) {
+      const directNote = (state.notes[dateStr] || "").toLowerCase();
+      const keywords = ["không đá được", "không đá banh", "ko đá đc", "ko đá banh", "hủy đá", "hoãn đá"];
+      for (const kw of keywords) {
+        if (directNote.includes(kw)) {
+          return { disabled: true, reason: state.notes[dateStr] };
+        }
+      }
+      
+      const d = new Date(dateStr);
+      d.setDate(d.getDate() - 1);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const dayVal = String(d.getDate()).padStart(2, "0");
+      const yesterdayStr = `${y}-${m}-${dayVal}`;
+      const yesterdayNote = (state.notes[yesterdayStr] || "").toLowerCase();
+      
+      for (const kw of keywords) {
+        if (yesterdayNote.includes(kw)) {
+          if (yesterdayNote.includes("mai") || yesterdayNote.includes("ngày mai")) {
+            return { disabled: true, reason: `Ghi chú ngày ${dayVal}/${m}: "${state.notes[yesterdayStr]}"` };
+          }
+        }
+      }
+      return { disabled: false };
+    }
+
     function assessFootball(day) {
       let threshold = getThreshold("football");
       const samples = FOOTBALL_SAMPLE_MINUTES
@@ -2467,6 +2581,23 @@
       const values = samples.map(sample => sample.height);
       const min = values.length ? Math.min(...values) : null;
       const max = values.length ? Math.max(...values) : null;
+
+      const footballCheck = isFootballDisabled(day.date);
+      if (footballCheck.disabled) {
+        return {
+          activityId: "football",
+          threshold,
+          score: 0,
+          min,
+          max,
+          bestLow: null,
+          window: "Hủy đá banh",
+          frameText: min !== null ? `${formatHeight(min)} - ${formatHeight(max)}` : "--",
+          tone: "bad",
+          label: "Hủy (Ghi chú)",
+          overrideReason: footballCheck.reason
+        };
+      }
 
       const hStart = heightAtMinute(day, FOOTBALL_START_MINUTE);
       const hEnd = heightAtMinute(day, FOOTBALL_END_MINUTE);
@@ -2548,6 +2679,25 @@
       const mm = String(month).padStart(2, "0");
       $("#homeChartTitle").textContent = `Biểu đồ mực nước ngày ${weekday} (${dd}/${mm}/${year})`;
 
+      // Show today's note if any
+      const noteForSelected = state.notes[day.date] || "";
+      const homeNotePanel = $("#homeNotePanel");
+      if (homeNotePanel) {
+        if (noteForSelected) {
+          homeNotePanel.innerHTML = `
+            <div style="margin: 0 0 16px; padding: 12px 14px; border-left: 4px solid var(--teal); background: var(--soft); border-radius: 8px; box-shadow: 0 2px 8px rgba(12,24,44,0.02);">
+              <div style="font-weight: 700; font-size: 13px; color: var(--teal); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Ghi chú ngày hôm nay:
+              </div>
+              <div style="font-size: 13px; color: var(--ink); line-height: 1.45; white-space: pre-wrap;">${noteForSelected}</div>
+            </div>
+          `;
+          homeNotePanel.hidden = false;
+        } else {
+          homeNotePanel.hidden = true;
+        }
+      }
+
       $("#homeActivityCards").innerHTML = ["football", "crab"].map(id => activityCard(day, id)).join("");
       renderTideChart(day, "homeTideChart", "homeChart", false);
     }
@@ -2555,14 +2705,19 @@
     function activityCard(day, activityId) {
       const meta = ACTIVITY_META[activityId];
       const assessment = assessActivity(day, activityId);
+      const overrideHtml = assessment.overrideReason 
+        ? `<div class="card-override-reason" style="font-size: 11px; color: var(--danger); margin-top: 6px; font-weight: 600; line-height: 1.35; display: flex; align-items: center; gap: 4px;"><i data-lucide="alert-circle" style="width: 13px; height: 13px; flex-shrink: 0;"></i> ${assessment.overrideReason}</div>`
+        : "";
+      const disabledClass = assessment.score === 0 ? " disabled-activity" : "";
       return `
-        <article class="activity-card ${meta.tone}">
+        <article class="activity-card ${meta.tone}${disabledClass}">
           <div class="activity-art" aria-hidden="true">${meta.icon}</div>
           <div>
             <div class="activity-title">
               <h3>${meta.title}</h3>
             </div>
             <div><span class="score ${assessment.tone}">${assessment.score}%</span> <span class="fit-text">phù hợp</span></div>
+            ${overrideHtml}
           </div>
         </article>
       `;
@@ -2578,11 +2733,16 @@
       $("#detailActivityCards").innerHTML = ["football", "crab"].map(id => {
         const meta = ACTIVITY_META[id];
         const assessment = assessActivity(day, id);
+        const overrideHtml = assessment.overrideReason 
+          ? `<div style="font-size: 10px; color: var(--danger); grid-column: 1 / -1; margin-top: 4px; font-weight: 600; line-height: 1.3;">⚠️ ${assessment.overrideReason}</div>`
+          : "";
+        const disabledClass = assessment.score === 0 ? " disabled-card" : "";
         return `
-          <div class="small-card">
+          <div class="small-card${disabledClass}">
             <span>${meta.icon} ${meta.title}</span>
             <strong class="${assessment.tone === "bad" ? "score bad" : ""}">${assessment.score}%</strong>
             <span>${assessment.window}</span>
+            ${overrideHtml}
           </div>
         `;
       }).join("");
@@ -2590,9 +2750,15 @@
       const crab = assessActivity(day, "crab");
       const football = assessActivity(day, "football");
       const low = getBestLow(day);
+
+      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>`;
+      if (football.overrideReason) {
+        footballReason = `<div><span class="dot-bad">✗</span><span>Đá banh bị hủy do ghi chú: "${football.overrideReason}".</span></div>`;
+      }
+
       $("#reasonList").innerHTML = `
         <div><span class="dot-ok">✓</span><span>Nước thấp nhất ${formatHeight(low?.height)} lúc ${low?.time || "--"}, thuận lợi nhất cho các hoạt động cần nước rút.</span></div>
-        <div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>
+        ${footballReason}
         <div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>
       `;
     }
@@ -2987,11 +3153,15 @@
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
         const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const hasNoteDot = state.notes[iso] ? `<span class="day-cell-note-dot" title="${state.notes[iso].replace(/"/g, '&quot;')}"></span>` : "";
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
-            <span class="status-dot ${status}" aria-hidden="true"></span>
+            <div style="display: flex; gap: 4px; align-items: center; justify-content: center; height: 10px;">
+              <span class="status-dot ${status}" aria-hidden="true"></span>
+              ${hasNoteDot}
+            </div>
           </button>
         `;
       }
@@ -3036,11 +3206,15 @@
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
         const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const hasNoteDot = state.notes[iso] ? `<span class="day-cell-note-dot" title="${state.notes[iso].replace(/"/g, '&quot;')}"></span>` : "";
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
-            <span class="status-dot ${status}" aria-hidden="true"></span>
+            <div style="display: flex; gap: 4px; align-items: center; justify-content: center; height: 10px;">
+              <span class="status-dot ${status}" aria-hidden="true"></span>
+              ${hasNoteDot}
+            </div>
           </button>
         `;
       }
@@ -3102,6 +3276,73 @@
       });
     }
 
+    function renderNotesScreen() {
+      const dateInput = $("#noteDateInput");
+      if (dateInput && !dateInput.value) {
+        dateInput.value = state.selectedDate || todayIso();
+      }
+      
+      const activeDate = dateInput ? dateInput.value : (state.selectedDate || todayIso());
+      const textInput = $("#noteTextInput");
+      if (textInput && document.activeElement !== textInput) {
+        textInput.value = state.notes[activeDate] || "";
+      }
+      
+      const historyList = $("#notesHistoryList");
+      if (!historyList) return;
+      
+      const noteEntries = Object.entries(state.notes).filter(([date, content]) => content.trim() !== "");
+      if (noteEntries.length === 0) {
+        historyList.innerHTML = `<div class="empty">Không có ghi chú nào. Hãy tạo ghi chú cho các ngày!</div>`;
+        return;
+      }
+      
+      noteEntries.sort((a, b) => b[0].localeCompare(a[0]));
+      
+      historyList.innerHTML = noteEntries.map(([date, content]) => {
+        const label = dateLabel(date);
+        return `
+          <div class="panel" style="padding: 12px 16px; background: #fff; border-radius: 12px; border-left: 4px solid var(--teal); box-shadow: 0 2px 8px rgba(12,24,44,0.02); display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 700; font-size: 13px; color: var(--ink);">${label}</span>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn-edit-note" data-note-date="${date}" style="border: none; background: transparent; color: var(--teal); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Chỉnh sửa">
+                  <i data-lucide="pencil" style="width: 14px; height: 14px;"></i>
+                </button>
+                <button type="button" class="btn-delete-note" data-note-date="${date}" style="border: none; background: transparent; color: var(--danger); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Xóa">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+            </div>
+            <div style="font-size: 13px; color: var(--muted); line-height: 1.45; white-space: pre-wrap;">${content}</div>
+          </div>
+        `;
+      }).join("");
+      
+      if (window.lucide) lucide.createIcons();
+      
+      $$(".btn-edit-note", historyList).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const date = btn.dataset.noteDate;
+          $("#noteDateInput").value = date;
+          $("#noteTextInput").value = state.notes[date] || "";
+          $("#noteTextInput").focus();
+        });
+      });
+      
+      $$(".btn-delete-note", historyList).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const date = btn.dataset.noteDate;
+          if (confirm(`Bạn có chắc muốn xóa ghi chú ngày ${dateLabel(date)}?`)) {
+            delete state.notes[date];
+            saveNotes();
+            renderNotesScreen();
+            renderAll();
+          }
+        });
+      });
+    }
+
     function renderAll() {
       renderHome();
       renderDetail();
@@ -3109,6 +3350,7 @@
       renderActivities();
       renderSettings();
       renderCompare();
+      renderNotesScreen();
       if (window.lucide) lucide.createIcons();
     }
 
@@ -3128,6 +3370,35 @@
       $$("[data-action='go-home']").forEach(button => button.addEventListener("click", () => setTab("home")));
 
       $$("[data-action='go-compare']").forEach(button => button.addEventListener("click", () => setTab("compare")));
+
+      const noteDateInput = $("#noteDateInput");
+      if (noteDateInput) {
+        noteDateInput.addEventListener("change", event => {
+          const date = event.target.value;
+          $("#noteTextInput").value = state.notes[date] || "";
+        });
+      }
+
+      const saveNoteBtn = $("#saveNoteBtn");
+      if (saveNoteBtn) {
+        saveNoteBtn.addEventListener("click", () => {
+          const date = $("#noteDateInput").value;
+          const content = $("#noteTextInput").value.trim();
+          if (!date) {
+            alert("Vui lòng chọn ngày!");
+            return;
+          }
+          if (content === "") {
+            delete state.notes[date];
+          } else {
+            state.notes[date] = content;
+          }
+          saveNotes();
+          renderNotesScreen();
+          renderAll();
+          alert("Đã lưu ghi chú thành công!");
+        });
+      }
 
       $("#compareDateA").addEventListener("change", event => {
         setCompareDateA(event.target.value);
