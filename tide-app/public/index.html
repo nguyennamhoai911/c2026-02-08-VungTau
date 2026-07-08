@@ -2667,14 +2667,19 @@
       
       let score;
       if (allOk) {
-        score = 88 + Math.min(12, Math.max(0, threshold - max) * 8);
+        score = 75 + Math.min(25, Math.max(0, threshold - max) * 20);
       } else {
         const belowCount = values.filter(value => value <= threshold).length;
-        if (belowCount >= 3) {
-          // If at least 3 samples (>= 1 hour) are playable
+        if (belowCount >= 4) {
+          // If at least 4 samples (>= 1.5 hours) are playable
           const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
           const margin = threshold - avgValue;
-          score = 70 + (belowCount / values.length) * 15 + margin * 5;
+          score = 70 + ((belowCount - 3) / 2) * 10 + margin * 5;
+        } else if (belowCount === 3) {
+          // If exactly 3 samples (1 hour) are playable: Cân nhắc (Yellow, around 50%)
+          const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
+          const margin = threshold - avgValue;
+          score = 50 + margin * 5;
         } else {
           // If less than 3 samples are playable: scale down dramatically
           if (belowCount === 2) {
