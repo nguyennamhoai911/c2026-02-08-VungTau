@@ -2561,35 +2561,24 @@
         threshold -= 0.7;
       }
 
-      const avgScore = values.length
-        ? values.reduce((sum, value) => sum + scoreBelow(value, threshold, 36), 0) / values.length
-        : 0;
       const allOk = values.length === FOOTBALL_SAMPLE_MINUTES.length && values.every(value => value <= threshold);
       
       let score;
       if (allOk) {
-        score = 75 + Math.min(25, Math.max(0, threshold - max) * 20);
+        // Scale score: 100% when max <= 2.0m, down to 0% when max >= 3.0m
+        score = Math.max(0, Math.min(100, Math.round(100 - (max - 2.0) * 100)));
       } else {
         const belowCount = values.filter(value => value <= threshold).length;
-        if (belowCount >= 4) {
-          // If at least 4 samples (>= 1.5 hours) are playable
+        if (belowCount === 4) {
           const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
           const margin = threshold - avgValue;
-          score = 70 + ((belowCount - 3) / 2) * 10 + margin * 5;
+          score = 70 + margin * 5;
         } else if (belowCount === 3) {
-          // If exactly 3 samples (1 hour) are playable: Cân nhắc (Yellow, around 50%)
           const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
           const margin = threshold - avgValue;
           score = 50 + margin * 5;
         } else {
-          // If less than 3 samples are playable: scale down dramatically
-          if (belowCount === 2) {
-            score = 25 * (avgScore / 100);
-          } else if (belowCount === 1) {
-            score = 5 * (avgScore / 100);
-          } else {
-            score = 0;
-          }
+          score = 0;
         }
       }
       score = Math.round(Math.max(0, Math.min(100, score)));
