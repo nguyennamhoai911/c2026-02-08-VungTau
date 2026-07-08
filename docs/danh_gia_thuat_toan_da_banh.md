@@ -9,47 +9,45 @@ Tài liệu này phân tích chi tiết và đánh giá thuật toán đánh gi�
 Thuật toán dự báo đá banh bãi biển (`assessFootball`) được thiết kế để xác định xem một ngày cụ thể có thích hợp để chơi đá bóng trên bãi biển hay không. Khác với các hoạt động khác (như bắt ghẹ cần nước ròng/rút sâu), đá bóng bãi biển cần **khung giờ có ánh sáng ngày** và **phần cát khô đủ rộng** (thủy triều không quá cao làm ngập bãi cát).
 
 ### Các thông số cốt lõi (Core Parameters):
-- **Khung giờ phân tích (Target Window)**: 16:30 - 18:30 hằng ngày. Đây là thời điểm lý tưởng vì trời mát mẻ, còn đủ ánh sáng tự nhiên và là giờ tan tầm phổ biến cho các hoạt động thể thao ngoài trời.
-- **Ngưỡng nước giới hạn (Threshold)**: Mặc định dưới `3.0m` (có thể tùy chỉnh). Đặc biệt, nếu **triều đang dâng** trong khung giờ chơi (mực nước lúc 18:30 > 16:30), ngưỡng nước giới hạn sẽ tự động giảm đi `0.7m` (xuống còn `2.3m`) do sóng triều dâng lấn bãi mạnh hơn.
-- **Tần suất lấy mẫu (Sampling)**: Lấy mẫu tại 5 thời điểm cách nhau 30 phút: `16:30`, `17:00`, `17:30`, `18:00`, `18:30`.
+- **Khung giờ phân tích chính (Target Window)**: **17:00 - 18:00** hằng ngày. Đây là thời điểm đá bóng thực tế chủ yếu. Mốc 18:30 không được kéo điểm lên quá cao.
+- **Tần suất lấy mẫu (Sampling)**: Lấy mẫu tại 3 thời điểm: `17:00` (quyết định đi hay không), `17:30` (quyết định tốt hay tạm), và `18:00` (điểm cộng nhỏ).
 
 ---
 
 ## 2. Chi Tiết Logic Tính Toán (Detailed Logic & Formulas)
 
 ### Bước 1: Nội suy mực nước (Tide Interpolation)
-Vì dữ liệu đầu vào thủy triều chỉ có theo từng giờ chẵn (ví dụ: 16h, 17h, 18h, 19h), thuật toán sử dụng **nội suy hình sin/cosine (cosine interpolation)** để ước lượng mực nước chính xác hơn tại các phút lẻ (16:30, 17:30, 18:30). Cách này mô phỏng đường cong thủy triều chuẩn xác hơn so với nội suy tuyến tính.
+Sử dụng công thức nội suy hình sin/cosine tại 3 phút lẻ:
+- $H_{17}$ (Nước lúc 17:00)
+- $H_{17.5}$ (Nước lúc 17:30)
+- $H_{18}$ (Nước lúc 18:00)
 
-Công thức nội suy tại phút lẻ `minute`:
-$$x = \frac{minute - hour \times 60}{60}$$
-$$cosRatio = \frac{1 - \cos(x \times \pi)}{2}$$
-$$H_{minute} = H_{hour} + (H_{next\_hour} - H_{hour}) \times cosRatio$$
+### Bước 2: Phân loại triều dâng / triều rút
+- **Triều đang dâng** ($H_{18} > H_{17}$): Phạt rất nặng vì bãi cát bị hẹp nhanh.
+- **Triều đang rút** ($H_{18} \le H_{17}$): Thuận lợi hơn nhưng vẫn bị giới hạn nếu đẹp quá muộn.
 
-### Bước 2: Tính điểm thành phần (Sub-score Calculation)
-Với mỗi điểm mẫu trong 5 điểm mẫu, thuật toán tính điểm độ phù hợp của mực nước qua hàm `scoreBelow`:
-- Nếu mực nước $H \le \text{Threshold}$ ($3.0m$): Điểm = `100` (hoàn hảo).
-- Nếu mực nước $H > \text{Threshold}$ (ví dụ nước dâng lên trên 3m): Điểm sẽ bị trừ dần dựa trên mức độ vượt ngưỡng với hệ số phạt (penalty coefficient) là `36` điểm/mét:
-  $$\text{Score} = \max(0, 100 - (H - \text{Threshold}) \times 36)$$
+### Bước 3: Hàm tính điểm mềm (Sigmoid)
+Sử dụng hàm Sigmoid để làm mượt điểm số dựa trên ngưỡng chuyển tiếp:
+$$\text{scoreHeight}(H, \text{Threshold}, \text{softness} = 0.12) = \frac{100}{1 + e^{(H - \text{Threshold}) / 0.12}}$$
 
-*Ví dụ: Nếu nước cao 3.5m (vượt ngưỡng 0.5m), điểm tại thời điểm đó sẽ là $100 - 0.5 \times 36 = 82$.*
+### Bước 4: Công thức tính điểm cụ thể
 
-### Bước 3: Tính điểm tổng hợp cho ngày (Final Score Aggregation)
-Thuật toán phân chia thành 2 trường hợp chính để tính điểm cuối cùng:
+#### **Trường hợp Triều Dâng (`isRising = true`)**:
+- $H_{18} \ge 2.70m$: **0%** (ngập sát kè).
+- $H_{18} \ge 2.60m$: **20%** (nước cao bãi hẹp).
+- $H_{17.5} \ge 2.45m$ và $H_{18} \ge 2.55m$: **25%** (rất rủi ro).
+- Toàn khung thấp ($H_{17} \le 2.10m$, $H_{17.5} \le 2.25m$, $H_{18} \le 2.40m$): **90%** (rất đẹp).
+- Điểm mềm:
+  $$\text{Score} = \text{scoreHeight}(H_{17}, 2.30) \times 0.45 + \text{scoreHeight}(H_{17.5}, 2.35) \times 0.40 + \text{scoreHeight}(H_{18}, 2.45) \times 0.15$$
 
-#### **Trường hợp A: Tất cả 5 điểm mẫu đều đạt yêu cầu ($H \le \text{Threshold}$)**
-Đây là trường hợp lý tưởng (`allOk = true`). Điểm số được tính toán và làm mượt dựa trên mực nước lớn nhất trong khung giờ chơi ($H_{max}$):
-$$\text{Score} = \max(0, \min(100, \text{round}(100 - (H_{max} - 2.0) * 100)))$$
-- Nếu nước rút cực thấp ($H_{max} \le 2.0m$): Điểm số đạt tối đa $\implies$ **Điểm cuối cùng = 100%**.
-- Nếu nước mập mé ngưỡng giới hạn ($H_{max} = 3.0m$): Điểm số chạm sàn $\implies$ **Điểm cuối cùng = 0%**.
-
-#### **Trường hợp B: Có ít nhất một điểm mẫu vượt ngưỡng ($H > \text{Threshold}$)**
-Đây là trường hợp bãi cát sẽ bị ngập ở một số thời điểm trong khung giờ chơi.
-Thuật toán tính điểm dựa trên số mẫu đạt chuẩn chơi được (`belowCount`):
-- **Nếu chơi được 1.5 tiếng (tương đương `belowCount === 4`)**: Điểm số nằm trong vùng **Rất đáng đi (Green, khoảng 70% - 73%)**:
-  $$\text{Score} = 70 + \text{margin} \times 5$$
-- **Nếu chơi được đúng 1.0 tiếng (tương đương `belowCount === 3`)**: Điểm số nằm trong vùng **Cân nhắc (Yellow, khoảng 50% - 53%)**:
-  $$\text{Score} = 50 + \text{margin} \times 5$$
-- **Nếu chơi được < 1.0 tiếng (tương đương `belowCount <= 2`)**: Thời gian chơi quá ngắn, không khả thi $\implies$ **Điểm cuối cùng = 0%**.
+#### **Trường hợp Triều Rút (`isRising = false`)**:
+- $H_{17} \ge 3.10m$ và $H_{17.5} \ge 3.00m$: **0%** (nước quá cao).
+- $H_{17} \ge 2.75m$ và $H_{17.5} \ge 2.50m$: **20%** (đẹp quá muộn - hiệu chuẩn ngày 03/07).
+- $H_{17} \ge 2.65m$ và $H_{17.5} \ge 2.45m$: **35%** (hơi muộn).
+- $H_{17} \ge 2.50m$ và $H_{17.5} \ge 2.35m$: **55%** (tạm được).
+- Đẹp từ đầu khung ($H_{17} \le 2.40m$, $H_{17.5} \le 2.30m$): **90%** (hoàn hảo).
+- Điểm mềm:
+  $$\text{Score} = \text{scoreHeight}(H_{17}, 2.45) \times 0.50 + \text{scoreHeight}(H_{17.5}, 2.40) \times 0.35 + \text{scoreHeight}(H_{18}, 2.50) \times 0.15$$
 
 ---
 

@@ -2626,73 +2626,179 @@
       return { disabled: false };
     }
 
-    function assessFootball(day) {
-      let threshold = getThreshold("football");
-      const samples = FOOTBALL_SAMPLE_MINUTES
-        .map(minute => ({ minute, height: heightAtMinute(day, minute) }))
-        .filter(sample => Number.isFinite(sample.height));
-      const values = samples.map(sample => sample.height);
-      const min = values.length ? Math.min(...values) : null;
-      const max = values.length ? Math.max(...values) : null;
+    const FOOTBALL_OBSERVED_SCORES = {
+      // User-confirmed actual history
+      "2026-07-03": 20,
 
-      const footballCheck = isActivityDisabled("football", day.date);
-      if (footballCheck.disabled) {
-        const score = footballCheck.score ?? 0;
+      // Historical note: tide rising, 18:00 around 2.6m, actual only around 20%
+      "2026-07-08": 20
+    };
+
+    const FOOTBALL_MAIN_MINUTES = {
+      h17: 17 * 60,
+      h1730: 17 * 60 + 30,
+      h18: 18 * 60
+    };
+
+    function getFootballNoteOverride(dateStr) {
+      const note = (state.notes[dateStr] || "").trim();
+      const lower = note.toLowerCase();
+
+      if (!note) return null;
+
+      const percentMatch = lower.match(/(\d{1,3})\s*%/);
+      const hasFootballNegativeKeyword = [
+        "không đá được",
+        "không đá banh",
+        "ko đá đc",
+        "ko đá banh",
+        "hủy đá",
+        "hoãn đá"
+      ].some(keyword => lower.includes(keyword));
+
+      if (percentMatch) {
+        const score = Math.max(0, Math.min(100, parseInt(percentMatch[1], 10)));
         return {
-          activityId: "football",
-          threshold,
           score,
-          min,
-          max,
-          bestLow: null,
-          window: score > 0 ? `${score}% khả năng` : "Hủy đá banh",
-          frameText: min !== null ? `${formatHeight(min)} - ${formatHeight(max)}` : "--",
-          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
-          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
-          overrideReason: footballCheck.reason
+          reason: note
         };
       }
 
-      const hStart = heightAtMinute(day, FOOTBALL_START_MINUTE);
-      const hEnd = heightAtMinute(day, FOOTBALL_END_MINUTE);
-      const isRising = Number.isFinite(hStart) && Number.isFinite(hEnd) && hEnd > hStart;
-      if (isRising) {
-        threshold -= 0.7;
+      if (hasFootballNegativeKeyword) {
+        const score = 0;
+        return {
+          score,
+          reason: note
+        };
       }
 
-      const allOk = values.length === FOOTBALL_SAMPLE_MINUTES.length && values.every(value => value <= threshold);
-      
-      let score;
-      if (allOk) {
-        // Scale score: 100% when max <= 2.0m, down to 0% when max >= 3.0m
-        score = Math.max(0, Math.min(100, Math.round(100 - (max - 2.0) * 100)));
-      } else {
-        const belowCount = values.filter(value => value <= threshold).length;
-        if (belowCount === 4) {
-          const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
-          const margin = threshold - avgValue;
-          score = 70 + margin * 5;
-        } else if (belowCount === 3) {
-          const avgValue = values.reduce((sum, val) => sum + val, 0) / values.length;
-          const margin = threshold - avgValue;
-          score = 50 + margin * 5;
-        } else {
-          score = 0;
-        }
+      return null;
+    }
+
+    function scoreHeight(height, threshold, softness = 0.12) {
+      if (!Number.isFinite(height)) return 0;
+      return 100 / (1 + Math.exp((height - threshold) / softness));
+    }
+
+    function scoreRisingFootball(h17, h1730, h18) {
+      // Case giống 22/06: 18h >= 2.70m, gần như không đá được
+      if (h18 >= 2.70) return 0;
+
+      // Case giống 08/07: 18h khoảng 2.6m, thực tế chỉ khoảng 20%
+      if (h18 >= 2.60) return 20;
+
+      // Nếu 17:30 đã cao và 18h tiếp tục cao, rất rủi ro
+      if (h1730 >= 2.45 && h18 >= 2.55) return 25;
+
+      // Nếu toàn khung còn thấp, đá tốt dù nước đang dâng
+      if (h17 <= 2.10 && h1730 <= 2.25 && h18 <= 2.40) return 90;
+
+      // Điểm mềm cho các case còn lại
+      const s17 = scoreHeight(h17, 2.30, 0.12);
+      const s1730 = scoreHeight(h1730, 2.35, 0.12);
+      const s18 = scoreHeight(h18, 2.45, 0.12);
+
+      return s17 * 0.45 + s1730 * 0.40 + s18 * 0.15;
+    }
+
+    function scoreFallingFootball(h17, h1730, h18) {
+      // Nước còn quá cao ở 17h và 17h30: không đá được
+      if (h17 >= 3.10 && h1730 >= 3.00) return 0;
+
+      // Case hiệu chuẩn 03/07:
+      // 17h khoảng 2.8m, 17h30 khoảng 2.55m, 18h bắt đầu đẹp nhưng quá muộn
+      if (h17 >= 2.75 && h1730 >= 2.50) return 20;
+
+      // Vẫn hơi muộn, có thể đá ít nhưng không đẹp
+      if (h17 >= 2.65 && h1730 >= 2.45) return 35;
+
+      // Tạm được
+      if (h17 >= 2.50 && h1730 >= 2.35) return 55;
+
+      // Đẹp từ đầu khung
+      if (h17 <= 2.40 && h1730 <= 2.30) return 90;
+
+      // Điểm mềm cho các case còn lại
+      const s17 = scoreHeight(h17, 2.45, 0.12);
+      const s1730 = scoreHeight(h1730, 2.40, 0.12);
+      const s18 = scoreHeight(h18, 2.50, 0.12);
+
+      return s17 * 0.50 + s1730 * 0.35 + s18 * 0.15;
+    }
+
+    function buildFootballReason(h17, h1730, h18, isRising) {
+      const direction = isRising ? "nước đang dâng" : "nước đang rút";
+      return `Khung đá chính 17:00–18:00: 17h ${formatHeight(h17)}, 17h30 ${formatHeight(h1730)}, 18h ${formatHeight(h18)}; ${direction}.`;
+    }
+
+    function calculateFootballScore(day) {
+      const noteOverride = getFootballNoteOverride(day.date);
+      if (noteOverride) {
+        return {
+          score: noteOverride.score,
+          reason: noteOverride.reason,
+          source: "note"
+        };
       }
-      score = Math.round(Math.max(0, Math.min(100, score)));
+
+      if (FOOTBALL_OBSERVED_SCORES[day.date] !== undefined) {
+        return {
+          score: FOOTBALL_OBSERVED_SCORES[day.date],
+          reason: "Dữ liệu thực tế đã ghi nhận",
+          source: "observed"
+        };
+      }
+
+      const h17 = heightAtMinute(day, FOOTBALL_MAIN_MINUTES.h17);
+      const h1730 = heightAtMinute(day, FOOTBALL_MAIN_MINUTES.h1730);
+      const h18 = heightAtMinute(day, FOOTBALL_MAIN_MINUTES.h18);
+
+      if (![h17, h1730, h18].every(Number.isFinite)) {
+        return {
+          score: 0,
+          reason: "Không đủ dữ liệu mực nước trong khung 17:00–18:00",
+          source: "formula"
+        };
+      }
+
+      const isRising = h18 > h17;
+
+      let score;
+
+      if (isRising) {
+        score = scoreRisingFootball(h17, h1730, h18);
+      } else {
+        score = scoreFallingFootball(h17, h1730, h18);
+      }
+
+      return {
+        score: Math.round(Math.max(0, Math.min(100, score))),
+        reason: buildFootballReason(h17, h1730, h18, isRising),
+        source: "formula"
+      };
+    }
+
+    function assessFootball(day) {
+      const h17 = heightAtMinute(day, 17 * 60);
+      const h1730 = heightAtMinute(day, 17 * 60 + 30);
+      const h18 = heightAtMinute(day, 18 * 60);
+
+      const calculated = calculateFootballScore(day);
+      const score = calculated.score;
 
       return {
         activityId: "football",
-        threshold,
+        threshold: null,
         score,
-        min,
-        max,
+        min: Math.min(h17, h1730, h18),
+        max: Math.max(h17, h1730, h18),
         bestLow: null,
-        window: `${minutesToTime(FOOTBALL_START_MINUTE)} - ${minutesToTime(FOOTBALL_END_MINUTE)}`,
-        frameText: `${formatHeight(min)} - ${formatHeight(max)}`,
+        window: "17:00 - 18:00",
+        frameText: `${formatHeight(h17)} / ${formatHeight(h1730)} / ${formatHeight(h18)}`,
         tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
-        label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận"
+        label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+        overrideReason: calculated.source !== "formula" ? calculated.reason : null,
+        formulaReason: calculated.reason
       };
     }
 
