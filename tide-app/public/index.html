@@ -2692,7 +2692,12 @@
       if (h1730 >= 2.45 && h18 >= 2.55) return 25;
 
       // Nếu toàn khung còn thấp, đá tốt dù nước đang dâng
-      if (h17 <= 2.10 && h1730 <= 2.25 && h18 <= 2.40) return 90;
+      if (h17 <= 2.10 && h1730 <= 2.25 && h18 <= 2.40) {
+        const baseScore = 90;
+        const avgHeight = (h17 + h1730) / 2;
+        const bonus = Math.max(0, Math.min(10, (2.175 - avgHeight) * 8));
+        return baseScore + bonus;
+      }
 
       // Điểm mềm cho các case còn lại
       const s17 = scoreHeight(h17, 2.30, 0.12);
@@ -2717,7 +2722,12 @@
       if (h17 >= 2.50 && h1730 >= 2.35) return 55;
 
       // Đẹp từ đầu khung
-      if (h17 <= 2.40 && h1730 <= 2.30) return 90;
+      if (h17 <= 2.40 && h1730 <= 2.30) {
+        const baseScore = 90;
+        const avgHeight = (h17 + h1730) / 2;
+        const bonus = Math.max(0, Math.min(10, (2.35 - avgHeight) * 7));
+        return baseScore + bonus;
+      }
 
       // Điểm mềm cho các case còn lại
       const s17 = scoreHeight(h17, 2.45, 0.12);
