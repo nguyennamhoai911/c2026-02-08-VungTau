@@ -2151,14 +2151,10 @@
     };
 
     function loadNotes() {
-      const defaultNotes = {
-        "2026-07-08": "Hôm nay không đá được, chỉ khoảng 20% thôi"
-      };
       try {
-        const saved = JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
-        return { ...defaultNotes, ...saved };
+        return JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
       } catch {
-        return defaultNotes;
+        return {};
       }
     }
 
