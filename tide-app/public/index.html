@@ -2459,6 +2459,25 @@
       if (activityId === "crab") return assessCrab(day);
       if (activityId === "football") return assessFootball(day);
 
+      const threshold = getThreshold(activityId);
+      
+      const activityCheck = isActivityDisabled(activityId, day.date);
+      if (activityCheck.disabled) {
+        const score = activityCheck.score ?? 0;
+        const bestLow = getBestLow(day);
+        return {
+          activityId,
+          threshold,
+          score,
+          min: null,
+          bestLow,
+          window: score > 0 ? `${score}% khả năng` : "Hủy hoạt động",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+          overrideReason: activityCheck.reason
+        };
+      }
+
       const hours = getPreferredHours(activityId);
       const values = hours.map(hour => day.hours[hour]).filter(Number.isFinite);
       const min = values.length ? Math.min(...values) : null;
@@ -2512,6 +2531,24 @@
       const targetScore = scoreBelow(targetHeight, threshold, 75);
       const bestLow = getBestLow(day);
 
+      const crabCheck = isActivityDisabled("crab", day.date);
+      if (crabCheck.disabled) {
+        const score = crabCheck.score ?? 0;
+        return {
+          activityId: "crab",
+          threshold,
+          eveningThreshold: CRAB_EVENING_THRESHOLD,
+          score,
+          min: bestLow?.height ?? null,
+          bestLow,
+          focusHeight: targetHeight,
+          window: score > 0 ? `${score}% khả năng` : "Hủy bắt ghẹ",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+          overrideReason: crabCheck.reason
+        };
+      }
+
       let score;
       if (targetOk && eveningOk) {
         const maxEvening = Math.max(...eveningValues);
@@ -2545,6 +2582,50 @@
       };
     }
 
+    function isActivityDisabled(activityId, dateStr) {
+      const directNote = (state.notes[dateStr] || "").toLowerCase();
+      
+      const keywordsMap = {
+        football: ["không đá được", "không đá banh", "ko đá đc", "ko đá banh", "hủy đá", "hoãn đá"],
+        crab: ["không bắt được ghẹ", "không đi bắt ghẹ", "không bắt ghẹ", "ko bắt ghẹ", "ko đi bắt ghẹ", "hủy bắt ghẹ"],
+        rocks: ["không đi bãi đá", "không đi đá", "không ra bãi đá", "ko đi bãi đá", "hủy đi bãi đá"]
+      };
+      
+      const keywords = keywordsMap[activityId] || [];
+      for (const kw of keywords) {
+        if (directNote.includes(kw)) {
+          const pctMatch = directNote.match(/(\d+)\s*%/);
+          const customScore = pctMatch ? parseInt(pctMatch[1], 10) : 0;
+          return { disabled: true, reason: state.notes[dateStr], score: customScore };
+        }
+      }
+      
+      if (!dateStr || !dateStr.includes("-")) return { disabled: false };
+      const parts = dateStr.split("-").map(Number);
+      if (parts.length !== 3 || parts.some(isNaN)) return { disabled: false };
+      
+      const [year, month, day] = parts;
+      const d = new Date(year, month - 1, day);
+      d.setDate(d.getDate() - 1);
+      
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const dayVal = String(d.getDate()).padStart(2, "0");
+      const yesterdayStr = `${y}-${m}-${dayVal}`;
+      
+      const yesterdayNote = (state.notes[yesterdayStr] || "").toLowerCase();
+      for (const kw of keywords) {
+        if (yesterdayNote.includes(kw)) {
+          if (yesterdayNote.includes("mai") || yesterdayNote.includes("ngày mai")) {
+            const pctMatch = yesterdayNote.match(/(\d+)\s*%/);
+            const customScore = pctMatch ? parseInt(pctMatch[1], 10) : 0;
+            return { disabled: true, reason: `Ghi chú ngày ${dayVal}/${m}: "${state.notes[yesterdayStr]}"`, score: customScore };
+          }
+        }
+      }
+      return { disabled: false };
+    }
+
     function assessFootball(day) {
       let threshold = getThreshold("football");
       const samples = FOOTBALL_SAMPLE_MINUTES
@@ -2553,6 +2634,24 @@
       const values = samples.map(sample => sample.height);
       const min = values.length ? Math.min(...values) : null;
       const max = values.length ? Math.max(...values) : null;
+
+      const footballCheck = isActivityDisabled("football", day.date);
+      if (footballCheck.disabled) {
+        const score = footballCheck.score ?? 0;
+        return {
+          activityId: "football",
+          threshold,
+          score,
+          min,
+          max,
+          bestLow: null,
+          window: score > 0 ? `${score}% khả năng` : "Hủy đá banh",
+          frameText: min !== null ? `${formatHeight(min)} - ${formatHeight(max)}` : "--",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+          overrideReason: footballCheck.reason
+        };
+      }
 
       const hStart = heightAtMinute(day, FOOTBALL_START_MINUTE);
       const hEnd = heightAtMinute(day, FOOTBALL_END_MINUTE);
@@ -2654,14 +2753,19 @@
     function activityCard(day, activityId) {
       const meta = ACTIVITY_META[activityId];
       const assessment = assessActivity(day, activityId);
+      const overrideHtml = assessment.overrideReason 
+        ? `<div class="card-override-reason" style="font-size: 11px; color: var(--danger); margin-top: 6px; font-weight: 600; line-height: 1.35; display: flex; align-items: center; gap: 4px;"><i data-lucide="alert-circle" style="width: 13px; height: 13px; flex-shrink: 0;"></i> ${assessment.overrideReason}</div>`
+        : "";
+      const disabledClass = assessment.score === 0 ? " disabled-activity" : "";
       return `
-        <article class="activity-card ${meta.tone}">
+        <article class="activity-card ${meta.tone}${disabledClass}">
           <div class="activity-art" aria-hidden="true">${meta.icon}</div>
           <div>
             <div class="activity-title">
               <h3>${meta.title}</h3>
             </div>
             <div><span class="score ${assessment.tone}">${assessment.score}%</span> <span class="fit-text">phù hợp</span></div>
+            ${overrideHtml}
           </div>
         </article>
       `;
@@ -2677,11 +2781,16 @@
       $("#detailActivityCards").innerHTML = ["football", "crab"].map(id => {
         const meta = ACTIVITY_META[id];
         const assessment = assessActivity(day, id);
+        const overrideHtml = assessment.overrideReason 
+          ? `<div style="font-size: 10px; color: var(--danger); grid-column: 1 / -1; margin-top: 4px; font-weight: 600; line-height: 1.3;">⚠️ ${assessment.overrideReason}</div>`
+          : "";
+        const disabledClass = assessment.score === 0 ? " disabled-card" : "";
         return `
-          <div class="small-card">
+          <div class="small-card${disabledClass}">
             <span>${meta.icon} ${meta.title}</span>
             <strong class="${assessment.tone === "bad" ? "score bad" : ""}">${assessment.score}%</strong>
             <span>${assessment.window}</span>
+            ${overrideHtml}
           </div>
         `;
       }).join("");
@@ -2690,10 +2799,20 @@
       const football = assessActivity(day, "football");
       const low = getBestLow(day);
 
+      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>`;
+      if (football.overrideReason) {
+        footballReason = `<div><span class="dot-bad">✗</span><span>Đá banh bị hủy do ghi chú: "${football.overrideReason}".</span></div>`;
+      }
+
+      let crabReason = `<div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>`;
+      if (crab.overrideReason) {
+        crabReason = `<div><span class="dot-bad">✗</span><span>Bắt ghẹ bị hủy do ghi chú: "${crab.overrideReason}".</span></div>`;
+      }
+
       $("#reasonList").innerHTML = `
         <div><span class="dot-ok">✓</span><span>Nước thấp nhất ${formatHeight(low?.height)} lúc ${low?.time || "--"}, thuận lợi nhất cho các hoạt động cần nước rút.</span></div>
-        <div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>
-        <div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>
+        ${footballReason}
+        ${crabReason}
       `;
     }
 
