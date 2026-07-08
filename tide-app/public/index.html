@@ -2370,6 +2370,7 @@
     }
 
     function formatThreshold(value) {
+      if (value === null || value === undefined) return "--";
       if (state.settings.unit === "cm") return `${Math.round(value * 100)}cm`;
       return `${value.toFixed(1)}m`;
     }
@@ -2905,7 +2906,7 @@
       const football = assessActivity(day, "football");
       const low = getBestLow(day);
 
-      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(football.threshold)}.</span></div>`;
+      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(getThreshold("football"))}.</span></div>`;
       if (football.overrideReason) {
         footballReason = `<div><span class="dot-bad">✗</span><span>Đá banh bị hủy do ghi chú: "${football.overrideReason}".</span></div>`;
       }
@@ -3389,10 +3390,10 @@
         const assessment = assessActivity(day, id);
         const badgeClass = id === "football" ? "blue" : id === "rocks" ? "orange" : "";
         const badgeText = id === "crab"
-          ? `20h dưới ${formatThreshold(assessment.threshold)}`
+          ? `20h dưới ${formatThreshold(getThreshold(id))}`
           : id === "football"
-            ? `16:30-18:30 dưới ${formatThreshold(assessment.threshold)}`
-            : `Dưới ${formatThreshold(assessment.threshold)}`;
+            ? `17:00-18:00 dưới ${formatThreshold(getThreshold(id))}`
+            : `Dưới ${formatThreshold(getThreshold(id))}`;
         return `
           <article class="activity-card compact ${meta.tone}">
             <div class="activity-art" aria-hidden="true">${meta.icon}</div>
