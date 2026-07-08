@@ -2464,6 +2464,24 @@
       if (activityId === "football") return assessFootball(day);
 
       const threshold = getThreshold(activityId);
+      
+      const activityCheck = isActivityDisabled(activityId, day.date);
+      if (activityCheck.disabled) {
+        const score = activityCheck.score ?? 0;
+        const bestLow = getBestLow(day);
+        return {
+          activityId,
+          threshold,
+          score,
+          min: null,
+          bestLow,
+          window: score > 0 ? `${score}% khả năng` : "Hủy hoạt động",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+          overrideReason: activityCheck.reason
+        };
+      }
+
       const hours = getPreferredHours(activityId);
       const values = hours.map(hour => day.hours[hour]).filter(Number.isFinite);
       const min = values.length ? Math.min(...values) : null;
@@ -2515,8 +2533,27 @@
         ? eveningValues.reduce((sum, value) => sum + scoreBelow(value, CRAB_EVENING_THRESHOLD, 45), 0) / eveningValues.length
         : 0;
       const targetScore = scoreBelow(targetHeight, threshold, 75);
-      let score;
+      const bestLow = getBestLow(day);
 
+      const crabCheck = isActivityDisabled("crab", day.date);
+      if (crabCheck.disabled) {
+        const score = crabCheck.score ?? 0;
+        return {
+          activityId: "crab",
+          threshold,
+          eveningThreshold: CRAB_EVENING_THRESHOLD,
+          score,
+          min: bestLow?.height ?? null,
+          bestLow,
+          focusHeight: targetHeight,
+          window: score > 0 ? `${score}% khả năng` : "Hủy bắt ghẹ",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
+          overrideReason: crabCheck.reason
+        };
+      }
+
+      let score;
       if (targetOk && eveningOk) {
         const maxEvening = Math.max(...eveningValues);
         const margin = Math.max(0, threshold - targetHeight) * 8 + Math.max(0, CRAB_EVENING_THRESHOLD - maxEvening) * 3;
@@ -2529,7 +2566,6 @@
       }
 
       score = Math.round(Math.max(0, Math.min(100, score)));
-      const bestLow = getBestLow(day);
       const window = targetOk && eveningOk
         ? "18:00 - 21:00"
         : targetOk
@@ -2550,9 +2586,16 @@
       };
     }
 
-    function isFootballDisabled(dateStr) {
+    function isActivityDisabled(activityId, dateStr) {
       const directNote = (state.notes[dateStr] || "").toLowerCase();
-      const keywords = ["không đá được", "không đá banh", "ko đá đc", "ko đá banh", "hủy đá", "hoãn đá"];
+      
+      const keywordsMap = {
+        football: ["không đá được", "không đá banh", "ko đá đc", "ko đá banh", "hủy đá", "hoãn đá"],
+        crab: ["không bắt được ghẹ", "không đi bắt ghẹ", "không bắt ghẹ", "ko bắt ghẹ", "ko đi bắt ghẹ", "hủy bắt ghẹ"],
+        rocks: ["không đi bãi đá", "không đi đá", "không ra bãi đá", "ko đi bãi đá", "hủy đi bãi đá"]
+      };
+      
+      const keywords = keywordsMap[activityId] || [];
       for (const kw of keywords) {
         if (directNote.includes(kw)) {
           const pctMatch = directNote.match(/(\d+)\s*%/);
@@ -2561,14 +2604,20 @@
         }
       }
       
-      const d = new Date(dateStr);
+      if (!dateStr || !dateStr.includes("-")) return { disabled: false };
+      const parts = dateStr.split("-").map(Number);
+      if (parts.length !== 3 || parts.some(isNaN)) return { disabled: false };
+      
+      const [year, month, day] = parts;
+      const d = new Date(year, month - 1, day);
       d.setDate(d.getDate() - 1);
+      
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
       const dayVal = String(d.getDate()).padStart(2, "0");
       const yesterdayStr = `${y}-${m}-${dayVal}`;
-      const yesterdayNote = (state.notes[yesterdayStr] || "").toLowerCase();
       
+      const yesterdayNote = (state.notes[yesterdayStr] || "").toLowerCase();
       for (const kw of keywords) {
         if (yesterdayNote.includes(kw)) {
           if (yesterdayNote.includes("mai") || yesterdayNote.includes("ngày mai")) {
@@ -2590,7 +2639,7 @@
       const min = values.length ? Math.min(...values) : null;
       const max = values.length ? Math.max(...values) : null;
 
-      const footballCheck = isFootballDisabled(day.date);
+      const footballCheck = isActivityDisabled("football", day.date);
       if (footballCheck.disabled) {
         const score = footballCheck.score ?? 0;
         return {
@@ -2765,10 +2814,15 @@
         footballReason = `<div><span class="dot-bad">✗</span><span>Đá banh bị hủy do ghi chú: "${football.overrideReason}".</span></div>`;
       }
 
+      let crabReason = `<div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>`;
+      if (crab.overrideReason) {
+        crabReason = `<div><span class="dot-bad">✗</span><span>Bắt ghẹ bị hủy do ghi chú: "${crab.overrideReason}".</span></div>`;
+      }
+
       $("#reasonList").innerHTML = `
         <div><span class="dot-ok">✓</span><span>Nước thấp nhất ${formatHeight(low?.height)} lúc ${low?.time || "--"}, thuận lợi nhất cho các hoạt động cần nước rút.</span></div>
         ${footballReason}
-        <div><span class="dot-ok">✓</span><span>Bắt ghẹ đạt ${crab.score}%: 20h là ${formatHeight(crab.focusHeight)}, điều kiện tốt nhất là 18h-20h dưới ${formatThreshold(CRAB_EVENING_THRESHOLD)} và 20h dưới ${formatThreshold(crab.threshold)}.</span></div>
+        ${crabReason}
       `;
     }
 
