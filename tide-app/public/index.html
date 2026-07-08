@@ -2657,7 +2657,7 @@
       const hEnd = heightAtMinute(day, FOOTBALL_END_MINUTE);
       const isRising = Number.isFinite(hStart) && Number.isFinite(hEnd) && hEnd > hStart;
       if (isRising) {
-        threshold -= 0.5;
+        threshold -= 0.7;
       }
 
       const avgScore = values.length

@@ -118,5 +118,24 @@
         "description": "Bãi cát rộng khoảng 5m, đá bóng khá thoải mái dù triều đang dâng nhẹ."
       }
     ]
+  },
+  {
+    "date": "2026-07-08",
+    "activity": "football",
+    "feedback_timestamp": "2026-07-08T18:52:49+07:00",
+    "tide_data_reference": {
+      "16:00": 2.0,
+      "17:00": 2.3,
+      "18:00": 2.6,
+      "19:00": 2.8
+    },
+    "observations": [
+      {
+        "time": "18:00",
+        "tide_height_interpolated_m": 2.6,
+        "playability": "bad",
+        "description": "Thực tế không đá bóng được (khoảng 20%), bãi cát hẹp và nước dâng lên nhanh."
+      }
+    ]
   }
 ]

@@ -10,7 +10,7 @@ Thuật toán dự báo đá banh bãi biển (`assessFootball`) được thiế
 
 ### Các thông số cốt lõi (Core Parameters):
 - **Khung giờ phân tích (Target Window)**: 16:30 - 18:30 hằng ngày. Đây là thời điểm lý tưởng vì trời mát mẻ, còn đủ ánh sáng tự nhiên và là giờ tan tầm phổ biến cho các hoạt động thể thao ngoài trời.
-- **Ngưỡng nước giới hạn (Threshold)**: Mặc định dưới `3.0m` (có thể tùy chỉnh). Đặc biệt, nếu **triều đang dâng** trong khung giờ chơi (mực nước lúc 18:30 > 16:30), ngưỡng nước giới hạn sẽ tự động giảm đi `0.5m` (xuống còn `2.5m`) do sóng triều dâng lấn bãi mạnh hơn.
+- **Ngưỡng nước giới hạn (Threshold)**: Mặc định dưới `3.0m` (có thể tùy chỉnh). Đặc biệt, nếu **triều đang dâng** trong khung giờ chơi (mực nước lúc 18:30 > 16:30), ngưỡng nước giới hạn sẽ tự động giảm đi `0.7m` (xuống còn `2.3m`) do sóng triều dâng lấn bãi mạnh hơn.
 - **Tần suất lấy mẫu (Sampling)**: Lấy mẫu tại 5 thời điểm cách nhau 30 phút: `16:30`, `17:00`, `17:30`, `18:00`, `18:30`.
 
 ---
@@ -114,7 +114,9 @@ Hệ thống đã lưu lại dữ liệu thực tế ngày 17/06/2026 làm mốc
 - **Ngày 20/06/2026**:
   - **17:30 (Nước nội suy 3.20m)**: Nước ngập sát bờ suốt cả khung giờ, hoàn toàn không thể đá bóng (`bad`). Thực tế 0%. Kết quả thuật toán mới: **5%** (Không thuận).
 - **Ngày 22/06/2026** (Thứ Hai):
-  - **18:00 (Nước nội suy 2.7m - triều đang dâng)**: Thực tế hoàn toàn không thể đá bóng (0%), bãi cát chỉ rộng khoảng nửa mét. Triều đang dâng từ 2.4m lên 2.8m khiến sóng biển đánh sát tường kè. Kết quả thuật toán mới (áp dụng giảm ngưỡng dâng 0.5m còn 2.5m và phạt belowCount = 1): **5%** (Không thuận).
+  - **18:00 (Nước nội suy 2.7m - triều đang dâng)**: Thực tế hoàn toàn không thể đá bóng (0%), bãi cát chỉ rộng khoảng nửa mét. Triều đang dâng từ 2.4m lên 2.8m khiến sóng biển đánh sát tường kè. Kết quả thuật toán mới (áp dụng giảm ngưỡng dâng 0.7m còn 2.3m): **0%** (Không thuận).
 - **Ngày 23/06/2026** (Thứ Ba):
-  - **17:30 (Nước nội suy 2.2m - triều đang dâng nhẹ)**: Thực tế bãi cát rộng khoảng 5m, đá bóng khá thoải mái (`good`). Kết quả thuật toán mới: **89%** (Rất đáng đi).
+  - **17:30 (Nước nội suy 2.2m - triều đang dâng nhẹ)**: Thực tế bãi cát rộng khoảng 5m, đá bóng khá thoải mái (`good`). Kết quả thuật toán mới: **82%** (Rất đáng đi).
+- **Ngày 08/07/2026** (Thứ Tư):
+  - **18:00 (Nước nội suy 2.6m - triều đang dâng)**: Thực tế bãi cát rất hẹp, sóng đánh mạnh lên bãi và không thể chơi đá bóng (chỉ khoảng 20% khả năng chơi). Kết quả thuật toán mới (áp dụng giảm ngưỡng dâng 0.7m còn 2.3m, belowCount = 2): **23%** (Không thuận).
 
