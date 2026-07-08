@@ -2151,10 +2151,14 @@
     };
 
     function loadNotes() {
+      const defaultNotes = {
+        "2026-07-08": "Hôm nay không đá được, chỉ khoảng 20% thôi"
+      };
       try {
-        return JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
+        const saved = JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
+        return { ...defaultNotes, ...saved };
       } catch {
-        return {};
+        return defaultNotes;
       }
     }
 
@@ -2551,7 +2555,9 @@
       const keywords = ["không đá được", "không đá banh", "ko đá đc", "ko đá banh", "hủy đá", "hoãn đá"];
       for (const kw of keywords) {
         if (directNote.includes(kw)) {
-          return { disabled: true, reason: state.notes[dateStr] };
+          const pctMatch = directNote.match(/(\d+)\s*%/);
+          const customScore = pctMatch ? parseInt(pctMatch[1], 10) : 0;
+          return { disabled: true, reason: state.notes[dateStr], score: customScore };
         }
       }
       
@@ -2566,7 +2572,9 @@
       for (const kw of keywords) {
         if (yesterdayNote.includes(kw)) {
           if (yesterdayNote.includes("mai") || yesterdayNote.includes("ngày mai")) {
-            return { disabled: true, reason: `Ghi chú ngày ${dayVal}/${m}: "${state.notes[yesterdayStr]}"` };
+            const pctMatch = yesterdayNote.match(/(\d+)\s*%/);
+            const customScore = pctMatch ? parseInt(pctMatch[1], 10) : 0;
+            return { disabled: true, reason: `Ghi chú ngày ${dayVal}/${m}: "${state.notes[yesterdayStr]}"`, score: customScore };
           }
         }
       }
@@ -2584,17 +2592,18 @@
 
       const footballCheck = isFootballDisabled(day.date);
       if (footballCheck.disabled) {
+        const score = footballCheck.score ?? 0;
         return {
           activityId: "football",
           threshold,
-          score: 0,
+          score,
           min,
           max,
           bestLow: null,
-          window: "Hủy đá banh",
+          window: score > 0 ? `${score}% khả năng` : "Hủy đá banh",
           frameText: min !== null ? `${formatHeight(min)} - ${formatHeight(max)}` : "--",
-          tone: "bad",
-          label: "Hủy (Ghi chú)",
+          tone: score >= 70 ? "good" : score >= 40 ? "medium" : "bad",
+          label: score >= 70 ? "Rất đáng đi" : score >= 40 ? "Cân nhắc" : "Không thuận",
           overrideReason: footballCheck.reason
         };
       }
