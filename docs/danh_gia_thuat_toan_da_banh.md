@@ -37,26 +37,19 @@ Với mỗi điểm mẫu trong 5 điểm mẫu, thuật toán tính điểm đ�
 Thuật toán phân chia thành 2 trường hợp chính để tính điểm cuối cùng:
 
 #### **Trường hợp A: Tất cả 5 điểm mẫu đều đạt yêu cầu ($H \le \text{Threshold}$)**
-Đây là trường hợp lý tưởng (`allOk = true`). Điểm số cơ bản bắt đầu từ `75%`, và được cộng thêm điểm thưởng (bonus) nếu mực nước càng thấp (giúp bãi cát rộng hơn):
-$$\text{Score} = 75 + \min(25, (\text{Threshold} - H_{max}) \times 20)$$
-- Nếu nước rút cực thấp (ví dụ tối đa chỉ $1.75m$): Điểm thưởng đạt tối đa $+25 \implies$ **Điểm cuối cùng = 100%**.
-- Nếu nước mấp mé ngưỡng giới hạn (ví dụ tối đa $2.95m$): Điểm thưởng nhỏ $\implies$ **Điểm cuối cùng $\approx$ 75% - 76%**.
+Đây là trường hợp lý tưởng (`allOk = true`). Điểm số được tính toán và làm mượt dựa trên mực nước lớn nhất trong khung giờ chơi ($H_{max}$):
+$$\text{Score} = \max(0, \min(100, \text{round}(100 - (H_{max} - 2.0) * 100)))$$
+- Nếu nước rút cực thấp ($H_{max} \le 2.0m$): Điểm số đạt tối đa $\implies$ **Điểm cuối cùng = 100%**.
+- Nếu nước mập mé ngưỡng giới hạn ($H_{max} = 3.0m$): Điểm số chạm sàn $\implies$ **Điểm cuối cùng = 0%**.
 
 #### **Trường hợp B: Có ít nhất một điểm mẫu vượt ngưỡng ($H > \text{Threshold}$)**
 Đây là trường hợp bãi cát sẽ bị ngập ở một số thời điểm trong khung giờ chơi.
-Thuật toán sử dụng **cơ chế chấm điểm dẻo dựa trên số giờ chơi được thực tế** (`belowCount` - số điểm mẫu dưới ngưỡng trong tổng số 5 điểm lấy mẫu):
-- **Nếu chơi được $\ge 1.5$ tiếng (tương đương `belowCount >= 4`)**: Điểm số nằm trong vùng **Rất đáng đi (Green, 70% - 80%)**:
-  $$\text{Score} = 70 + \left(\frac{belowCount - 3}{2}\right) \times 10 + \text{margin} \times 5$$
-  *Ví dụ: Có 4/5 điểm đạt yêu cầu $\implies \text{Score} = 70 + 5 + \text{margin} \times 5 \approx 75\%$ (Vùng xanh lá, Rất đáng đi).*
-- **Nếu chơi được đúng 1.0 tiếng (tương đương `belowCount === 3`)**: Điểm số nằm trong vùng **Cân nhắc (Yellow, khoảng 50%)**:
+Thuật toán tính điểm dựa trên số mẫu đạt chuẩn chơi được (`belowCount`):
+- **Nếu chơi được 1.5 tiếng (tương đương `belowCount === 4`)**: Điểm số nằm trong vùng **Rất đáng đi (Green, khoảng 70% - 73%)**:
+  $$\text{Score} = 70 + \text{margin} \times 5$$
+- **Nếu chơi được đúng 1.0 tiếng (tương đương `belowCount === 3`)**: Điểm số nằm trong vùng **Cân nhắc (Yellow, khoảng 50% - 53%)**:
   $$\text{Score} = 50 + \text{margin} \times 5$$
-  *Ví dụ: Ngày 04/07/2026 có 3/5 điểm đạt yêu cầu $\implies \text{Score} \approx 51\%$ (Vùng vàng, Cân nhắc).*
-- **Nếu chơi được < 1 tiếng (tương đương `belowCount < 3`)**: Thời gian chơi quá ngắn, ngày đó bị đánh giá thấp và phạt điểm sâu hơn dựa trên số lượng mẫu đạt chuẩn:
-  - **Nếu `belowCount === 2`**: Phạt điểm về vùng dưới 25% (Không thuận):
-    $$\text{Score} = 25 \times \left(\frac{\text{avgScore}}{100}\right)$$
-  - **Nếu `belowCount === 1`**: Phạt điểm về vùng dưới 5% (Không thuận):
-    $$\text{Score} = 5 \times \left(\frac{\text{avgScore}}{100}\right)$$
-  - **Nếu `belowCount === 0`**: Đạt `0%` (Không thuận).
+- **Nếu chơi được < 1.0 tiếng (tương đương `belowCount <= 2`)**: Thời gian chơi quá ngắn, không khả thi $\implies$ **Điểm cuối cùng = 0%**.
 
 ---
 
