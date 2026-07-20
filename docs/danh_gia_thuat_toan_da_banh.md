@@ -113,4 +113,7 @@ Hệ thống đã lưu lại dữ liệu thực tế ngày 17/06/2026 làm mốc
   - **17:30 (Nước nội suy 2.2m - triều đang dâng nhẹ)**: Thực tế bãi cát rộng khoảng 5m, đá bóng khá thoải mái (`good`). Kết quả thuật toán mới: **82%** (Rất đáng đi).
 - **Ngày 08/07/2026** (Thứ Tư):
   - **18:00 (Nước nội suy 2.6m - triều đang dâng)**: Thực tế bãi cát rất hẹp, sóng đánh mạnh lên bãi và không thể chơi đá bóng (chỉ khoảng 20% khả năng chơi). Kết quả thuật toán mới (áp dụng giảm ngưỡng dâng 0.7m còn 2.3m, belowCount = 2): **23%** (Không thuận).
+- **Ngày 16/07/2026** (Thứ Năm):
+  - **17:30 (Nước nội suy 2.3m - triều đang rút)**: Thực tế đá bóng tốt (khoảng 60%), nước rút bãi cát dần lộ ra rộng rãi. Kết quả thực tế ghi nhận: **60%** (Cân nhắc).
+
 

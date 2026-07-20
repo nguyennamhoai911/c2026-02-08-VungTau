@@ -137,5 +137,24 @@
         "description": "Thực tế không đá bóng được (khoảng 20%), bãi cát hẹp và nước dâng lên nhanh."
       }
     ]
+  },
+  {
+    "date": "2026-07-16",
+    "activity": "football",
+    "feedback_timestamp": "2026-07-16T19:16:42+07:00",
+    "tide_data_reference": {
+      "16:00": 3.3,
+      "17:00": 2.7,
+      "18:00": 1.9,
+      "19:00": 1.1
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 2.3,
+        "playability": "good",
+        "description": "Thực tế đá bóng tốt (khoảng 60%), nước rút bãi cát dần lộ ra rộng rãi."
+      }
+    ]
   }
 ]
