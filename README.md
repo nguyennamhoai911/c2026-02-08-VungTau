@@ -23,3 +23,5 @@ Không đưa vào deploy khác với bảo mật trên GitHub: nếu repository 
 Nhãn tiếng Việt trực tiếp, 3 luồng tra cứu, bảng 24 giờ thay thế biểu đồ cho người cần số liệu. Nút và ô nhập chính cao tối thiểu 44px; ô lịch có nhãn điểm bằng chữ/số, không chỉ phân biệt bằng màu. Focus bàn phím rõ, input 16px tránh tự zoom trên iOS, dùng giờ Việt Nam cho ngày hiện tại.
 
 Tham khảo: https://www.w3.org/WAI/WCAG21/Understanding/reflow và https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html ; cấu hình static deployment: https://vercel.com/docs/builds/configure-a-build .
+
+Cấu hình Vercel hỗ trợ Root Directory ở gốc repository hoặc `tide-app`: mỗi thư mục có vercel.json tương ứng và build bằng Node trực tiếp, không cần npm install.

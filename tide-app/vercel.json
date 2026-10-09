@@ -1,6 +1,6 @@
 {
-  "buildCommand": "node tide-app/scripts/build.mjs",
-  "outputDirectory": "tide-app/dist",
+  "buildCommand": "node scripts/build.mjs",
+  "outputDirectory": "dist",
   "framework": null,
   "headers": [
     {
