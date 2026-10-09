@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lịch Nước Vũng Tàu</title>
-  <meta name="theme-color" content="#10243a">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #0f2a56;
@@ -28,7 +27,7 @@
       --danger: #e23942;
       --shadow: 0 24px 70px rgba(24, 54, 86, 0.18);
       --radius: 8px;
-      font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * {
@@ -1639,11 +1638,11 @@
     }
 
     .legend-line-color.a {
-      background: var(--color-chart-a);
+      background: #176bd6;
     }
 
     .legend-line-color.b {
-      background: var(--color-chart-b);
+      background: #ff7e15;
     }
 
     .compare-list {
@@ -1732,12 +1731,12 @@
     }
 
     .col-a-text {
-      color: var(--color-chart-a);
+      color: #176bd6;
       font-weight: 700;
     }
 
     .col-b-text {
-      color: var(--color-chart-b);
+      color: #ff7e15;
       font-weight: 700;
     }
 
@@ -1781,28 +1780,26 @@
       position: relative;
     }
   </style>
-  <link rel="stylesheet" href="brand-theme.css">
-  <link rel="icon" type="image/png" href="logo-maritime.png">
 </head>
 <body>
   <div class="page">
     <header class="hero">
       <div class="brand">
-        <img class="brand-mark" src="logo-maritime.png" alt="" width="92" height="92">
+        <div class="brand-mark" aria-hidden="true"></div>
         <div>
           <h1>Lịch Nước Vũng Tàu</h1>
           <p>Biết nước - Chọn thời điểm - Trọn trải nghiệm</p>
         </div>
       </div>
       <div class="quick-card">
-        <div class="quick-icon" aria-hidden="true"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg></div>
+        <div class="quick-icon" aria-hidden="true">🦀</div>
         <div>
           <strong>Bắt ghẹ Bình Châu</strong>
           <span>Tốt khi 20h dưới 1m, từ 18h dưới 2m</span>
         </div>
       </div>
       <div class="quick-card">
-        <div class="quick-icon" aria-hidden="true"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg></div>
+        <div class="quick-icon" aria-hidden="true">⚽</div>
         <div>
           <strong>Đá banh / hoạt động bãi biển</strong>
           <span>Tốt trong khung 16:30-18:30, nước dưới 3m</span>
@@ -1814,7 +1811,7 @@
       <div class="phone" role="application" aria-label="Lịch Nước Vũng Tàu">
         <section id="screen-home" class="screen active" data-screen="home">
           <div class="topbar">
-            <img class="app-logo" src="logo-maritime.png" alt="" width="36" height="36">
+            <span></span>
             <h2>Lịch Nước Vũng Tàu</h2>
             <span></span>
           </div>
@@ -1842,14 +1839,15 @@
               <button class="datepicker-step" type="button" id="nextPickerMonth" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
             </div>
             <div class="picker-tabs" role="tablist" aria-label="Bộ lọc lịch nhỏ">
-              <button class="active" type="button" data-picker-act="football"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg> Đá banh</button>
-              <button type="button" data-picker-act="crab"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg> Bắt ghẹ</button>
+              <button class="active" type="button" data-picker-act="football">⚽ Đá banh</button>
+              <button type="button" data-picker-act="crab">🦀 Bắt ghẹ</button>
             </div>
             <div class="datepicker-calendar" id="pickerCalendarGrid"></div>
           </div>
 
 
 
+          <div id="homeNotePanel" hidden></div>
           <div class="stack" id="homeActivityCards"></div>
 
           <h3 class="section-title" id="homeChartTitle">Biểu đồ mực nước hôm nay</h3>
@@ -1862,7 +1860,7 @@
 
         <section id="screen-detail" class="screen" data-screen="detail">
           <div class="topbar">
-            <button class="icon-btn" type="button" data-action="go-month" aria-label="Quay lại lịch tháng"><i data-lucide="arrow-left"></i></button>
+            <button class="icon-btn" type="button" data-action="go-home" aria-label="Quay lại"><i data-lucide="arrow-left"></i></button>
             <h2>Chi tiết ngày</h2>
             <button class="icon-btn" type="button" aria-label="Chia sẻ"><i data-lucide="share-2"></i></button>
           </div>
@@ -1911,21 +1909,17 @@
 
           <div class="month-card">
             <button class="month-step" type="button" data-month-step="-1" aria-label="Tháng trước"><i data-lucide="chevron-left"></i></button>
-            <button class="month-picker" id="openMonthChooser" type="button" aria-label="Chọn tháng" aria-haspopup="dialog">
+            <label class="month-picker">
               <h3 class="month-title" id="monthTitle">Tháng 5 2026</h3>
               <i data-lucide="calendar-days" aria-hidden="true"></i>
-            </button>
+              <input id="selectedMonthInput" type="month" aria-label="Chọn tháng">
+            </label>
             <button class="month-step" type="button" data-month-step="1" aria-label="Tháng sau"><i data-lucide="chevron-right"></i></button>
           </div>
 
-          <dialog id="monthChooser" class="month-chooser" aria-labelledby="monthChooserTitle">
-            <div class="month-chooser-heading"><h3 id="monthChooserTitle">Chọn tháng</h3><button id="closeMonthChooser" type="button" aria-label="Đóng">×</button></div>
-            <div class="month-chooser-year"><button type="button" data-chooser-year="-1" aria-label="Năm trước">‹</button><strong id="chooserYear"></strong><button type="button" data-chooser-year="1" aria-label="Năm sau">›</button></div>
-            <div id="chooserMonths" class="chooser-months"></div>
-          </dialog>
           <div class="month-tabs" role="tablist" aria-label="Hoạt động trong tháng">
-            <button class="active" type="button" data-month-activity="football"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg> Đá banh</button>
-            <button type="button" data-month-activity="crab"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg> Bắt ghẹ</button>
+            <button class="active" type="button" data-month-activity="football">⚽ Đá banh</button>
+            <button type="button" data-month-activity="crab">🦀 Bắt ghẹ</button>
           </div>
 
           <div class="month-calendar-card">
@@ -1937,6 +1931,10 @@
               <div class="month-legend-item"><span class="legend-dot"></span><div>Tốt<br><span>(từ 70%)</span></div></div>
               <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(40-69%)</span></div></div>
               <div class="month-legend-item"><span class="legend-dot bad"></span><div>Kém<br><span>(dưới 40%)</span></div></div>
+            </div>
+            <div class="month-hint">
+              <div class="month-hint-icon">i</div>
+              <div>Chạm vào ngày để xem giờ nước đẹp và chi tiết hoạt động.</div>
             </div>
             <div class="month-wave" aria-hidden="true"></div>
           </div>
@@ -1962,7 +1960,7 @@
           <div class="panel settings-group">
             <h3>Ngưỡng mực nước</h3>
             <div class="setting-row">
-              <div class="quick-icon" aria-hidden="true"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg></div>
+              <div class="quick-icon" aria-hidden="true">🦀</div>
               <div>
                 <strong>Ngưỡng bắt ghẹ</strong>
                 <span>20h dưới <span data-setting-label="crabThreshold"></span>, từ 18h dưới 2.0m</span>
@@ -1974,7 +1972,7 @@
               </div>
             </div>
             <div class="setting-row">
-              <div class="quick-icon" aria-hidden="true"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg></div>
+              <div class="quick-icon" aria-hidden="true">⚽</div>
               <div>
                 <strong>Ngưỡng đá banh</strong>
                 <span>khung 16:30-18:30 dưới <span data-setting-label="footballThreshold"></span></span>
@@ -2037,32 +2035,65 @@
           </div>
         </section>
 
-<section id="screen-compare" class="screen" data-screen="compare">
+        <section id="screen-notes" class="screen" data-screen="notes">
+          <div class="topbar">
+            <span></span>
+            <h2>Ghi Chú Hoạt Động</h2>
+            <span></span>
+          </div>
+
+          <div class="panel" style="margin: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(12,24,44,0.05);">
+            <div class="date-row" style="margin: 0; padding: 0; background: transparent; border: none; display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="calendar-days" style="color: var(--teal); width: 18px; height: 18px;"></i>
+              <input id="noteDateInput" type="date" aria-label="Ngày ghi chú" style="flex: 1; border: 1px solid #dce5ef; border-radius: 8px; padding: 8px; font-size: 14px; color: var(--ink);">
+            </div>
+            
+            <textarea id="noteTextInput" placeholder="Nhập ghi chú (ví dụ: hôm nay không đá được được, và có thể mai cũng vậy)..." style="width: 100%; height: 100px; border: 1px solid #dce5ef; border-radius: 8px; padding: 12px; font-size: 14px; resize: none; font-family: inherit; box-sizing: border-box;" aria-label="Nội dung ghi chú"></textarea>
+            
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+              <button id="saveNoteBtn" type="button" class="btn" style="background: var(--teal); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="save" style="width: 16px; height: 16px;"></i> Lưu ghi chú
+              </button>
+            </div>
+          </div>
+
+          <h3 class="section-title" style="margin: 16px 12px 8px;">Lịch sử ghi chú</h3>
+          <div id="notesHistoryList" style="display: flex; flex-direction: column; gap: 10px; padding: 0 12px 24px; overflow-y: auto; max-height: calc(100vh - 360px);">
+          </div>
+        </section>
+
+        <section id="screen-compare" class="screen" data-screen="compare">
           <div class="topbar">
             <button class="icon-btn" type="button" data-action="go-home" aria-label="Quay lại"><i data-lucide="arrow-left"></i></button>
             <h2>So sánh ngày</h2>
             <button class="icon-btn" style="opacity: 0" disabled><i data-lucide="bell"></i></button>
           </div>
 
-          <div class="panel" style="position: relative;">
-            <h3 class="section-title" style="margin-top: 0">So sánh mực nước</h3>
-            
+          <div class="compare-dates-selector">
             <div class="compare-date-pill" id="comparePillA" style="position: relative; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04); cursor: pointer; flex: 1; min-width: 0; gap: 8px;">
               <span id="compareDateLabelA" style="font-size: 13px; font-weight: 700; color: #27466d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</span>
               <i data-lucide="calendar" style="width: 16px; height: 16px; color: #607086; flex-shrink: 0;"></i>
               <input id="compareDateA" type="date" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
             </div>
+            <div class="compare-divider"><i data-lucide="arrow-left-right"></i></div>
+            <div class="compare-date-pill" id="comparePillB" style="position: relative; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04); cursor: pointer; flex: 1; min-width: 0; gap: 8px;">
+              <span id="compareDateLabelB" style="font-size: 13px; font-weight: 700; color: #27466d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</span>
+              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #607086; flex-shrink: 0;"></i>
+              <input id="compareDateB" type="date" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
+            </div>
+          </div>
+
+          <div class="panel" style="position: relative;">
+            <h3 class="section-title" style="margin-top: 0">So sánh mực nước</h3>
+            
+            <div id="compareHeaderA" style="font-size: 13px; font-weight: 800; color: #176bd6; margin: 12px 0 6px 4px;"></div>
             <div class="chart-box" style="height: 178px; margin-bottom: 16px;">
               <div id="compareTideChartA" class="tide-chart" style="height: 100%;"></div>
             </div>
 
             <div id="compareTooltip" class="compare-tooltip" style="top: 238px;"></div>
 
-            <div class="compare-date-pill" id="comparePillB" style="position: relative; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; box-shadow: 0 4px 12px rgba(12, 24, 44, 0.04); cursor: pointer; flex: 1; min-width: 0; gap: 8px;">
-              <span id="compareDateLabelB" style="font-size: 13px; font-weight: 700; color: #27466d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</span>
-              <i data-lucide="calendar" style="width: 16px; height: 16px; color: #607086; flex-shrink: 0;"></i>
-              <input id="compareDateB" type="date" style="position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;">
-            </div>
+            <div id="compareHeaderB" style="font-size: 13px; font-weight: 800; color: #ff7e15; margin: 12px 0 6px 4px;"></div>
             <div class="chart-box" style="height: 178px; margin-bottom: 12px;">
               <div id="compareTideChartB" class="tide-chart" style="height: 100%;"></div>
             </div>
@@ -2094,6 +2125,7 @@
         <nav class="bottom-nav" aria-label="Điều hướng chính">
           <button class="nav-btn active" type="button" data-tab="home"><i data-lucide="home"></i><span>Hôm nay</span></button>
           <button class="nav-btn" type="button" data-tab="month"><i data-lucide="calendar-days"></i><span>Lịch tháng</span></button>
+          <button class="nav-btn" type="button" data-tab="notes"><i data-lucide="file-text"></i><span>Ghi chú</span></button>
           <button class="nav-btn" type="button" data-tab="compare"><i data-lucide="arrow-left-right"></i><span>So sánh</span></button>
         </nav>
       </div>
@@ -2115,8 +2147,20 @@
       homeChart: null,
       detailChart: null,
       settings: loadSettings(),
-      notes: {}
+      notes: loadNotes()
     };
+
+    function loadNotes() {
+      try {
+        return JSON.parse(localStorage.getItem("vungTauTideNotes") || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveNotes() {
+      localStorage.setItem("vungTauTideNotes", JSON.stringify(state.notes));
+    }
 
     const CRAB_TARGET_HOUR = 20;
     const CRAB_EVENING_HOURS = [18, 19, 20];
@@ -2130,16 +2174,16 @@
       crab: {
         title: "Bắt ghẹ Bình Châu",
         short: "Bắt ghẹ",
-        icon: "<svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg>",
+        icon: "🦀",
         tone: "green",
         thresholdKey: "crabThreshold",
         fallbackThreshold: 1,
         description: "Tốt nhất khi 20h dưới 1m, và từ 18h mực nước đã rút dưới 2m."
       },
       football: {
-        title: "Đá bãi Dứa",
+        title: "Đá banh bãi biển",
         short: "Đá banh",
-        icon: "<svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg>",
+        icon: "⚽",
         tone: "blue",
         thresholdKey: "footballThreshold",
         fallbackThreshold: 3,
@@ -2148,7 +2192,7 @@
       rocks: {
         title: "Đi bãi đá",
         short: "Bãi đá",
-        icon: "<svg class='activity-symbol icon-rocks' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='m3 25 3-10 7-3 5 4-1 9Z M17 25l1-9 6-6 5 5v10Z M10 12l2-6 8-2 5 6 M6 15l5 5-2 5 M24 10l-1 9 6 6'/></svg>",
+        icon: "🪨",
         tone: "orange",
         thresholdKey: "rockThreshold",
         fallbackThreshold: 1.5,
@@ -2803,6 +2847,25 @@
       const mm = String(month).padStart(2, "0");
       $("#homeChartTitle").textContent = `Biểu đồ mực nước ngày ${weekday} (${dd}/${mm}/${year})`;
 
+      // Show today's note if any
+      const noteForSelected = state.notes[day.date] || "";
+      const homeNotePanel = $("#homeNotePanel");
+      if (homeNotePanel) {
+        if (noteForSelected) {
+          homeNotePanel.innerHTML = `
+            <div style="margin: 0 0 16px; padding: 12px 14px; border-left: 4px solid var(--teal); background: var(--soft); border-radius: 8px; box-shadow: 0 2px 8px rgba(12,24,44,0.02);">
+              <div style="font-weight: 700; font-size: 13px; color: var(--teal); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Ghi chú ngày hôm nay:
+              </div>
+              <div style="font-size: 13px; color: var(--ink); line-height: 1.45; white-space: pre-wrap;">${noteForSelected}</div>
+            </div>
+          `;
+          homeNotePanel.hidden = false;
+        } else {
+          homeNotePanel.hidden = true;
+        }
+      }
+
       $("#homeActivityCards").innerHTML = ["football", "crab"].map(id => activityCard(day, id)).join("");
       renderTideChart(day, "homeTideChart", "homeChart", false);
     }
@@ -2816,12 +2879,12 @@
       const disabledClass = assessment.score === 0 ? " disabled-activity" : "";
       return `
         <article class="activity-card ${meta.tone}${disabledClass}">
-          <div class="activity-art activity-photo" aria-hidden="true"><img src="activity-${activityId}.png" alt="" decoding="async"></div>
-          <div class="activity-summary">
+          <div class="activity-art" aria-hidden="true">${meta.icon}</div>
+          <div>
             <div class="activity-title">
               <h3>${meta.title}</h3>
             </div>
-            <div><span class="score ${assessment.tone}">${assessment.score}%</span></div>
+            <div><span class="score ${assessment.tone}">${assessment.score}%</span> <span class="fit-text">phù hợp</span></div>
             ${overrideHtml}
           </div>
         </article>
@@ -2839,7 +2902,7 @@
         const meta = ACTIVITY_META[id];
         const assessment = assessActivity(day, id);
         const overrideHtml = assessment.overrideReason 
-          ? `<div style="font-size: 10px; color: var(--danger); grid-column: 1 / -1; margin-top: 4px; font-weight: 600; line-height: 1.3;"><svg class='activity-symbol icon-warning' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='m16 4 13 23H3Z M16 12v7'/><circle cx='16' cy='23' r='.8' fill='currentColor' stroke='none'/></svg> ${assessment.overrideReason}</div>`
+          ? `<div style="font-size: 10px; color: var(--danger); grid-column: 1 / -1; margin-top: 4px; font-weight: 600; line-height: 1.3;">⚠️ ${assessment.overrideReason}</div>`
           : "";
         const disabledClass = assessment.score === 0 ? " disabled-card" : "";
         return `
@@ -2856,7 +2919,7 @@
       const football = assessActivity(day, "football");
       const low = getBestLow(day);
 
-      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá bãi Dứa đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(getThreshold("football"))}.</span></div>`;
+      let footballReason = `<div><span class="dot-ok">✓</span><span>Đá banh bãi biển đạt ${football.score}% trong đúng khung ${football.window}, mực nước trong khung là ${football.frameText}, dựa trên ngưỡng dưới ${formatThreshold(getThreshold("football"))}.</span></div>`;
       if (football.overrideReason) {
         footballReason = `<div><span class="dot-bad">✗</span><span>Đá banh bị hủy do ghi chú: "${football.overrideReason}".</span></div>`;
       }
@@ -2873,70 +2936,6 @@
       `;
     }
 
-    // Monotone cubic interpolation keeps the curve within each pair of readings.
-    function enableChartGestures(roots) {
-      const views = roots.map(root => ({ scroll: root.querySelector('.tide-scroll'), inner: root.querySelector('.tide-inner, .tide-inner-compare-single') })).filter(v => v.scroll && v.inner);
-      let scale = 1;
-      function zoom(next, active, clientX) {
-        next = Math.max(.4, Math.min(3, next));
-        const local = clientX - active.scroll.getBoundingClientRect().left;
-        const position = (active.scroll.scrollLeft + local) / scale;
-        scale = next;
-        views.forEach(({scroll, inner}) => {
-          inner.style.width = `${1152 * scale}px`;
-          const row = inner.querySelector('.tide-time-row');
-          if (row) row.style.gridTemplateColumns = `repeat(24, ${48 * scale}px)`;
-          const plot = inner.querySelector('.tide-plot');
-          if (plot) plot.style.backgroundSize = `${48 * scale}px 100%, 100% 20%`;
-          scroll.scrollLeft = position * scale - local;
-        });
-      }
-      views.forEach(view => {
-        let pinch = null, drag = null;
-        const distance = touches => Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
-        view.scroll.addEventListener('touchstart', e => {
-          if (e.touches.length === 2) pinch = {distance: distance(e.touches), scale};
-        }, {passive: true});
-        view.scroll.addEventListener('touchmove', e => {
-          if (e.touches.length === 2 && pinch) {
-            e.preventDefault();
-            zoom(pinch.scale * distance(e.touches) / Math.max(1, pinch.distance), view, (e.touches[0].clientX + e.touches[1].clientX) / 2);
-          }
-        }, {passive: false});
-        const end = () => { pinch = null; };
-        view.scroll.addEventListener('touchend', end);
-        view.scroll.addEventListener('touchcancel', end);
-        view.scroll.addEventListener('wheel', e => {
-          if (e.ctrlKey || e.metaKey) { e.preventDefault(); zoom(scale * Math.exp(-e.deltaY * .005), view, e.clientX); }
-        }, {passive: false});
-        view.scroll.addEventListener('pointerdown', e => {
-          if (e.pointerType === 'mouse' && e.button === 0) { drag = {x:e.clientX, left:view.scroll.scrollLeft}; view.scroll.setPointerCapture(e.pointerId); }
-        });
-        view.scroll.addEventListener('pointermove', e => { if (drag) view.scroll.scrollLeft = drag.left - (e.clientX - drag.x); });
-        view.scroll.addEventListener('pointerup', () => { drag = null; });
-        view.scroll.addEventListener('pointercancel', () => { drag = null; });
-      });
-    }
-
-    function smoothTidePath(values, x, y) {
-      const points = values.map((value, hour) => [x(hour), y(value)]);
-      if (!points.length) return "";
-      const slopes = points.slice(1).map((point, i) => (point[1] - points[i][1]) / (point[0] - points[i][0]));
-      const tangents = points.map((_, i) => {
-        if (i === 0) return slopes[0] || 0;
-        if (i === points.length - 1) return slopes[i - 1] || 0;
-        const a = slopes[i - 1], b = slopes[i];
-        return a * b > 0 ? 2 * a * b / (a + b) : 0;
-      });
-      let path = `M ${points[0][0]} ${points[0][1]}`;
-      for (let i = 0; i < points.length - 1; i++) {
-        const [ax, ay] = points[i], [bx, by] = points[i + 1];
-        const third = (bx - ax) / 3;
-        path += ` C ${ax + third} ${ay + tangents[i] * third}, ${bx - third} ${by - tangents[i + 1] * third}, ${bx} ${by}`;
-      }
-      return path;
-    }
-
     function renderTideChart(day, chartId) {
       const root = $(`#${chartId}`);
       if (!root) return;
@@ -2947,8 +2946,8 @@
       const maxY = 5;
       const y = value => height - ((Math.max(0, Math.min(maxY, value || 0)) / maxY) * height);
       const x = hour => (hour * hourWidth) + (hourWidth / 2);
-      const points = smoothTidePath(day.hours, x, y);
-      const area = `${points} L ${x(23)} ${height} L ${x(0)} ${height} Z`;
+      const points = day.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const area = `M ${x(0)} ${height} L ${points.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
       const crabThreshold = getThreshold("crab");
       const footballThreshold = getThreshold("football");
       const labels = [5, 4, 3, 2, 1, 0];
@@ -2967,13 +2966,13 @@
           <div class="tide-inner">
             <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước 24 giờ">
               <path d="${area}" fill="rgba(23, 107, 214, 0.12)"></path>
-              <path d="${points}" fill="none" stroke="var(--color-chart-a)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="var(--color-chart-a)" stroke-width="2" stroke-dasharray="8 7"></line>
+              <polyline points="${points}" fill="none" stroke="#176bd6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="2" stroke-dasharray="8 7"></line>
               <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="2" stroke-dasharray="6 7"></line>
               <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="2" stroke-dasharray="8 7"></line>
               <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4 4"></line>
               <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730}</text>
-              ${day.hours.map((value, hour) => `<circle cx="${x(hour)}" cy="${y(value)}" r="${hour >= 16 && hour <= 22 ? 4 : 2.6}" fill="var(--color-chart-a)"></circle>`).join("")}
+              ${day.hours.map((value, hour) => `<circle cx="${x(hour)}" cy="${y(value)}" r="${hour >= 16 && hour <= 22 ? 4 : 2.6}" fill="#176bd6"></circle>`).join("")}
               ${day.hours.map((value, hour) => `
                 <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#27466d" font-size="11" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
               `).join("")}
@@ -2983,7 +2982,6 @@
         </div>
       `;
 
-      enableChartGestures([root]);
       const scroll = $(".tide-scroll", root);
       requestAnimationFrame(() => {
         if (scroll) scroll.scrollLeft = hourWidth * 16;
@@ -3032,7 +3030,7 @@
 
       if (!dayA || !dayB) {
         $("#compareActivities").innerHTML = `<div class="empty">Không tìm thấy dữ liệu cho một trong hai ngày.</div>`;
-        $("#compareTideChartA").innerHTML = ""; $("#compareTideChartB").innerHTML = "";
+        $("#compareTideChart").innerHTML = "";
         $("#compareExtremesBody").innerHTML = "";
         return;
       }
@@ -3114,11 +3112,11 @@
       const y = value => height - ((Math.max(0, Math.min(maxY, value || 0)) / maxY) * height);
       const x = hour => (hour * hourWidth) + (hourWidth / 2);
 
-      const pointsA = smoothTidePath(dayA.hours, x, y);
-      const areaA = `${pointsA} L ${x(23)} ${height} L ${x(0)} ${height} Z`;
+      const pointsA = dayA.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const areaA = `M ${x(0)} ${height} L ${pointsA.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
 
-      const pointsB = smoothTidePath(dayB.hours, x, y);
-      const areaB = `${pointsB} L ${x(23)} ${height} L ${x(0)} ${height} Z`;
+      const pointsB = dayB.hours.map((value, hour) => `${x(hour)},${y(value)}`).join(" ");
+      const areaB = `M ${x(0)} ${height} L ${pointsB.replaceAll(" ", " L ")} L ${x(23)} ${height} Z`;
 
       const crabThreshold = getThreshold("crab");
       const footballThreshold = getThreshold("football");
@@ -3143,14 +3141,14 @@
           <div class="tide-inner-compare-single" style="width: 1152px; height: 100%; position: relative;">
             <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước ngày A" style="height: 150px; display: block; overflow: visible;">
               <path d="${areaA}" fill="rgba(23, 107, 214, 0.08)"></path>
-              <path d="${pointsA}" fill="none" stroke="var(--color-chart-a)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="var(--color-chart-a)" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <polyline points="${pointsA}" fill="none" stroke="#176bd6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
               <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="1.5" stroke-dasharray="6 7" opacity="0.6"></line>
               <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
               <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7"></line>
               <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730A}</text>
               <line id="compareGuideLineA" x1="0" x2="0" y1="0" y2="${height}" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;"></line>
-              ${dayA.hours.map((value, hour) => `<circle class="compare-dot-a compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="var(--color-chart-a)"></circle>`).join("")}
+              ${dayA.hours.map((value, hour) => `<circle class="compare-dot-a compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="#176bd6"></circle>`).join("")}
               ${dayA.hours.map((value, hour) => `
                 <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#27466d" font-size="10" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
               `).join("")}
@@ -3168,16 +3166,16 @@
           <div class="tide-inner-compare-single" style="width: 1152px; height: 100%; position: relative;">
             <svg class="tide-plot" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Biểu đồ mực nước ngày B" style="height: 150px; display: block; overflow: visible;">
               <path d="${areaB}" fill="rgba(255, 126, 21, 0.08)"></path>
-              <path d="${pointsB}" fill="none" stroke="var(--color-chart-b)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="var(--color-chart-a)" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
+              <polyline points="${pointsB}" fill="none" stroke="#ff7e15" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+              <line x1="0" x2="${width}" y1="${y(footballThreshold)}" y2="${y(footballThreshold)}" stroke="#176bd6" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
               <line x1="0" x2="${width}" y1="${y(CRAB_EVENING_THRESHOLD)}" y2="${y(CRAB_EVENING_THRESHOLD)}" stroke="#f0a61a" stroke-width="1.5" stroke-dasharray="6 7" opacity="0.6"></line>
               <line x1="0" x2="${width}" y1="${y(crabThreshold)}" y2="${y(crabThreshold)}" stroke="#25a550" stroke-width="1.5" stroke-dasharray="8 7" opacity="0.6"></line>
               <line x1="${x(17.5)}" x2="${x(17.5)}" y1="0" y2="${height}" stroke="#ff6b6b" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7"></line>
               <text x="${x(17.5)}" y="16" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">${label1730B}</text>
               <line id="compareGuideLineB" x1="0" x2="0" y1="0" y2="${height}" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;"></line>
-              ${dayB.hours.map((value, hour) => `<circle class="compare-dot-b compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="var(--color-chart-b)"></circle>`).join("")}
+              ${dayB.hours.map((value, hour) => `<circle class="compare-dot-b compare-dot-${hour}" cx="${x(hour)}" cy="${y(value)}" r="3" fill="#ff7e15"></circle>`).join("")}
               ${dayB.hours.map((value, hour) => `
-                <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="var(--color-chart-b)" font-size="10" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
+                <text x="${x(hour)}" y="${Math.max(12, y(value) - 8)}" text-anchor="middle" fill="#804415" font-size="10" font-weight="700">${Number.isFinite(value) ? value.toFixed(1) : ""}</text>
               `).join("")}
             </svg>
             <div class="tide-time-row" style="margin-top: 4px;">${timeLabels}</div>
@@ -3185,7 +3183,6 @@
         </div>
       `;
 
-      enableChartGestures([rootA, rootB]);
       // Set up scrolling synchronization
       const scrollA = $(".tide-scroll", rootA);
       const scrollB = $(".tide-scroll", rootB);
@@ -3225,7 +3222,7 @@
         const rect = activeInner.getBoundingClientRect();
         const clientX = (event.touches && event.touches[0]) ? event.touches[0].clientX : event.clientX;
         const xRel = clientX - rect.left;
-        const hour = Math.floor(xRel / (activeInner.getBoundingClientRect().width / 24));
+        const hour = Math.floor(xRel / 48);
         const normalizedHour = Math.max(0, Math.min(23, hour));
         const lineX = normalizedHour * 48 + 24;
 
@@ -3298,8 +3295,8 @@
         if (inner && scroll) {
           inner.addEventListener("mousemove", e => handlePointer(e, inner, scroll));
           inner.addEventListener("mouseleave", clearPointer);
-
-
+          inner.addEventListener("touchstart", e => handlePointer(e, inner, scroll), { passive: true });
+          inner.addEventListener("touchmove", e => handlePointer(e, inner, scroll), { passive: true });
           inner.addEventListener("touchend", clearPointer);
           inner.addEventListener("touchcancel", clearPointer);
         }
@@ -3308,9 +3305,11 @@
 
     function renderMonth() {
       if (!state.selectedMonth) return;
+      $("#selectedMonthInput").value = state.selectedMonth;
       const [year, month] = state.selectedMonth.split("-").map(Number);
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const title = $("#monthTitle");
-      if (title) title.textContent = `Tháng ${month}, ${year}`;
+      if (title) title.textContent = `${monthNames[month - 1]} ${year}`;
       const firstDay = new Date(year, month - 1, 1);
       const start = new Date(firstDay);
       const offset = (firstDay.getDay() + 6) % 7;
@@ -3318,7 +3317,7 @@
       const weekdays = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
       let html = weekdays.map(day => `<div class="weekday">${day}</div>`).join("");
 
-      for (let index = 0; index < Math.ceil((offset + new Date(year, month, 0).getDate()) / 7) * 7; index += 1) {
+      for (let index = 0; index < 42; index += 1) {
         const d = new Date(start);
         d.setDate(start.getDate() + index);
         const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -3327,10 +3326,15 @@
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
         const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const hasNoteDot = state.notes[iso] ? `<span class="day-cell-note-dot" title="${state.notes[iso].replace(/"/g, '&quot;')}"></span>` : "";
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
-            <span class="day-score ${status}">${score !== null ? `${score}%` : "-"}</span>
+            <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
+            <div style="display: flex; gap: 4px; align-items: center; justify-content: center; height: 10px;">
+              <span class="status-dot ${status}" aria-hidden="true"></span>
+              ${hasNoteDot}
+            </div>
           </button>
         `;
       }
@@ -3359,7 +3363,7 @@
       const weekdays = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
       let html = weekdays.map(day => `<div class="weekday">${day}</div>`).join("");
 
-      for (let index = 0; index < Math.ceil((offset + new Date(year, month, 0).getDate()) / 7) * 7; index += 1) {
+      for (let index = 0; index < 42; index += 1) {
         const d = new Date(start);
         d.setDate(start.getDate() + index);
         const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -3375,10 +3379,15 @@
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
         const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const hasNoteDot = state.notes[iso] ? `<span class="day-cell-note-dot" title="${state.notes[iso].replace(/"/g, '&quot;')}"></span>` : "";
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
-            <span class="day-score ${status}">${score !== null ? `${score}%` : "-"}</span>
+            <span class="day-score">${score !== null ? `${score}%` : "-"}</span>
+            <div style="display: flex; gap: 4px; align-items: center; justify-content: center; height: 10px;">
+              <span class="status-dot ${status}" aria-hidden="true"></span>
+              ${hasNoteDot}
+            </div>
           </button>
         `;
       }
@@ -3440,6 +3449,73 @@
       });
     }
 
+    function renderNotesScreen() {
+      const dateInput = $("#noteDateInput");
+      if (dateInput && !dateInput.value) {
+        dateInput.value = state.selectedDate || todayIso();
+      }
+      
+      const activeDate = dateInput ? dateInput.value : (state.selectedDate || todayIso());
+      const textInput = $("#noteTextInput");
+      if (textInput && document.activeElement !== textInput) {
+        textInput.value = state.notes[activeDate] || "";
+      }
+      
+      const historyList = $("#notesHistoryList");
+      if (!historyList) return;
+      
+      const noteEntries = Object.entries(state.notes).filter(([date, content]) => content.trim() !== "");
+      if (noteEntries.length === 0) {
+        historyList.innerHTML = `<div class="empty">Không có ghi chú nào. Hãy tạo ghi chú cho các ngày!</div>`;
+        return;
+      }
+      
+      noteEntries.sort((a, b) => b[0].localeCompare(a[0]));
+      
+      historyList.innerHTML = noteEntries.map(([date, content]) => {
+        const label = dateLabel(date);
+        return `
+          <div class="panel" style="padding: 12px 16px; background: #fff; border-radius: 12px; border-left: 4px solid var(--teal); box-shadow: 0 2px 8px rgba(12,24,44,0.02); display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 700; font-size: 13px; color: var(--ink);">${label}</span>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn-edit-note" data-note-date="${date}" style="border: none; background: transparent; color: var(--teal); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Chỉnh sửa">
+                  <i data-lucide="pencil" style="width: 14px; height: 14px;"></i>
+                </button>
+                <button type="button" class="btn-delete-note" data-note-date="${date}" style="border: none; background: transparent; color: var(--danger); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;" title="Xóa">
+                  <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+            </div>
+            <div style="font-size: 13px; color: var(--muted); line-height: 1.45; white-space: pre-wrap;">${content}</div>
+          </div>
+        `;
+      }).join("");
+      
+      if (window.lucide) lucide.createIcons();
+      
+      $$(".btn-edit-note", historyList).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const date = btn.dataset.noteDate;
+          $("#noteDateInput").value = date;
+          $("#noteTextInput").value = state.notes[date] || "";
+          $("#noteTextInput").focus();
+        });
+      });
+      
+      $$(".btn-delete-note", historyList).forEach(btn => {
+        btn.addEventListener("click", () => {
+          const date = btn.dataset.noteDate;
+          if (confirm(`Bạn có chắc muốn xóa ghi chú ngày ${dateLabel(date)}?`)) {
+            delete state.notes[date];
+            saveNotes();
+            renderNotesScreen();
+            renderAll();
+          }
+        });
+      });
+    }
+
     function renderAll() {
       renderHome();
       renderDetail();
@@ -3447,14 +3523,11 @@
       renderActivities();
       renderSettings();
       renderCompare();
+      renderNotesScreen();
       if (window.lucide) lucide.createIcons();
     }
 
     function setTab(tab) {
-      if (tab === "month") {
-        state.selectedDate = todayIso();
-        state.selectedMonth = state.selectedDate.slice(0, 7);
-      }
       state.tab = tab;
       localStorage.setItem("vungTauTideActiveTab", tab);
       $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === tab));
@@ -3468,9 +3541,37 @@
       });
 
       $$("[data-action='go-home']").forEach(button => button.addEventListener("click", () => setTab("home")));
-      $$("[data-action='go-month']").forEach(button => button.addEventListener("click", () => setTab("month")));
 
       $$("[data-action='go-compare']").forEach(button => button.addEventListener("click", () => setTab("compare")));
+
+      const noteDateInput = $("#noteDateInput");
+      if (noteDateInput) {
+        noteDateInput.addEventListener("change", event => {
+          const date = event.target.value;
+          $("#noteTextInput").value = state.notes[date] || "";
+        });
+      }
+
+      const saveNoteBtn = $("#saveNoteBtn");
+      if (saveNoteBtn) {
+        saveNoteBtn.addEventListener("click", () => {
+          const date = $("#noteDateInput").value;
+          const content = $("#noteTextInput").value.trim();
+          if (!date) {
+            alert("Vui lòng chọn ngày!");
+            return;
+          }
+          if (content === "") {
+            delete state.notes[date];
+          } else {
+            state.notes[date] = content;
+          }
+          saveNotes();
+          renderNotesScreen();
+          renderAll();
+          alert("Đã lưu ghi chú thành công!");
+        });
+      }
 
       $("#compareDateA").addEventListener("change", event => {
         setCompareDateA(event.target.value);
@@ -3590,30 +3691,9 @@
       $("[data-detail-mode='chart']").addEventListener("click", () => setDetailMode("chart"));
       $("[data-detail-mode='table']").addEventListener("click", () => setDetailMode("table"));
 
-      const monthChooser = $("#monthChooser");
-      let chooserYear = 2026;
-      function renderMonthChooser() {
-        $("#chooserYear").textContent = chooserYear;
-        $("#chooserMonths").innerHTML = Array.from({length: 12}, (_, i) => {
-          const value = `${chooserYear}-${String(i + 1).padStart(2, "0")}`;
-          return `<button type="button" data-choose-month="${value}" aria-pressed="${value === state.selectedMonth}">Tháng ${i + 1}</button>`;
-        }).join("");
-      }
-      $("#openMonthChooser").addEventListener("click", () => {
-        chooserYear = Number(state.selectedMonth.split("-")[0]);
-        renderMonthChooser();
-        monthChooser.showModal();
-      });
-      $("#closeMonthChooser").addEventListener("click", () => monthChooser.close());
-      monthChooser.addEventListener("click", event => {
-        const yearButton = event.target.closest("[data-chooser-year]");
-        if (yearButton) { chooserYear = Math.max(1, Math.min(9999, chooserYear + Number(yearButton.dataset.chooserYear))); renderMonthChooser(); }
-        const monthButton = event.target.closest("[data-choose-month]");
-        if (monthButton) { state.selectedMonth = monthButton.dataset.chooseMonth; renderMonth(); monthChooser.close(); }
-        if (event.target === monthChooser) {
-          const rect = monthChooser.getBoundingClientRect();
-          if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) monthChooser.close();
-        }
+      $("#selectedMonthInput").addEventListener("change", event => {
+        state.selectedMonth = event.target.value;
+        renderMonth();
       });
 
       $$("[data-month-step]").forEach(button => {
@@ -3722,7 +3802,7 @@
         // Restore active tab from localStorage
         const savedTab = localStorage.getItem("vungTauTideActiveTab");
         if (savedTab) {
-          state.tab = savedTab === "notes" ? "home" : savedTab;
+          state.tab = savedTab;
           $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === state.tab));
           $$(".nav-btn").forEach(button => button.classList.toggle("active", button.dataset.tab === state.tab));
         }
@@ -3738,4 +3818,3 @@
   </script>
 </body>
 </html>
-

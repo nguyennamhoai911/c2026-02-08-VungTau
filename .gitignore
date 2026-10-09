@@ -27,3 +27,5 @@ __pycache__/
 # safe_copy.js
 # update.js
 # fix_mount.js
+
+tide-app/dist/

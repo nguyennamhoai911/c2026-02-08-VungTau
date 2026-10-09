@@ -1,12 +1,4 @@
-FROM node:20-alpine
+FROM nginx:alpine
+COPY tide-app/public/index.html tide-app/public/styles.css tide-app/public/app.js tide-app/public/model.js tide-app/public/data.csv tide-app/public/brand-theme.css tide-app/public/logo-maritime.png tide-app/public/activity-football.png tide-app/public/activity-crab.png tide-app/public/header-coast.jpg /usr/share/nginx/html/
+EXPOSE 80
 
-WORKDIR /app
-
-COPY tide-app/package*.json ./
-RUN npm install
-
-COPY tide-app/ ./
-
-EXPOSE 3132
-
-CMD ["npm", "start"]

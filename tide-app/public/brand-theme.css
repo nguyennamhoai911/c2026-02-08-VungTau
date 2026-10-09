@@ -1,0 +1,469 @@
+/* Visual theme only. Existing layouts, controls and scoring remain unchanged. */
+:root {
+  --ink: #10243a;
+  --muted: #54677e;
+  --soft: #f3f6fa;
+  --line: #dce4ed;
+  --card: #ffffff;
+  --teal: #0065cc;
+  --teal-dark: #123f79;
+  --blue: #0065cc;
+  --blue-soft: #edf3fb;
+  --green: #008a3d;
+  --green-soft: #eff6f2;
+  --orange: #c47b00;
+  --orange-soft: #faf5eb;
+  --danger: #e3263d;
+  --shadow: 0 10px 40px rgba(16, 36, 58, .12);
+  --radius: 10px;
+  font-family: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+body { background: #e8edf3; }
+.screen { background: #f5f7fa; }
+.topbar { background: #10243a; border-color: #233c56; color: #fff; }
+.topbar h2 { font-weight: 650; letter-spacing: -.25px; }
+.topbar .icon-btn { color: #e3edf8; }
+.topbar .icon-btn:hover { background: #203b57; }
+.app-logo { width: 36px; height: 36px; object-fit: contain; border-radius: 8px; display: block; }
+.brand-mark { object-fit: cover; background: none; box-shadow: none; }
+.date-pill, .nav-date-btn { border-color: var(--line); color: var(--ink); box-shadow: 0 2px 7px rgba(16, 36, 58, .04); }
+.date-pill { border-radius: 10px; font-weight: 650; }
+.date-pill:hover, .nav-date-btn:hover { background: #edf3fb; border-color: #b9cbe2; box-shadow: 0 3px 8px rgba(16, 36, 58, .06); }
+.activity-card, .activity-card.green, .activity-card.blue, .activity-card.orange {
+  background: #fff;
+  border-color: var(--line);
+  box-shadow: 0 3px 10px rgba(16, 36, 58, .04);
+}
+.activity-art, .activity-card.blue .activity-art, .activity-card.orange .activity-art { background: #edf3fb; color: #0065cc; }
+.activity-card.green .activity-art { background: #eff6f2; color: #008a3d; }
+.activity-card.orange .activity-art { background: #faf5eb; color: #c47b00; }
+.activity-symbol { width: 44px; height: 44px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.quick-icon { background: #edf3fb; color: #0065cc; }
+.quick-icon .activity-symbol { width: 32px; height: 32px; }
+.picker-tabs .activity-symbol, .month-tabs .activity-symbol, .small-card .activity-symbol { width: 19px; height: 19px; margin-right: 4px; }
+.icon-warning { width: 14px; height: 14px; }
+.activity-title h3 { font-weight: 650; color: var(--ink); }
+.score { font-weight: 700; letter-spacing: -.7px; font-variant-numeric: tabular-nums; }
+.score.medium { color: #c47b00; }
+.fit-text { color: var(--muted); font-weight: 500; }
+.section-title { color: var(--ink); font-weight: 650; }
+.panel { background: #fff; border-color: var(--line); box-shadow: 0 3px 10px rgba(16, 36, 58, .03); }
+.bottom-nav { background: #fff; border-color: var(--line); }
+.nav-btn { color: #607087; font-weight: 600; }
+.nav-btn svg { stroke-width: 1.8; }
+.nav-btn.active { color: #0065cc; background: #edf3fb; }
+.custom-datepicker, .month-calendar-card, .month-legend-card, .month-card { background: #fff; border-color: var(--line); box-shadow: 0 3px 12px rgba(16, 36, 58, .04); }
+.month-title, .datepicker-title { color: var(--ink); font-weight: 650; }
+.day-cell { font-variant-numeric: tabular-nums; }
+.day-cell.selected { background: #0065cc; color: #fff; }
+.month-wave { opacity: .22; }
+.small-card { box-shadow: none; border-color: var(--line); }
+button:focus-visible, input:focus-visible { outline: 2px solid #0065cc; outline-offset: 2px; }
+.month-screen { background: #f5f7fa; }
+.month-screen .topbar { background: #10243a; }
+.month-screen .topbar h2 { color: #fff; font-weight: 650; }
+.month-screen .icon-btn { color: #e3edf8; background: #203b57; border-color: #35516e; box-shadow: none; }
+.month-tabs { box-shadow: 0 3px 10px rgba(16,36,58,.04); }
+.month-tabs button { font-weight: 650; }
+.month-tabs button.active, .picker-tabs button.active { background: #0065cc; box-shadow: none; }
+.month-screen .day-cell.selected { background: #0065cc; box-shadow: 0 2px 5px rgba(24,88,165,.15); }
+.month-screen .day-cell:hover:not(:disabled):not(.selected) { background: #edf3fb; }
+/* Unified mobile sizing: 4px spacing scale, 44px controls, 18px headings. */
+:root { --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; }
+.screen, .month-screen { padding: 0 16px 16px; }
+.topbar, .month-screen .topbar {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  min-height: 64px;
+  margin: 0 -16px 16px;
+  padding: 10px 16px;
+  gap: 8px;
+}
+.topbar h2, .month-screen .topbar h2 { font-size: 18px; line-height: 24px; font-weight: 650; letter-spacing: -.3px; }
+.icon-btn, .month-screen .icon-btn { width: 44px; height: 44px; border-radius: 10px; border: 0; box-shadow: none; background: transparent; }
+.icon-btn svg, .month-screen .icon-btn svg { width: 22px; height: 22px; stroke-width: 1.8; }
+.app-logo { width: 36px; height: 36px; }
+.month-card { grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 8px; padding: 8px; margin-bottom: 12px; border-radius: 12px; }
+.month-step, .datepicker-step { width: 44px; height: 44px; border-radius: 8px; box-shadow: none; border-color: transparent; }
+.month-step svg, .datepicker-step svg { width: 20px; height: 20px; }
+.month-picker { height: 44px; grid-template-columns: minmax(0,1fr) 20px; gap: 8px; padding: 0 12px; border-color: transparent; box-shadow: none; }
+.month-title, .datepicker-title { font-size: 16px; line-height: 22px; font-weight: 650; }
+.month-picker svg { width: 20px; height: 20px; }
+.month-tabs { padding: 4px; margin-bottom: 12px; border-radius: 12px; box-shadow: none; }
+.month-tabs button { min-height: 44px; padding: 8px; border-radius: 8px; font-size: 14px; line-height: 20px; gap: 8px; font-weight: 600; }
+.month-tabs button.active { transform: none; }
+.month-tabs .activity-symbol, .picker-tabs .activity-symbol { width: 20px; height: 20px; margin: 0; }
+.month-calendar-card { padding: 12px 8px; border-radius: 12px; box-shadow: 0 2px 8px rgba(16,36,58,.03); }
+.month-screen .calendar { gap: 4px 2px; }
+.month-screen .weekday { min-height: 28px; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--muted); }
+.month-screen .day-cell { min-height: 56px; padding: 6px 0; border-radius: 8px; gap: 4px; }
+.month-screen .day-num { font-size: 16px; line-height: 18px; font-weight: 650; }
+.month-screen .day-score { font-size: 11px; line-height: 13px; font-weight: 500; }
+.month-screen .day-cell.selected, .month-screen .day-cell:hover:not(:disabled) { transform: none; box-shadow: none; }
+.status-dot { width: 5px; height: 5px; background: var(--danger); box-shadow: none; }
+.status-dot.good { background: var(--green); box-shadow: none; }
+.status-dot.medium { background: var(--orange); box-shadow: none; }
+.month-screen .day-cell.selected .status-dot { background: #fff; }
+.month-legend-card { margin-top: 12px; padding: 12px; border-radius: 12px; box-shadow: none; }
+.month-legend-row { gap: 8px; }
+.month-legend-item { font-size: 12px; line-height: 18px; }
+.month-legend-item span { font-size: 11px; }
+.month-hint { margin-top: 12px; font-size: 12px; line-height: 18px; }
+.month-wave { display: none; }
+.bottom-nav { height: calc(64px + env(safe-area-inset-bottom, 0px)); padding: 4px 8px calc(4px + env(safe-area-inset-bottom, 0px)); }
+.nav-btn { font-size: 11px; line-height: 15px; font-weight: 600; gap: 4px; border-radius: 10px; }
+.nav-btn svg { width: 22px; height: 22px; }
+.date-navigator { gap: 8px; margin-bottom: 12px; }
+.nav-date-btn { width: 44px; height: 44px; flex-shrink: 0; border-radius: 10px; box-shadow: none; }
+.date-pill { min-height: 44px; padding: 8px 12px; font-size: 12px; line-height: 18px; gap: 6px; box-shadow: none; }
+.activity-card { padding: 12px; gap: 12px; border-radius: 12px; }
+.activity-title h3 { font-size: 14px; line-height: 20px; font-weight: 650; }
+.score { font-size: 28px; line-height: 34px; }
+.fit-text { font-size: 12px; line-height: 18px; }
+.activity-art { border-radius: 8px; }
+.activity-symbol { width: 36px; height: 36px; }
+.section-title { margin: 16px 0 12px; font-size: 14px; line-height: 20px; font-weight: 650; }
+.panel { padding: 12px; border-radius: 12px; }
+.compare-date-pill { min-height: 44px; }
+.segmented button, .picker-tabs button { min-height: 44px; font-size: 13px; line-height: 18px; }
+/* Three remaining navigation destinations. */
+.bottom-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Soft surfaces and restrained motion inspired by native mobile interfaces. */
+:root {
+  --ink: #202734;
+  --muted: #667182;
+  --soft: #f2f3f7;
+  --line: #e5e8ef;
+  --teal: #0065cc;
+  --teal-dark: #255a9d;
+  --blue: #0065cc;
+  --blue-soft: #edf4fd;
+  --green: #008a3d;
+  --green-soft: #edf6f2;
+  --orange: #c47b00;
+  --orange-soft: #faf4e9;
+  --danger: #e3263d;
+  --ease-ui: cubic-bezier(.22, 1, .36, 1);
+}
+body { background: #e9ecf2; }
+.screen, .month-screen { background: #f2f3f7; overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+.topbar, .month-screen .topbar {
+  background: rgba(247,248,251,.92);
+  color: var(--ink);
+  border-bottom: 1px solid rgba(32,39,52,.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.topbar h2, .month-screen .topbar h2 { color: var(--ink); font-weight: 600; letter-spacing: -.4px; }
+.topbar .icon-btn, .month-screen .icon-btn { color: var(--blue); background: transparent; border-radius: 50%; }
+.app-logo { border-radius: 10px; }
+.activity-card, .activity-card.green, .activity-card.blue, .activity-card.orange,
+.panel, .month-card, .month-calendar-card, .month-legend-card, .small-card {
+  background: #fff;
+  border-color: rgba(32,39,52,.045);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(32,39,52,.035);
+}
+.activity-art, .activity-card.blue .activity-art { background: #edf4fd; color: #0065cc; border-radius: 14px; }
+.activity-card.green .activity-art { background: #edf6f2; color: #008a3d; }
+.activity-card.orange .activity-art { background: #faf4e9; color: #c47b00; }
+.activity-title h3 { font-weight: 600; letter-spacing: -.2px; }
+.score { font-weight: 650; letter-spacing: -1px; }
+#homeActivityCards .score { font-weight: 650; }
+.score.good { color: var(--green); }
+.score.medium { color: var(--orange); }
+.score.bad { color: var(--danger); }
+.section-title { font-weight: 600; color: #455264; }
+.date-pill, .nav-date-btn { background: #fff; border-color: rgba(32,39,52,.05); border-radius: 14px; box-shadow: 0 2px 8px rgba(32,39,52,.025); }
+.date-pill { color: #344359; font-weight: 600; }
+.month-step, .datepicker-step { background: #f6f7fa; color: var(--blue); border-radius: 12px; }
+.month-picker { border-radius: 12px; }
+.month-title, .datepicker-title { color: #344359; font-weight: 600; }
+.month-tabs, .picker-tabs, .segmented { background: #e8ebf1; border: 0; border-radius: 16px; padding: 4px; box-shadow: none; }
+.month-tabs button, .picker-tabs button, .segmented button { color: #657184; border-radius: 12px; font-weight: 550; }
+.month-tabs button.active, .picker-tabs button.active, .segmented button.active { color: #0065cc; background: #fff; box-shadow: 0 2px 6px rgba(32,39,52,.08); transform: none; }
+.month-screen .day-cell { border-radius: 13px; color: #344359; }
+.month-screen .day-cell.muted { color: #a4adba; }
+.month-screen .day-cell.selected, .day-cell.selected { background: #0065cc; color: #fff; box-shadow: 0 3px 8px rgba(52,120,207,.18); }
+.month-screen .day-score { color: #788395; }
+.month-screen .day-cell.selected .day-score { color: #fff; }
+.status-dot { background: var(--danger); }
+.status-dot.good { background: var(--green); }
+.status-dot.medium { background: var(--orange); }
+.bottom-nav { background: rgba(255,255,255,.94); border-top: 1px solid rgba(32,39,52,.07); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.nav-btn { color: #87919f; font-weight: 550; border-radius: 16px; }
+.nav-btn.active { color: #0065cc; background: #edf4fd; }
+.nav-btn svg { stroke-width: 1.8; }
+.custom-datepicker { background: #fff; border: 1px solid rgba(32,39,52,.06); border-radius: 22px; box-shadow: 0 12px 40px rgba(32,39,52,.14); }
+button, .date-pill { -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: transform 140ms var(--ease-ui), background-color 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+button:active:not(:disabled), .date-pill:active { transform: scale(.96); }
+.nav-btn:active:not(:disabled) { transform: scale(.95); }
+.month-screen .day-cell:active:not(:disabled) { transform: scale(.92); }
+.nav-btn.active svg { animation: icon-settle 240ms var(--ease-ui) both; }
+.screen.active { animation: screen-reveal 180ms ease-out both; }
+.activity-card { animation: content-reveal 240ms var(--ease-ui) both; }
+.activity-card:nth-child(2) { animation-delay: 35ms; }
+.custom-datepicker.active { transform-origin: top center; animation: picker-reveal 200ms var(--ease-ui) both; }
+.month-screen .day-cell.selected { animation: selection-settle 200ms var(--ease-ui) both; }
+@keyframes screen-reveal { from { opacity: .45; } to { opacity: 1; } }
+@keyframes content-reveal { from { opacity: .5; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes picker-reveal { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes icon-settle { from { transform: scale(.88); } to { transform: scale(1); } }
+@keyframes selection-settle { from { transform: scale(.94); } to { transform: scale(1); } }
+@media (hover: hover) {
+  .nav-btn:not(.active):hover { background: #f1f5fa; }
+  .nav-date-btn:hover, .date-pill:hover, .month-step:hover { background: #f7f9fc; border-color: #d8e2f0; transform: none; box-shadow: 0 3px 10px rgba(32,39,52,.05); }
+  .month-screen .day-cell:hover:not(:disabled):not(.selected) { background: #edf4fd; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phone *, .phone *::before, .phone *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  button:active:not(:disabled), .date-pill:active, .month-screen .day-cell:active:not(:disabled) { transform: none; }
+}
+
+/* Image-led activity cards: content remains separate from illustrative imagery. */
+#homeActivityCards { gap: 12px; align-items: stretch; }
+#homeActivityCards .activity-card { padding: 0; gap: 0; overflow: hidden; border-radius: 18px; border: 1px solid #e3e7ed; background: #fff; box-shadow: 0 4px 14px rgba(28,42,60,.04); }
+#homeActivityCards .activity-photo { min-height: 0; aspect-ratio: 3 / 2; border-radius: 0; overflow: hidden; background: #e8edf1; }
+.activity-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+#homeActivityCards .activity-summary { padding: 12px; }
+#homeActivityCards .activity-title { margin-bottom: 8px; }
+#homeActivityCards .activity-title h3 { font-size: 13px; line-height: 19px; font-weight: 650; letter-spacing: -.15px; min-height: 38px; }
+#homeActivityCards .score { font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+#homeActivityCards .fit-text { display: block; font-size: 11px; line-height: 16px; color: #6b7585; margin-top: 2px; }
+.day-cell .day-score { font-weight: 650; }
+.day-cell .day-score.good { color: #008a3d; }
+.day-cell .day-score.medium { color: #c47b00; }
+.day-cell .day-score.bad { color: #e3263d; }
+.day-cell.selected .day-score { border-radius: 5px; padding: 2px 4px; background: #fff; }
+.month-screen .day-cell .day-score.good, .datepicker-calendar .day-cell .day-score.good { color: #008a3d; }
+.month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { color: #c47b00; }
+.month-screen .day-cell .day-score.bad, .datepicker-calendar .day-cell .day-score.bad { color: #e3263d; }
+/* Strong maritime palette with clear selected states. */
+:root { --ink: #102b46; --muted: #506078; --blue: #0065cc; --teal: #0065cc; --teal-dark: #104c8b; --green: #008a3d; --orange: #c47b00; --danger: #e3263d; --line: #d6e0eb; }
+body { background: #dce4ed; }
+.screen, .month-screen { background: #edf1f6; }
+.topbar, .month-screen .topbar { background: #102e4c; color: #fff; border-bottom: 1px solid #244a6b; }
+.topbar h2, .month-screen .topbar h2 { color: #fff; font-weight: 650; }
+.topbar .icon-btn, .month-screen .topbar .icon-btn { color: #fff; background: #204665; }
+.section-title, .month-title, .datepicker-title, .date-pill { color: #17334e; }
+.panel, .month-card, .month-calendar-card, .month-legend-card, .small-card { border-color: #d8e1eb; box-shadow: 0 4px 14px rgba(16,43,70,.06); }
+.month-tabs, .picker-tabs, .segmented { background: #dfe6ee; }
+.month-tabs button, .picker-tabs button, .segmented button { color: #435970; font-weight: 600; }
+.month-tabs button.active, .picker-tabs button.active, .segmented button.active { background: #0065cc; color: #fff; box-shadow: 0 3px 8px rgba(21,93,168,.18); }
+.nav-btn { color: #52677d; font-weight: 600; }
+.nav-btn.active { color: #fff; background: #0065cc; }
+.month-screen .day-cell.selected, .day-cell.selected { background: #0065cc; box-shadow: 0 3px 8px rgba(21,93,168,.2); }
+.month-screen .day-cell .day-score.good, .datepicker-calendar .day-cell .day-score.good { color: #008a3d; }
+.month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { color: #c47b00; }
+.month-screen .day-cell .day-score.bad, .datepicker-calendar .day-cell .day-score.bad { color: #e3263d; }
+#homeActivityCards .activity-title h3 { color: #102b46; }
+#homeActivityCards .fit-text { color: #52647a; }
+/* Saturated forecast colors, including selected calendar percentages. */
+:root { --green: #008a3d; --orange: #c47b00; --danger: #e3263d; }
+.score.good { color: #008a3d; }
+.score.medium { color: #c47b00; }
+.score.bad { color: #e3263d; }
+.month-screen .day-cell .day-score.good, .datepicker-calendar .day-cell .day-score.good { color: #008a3d; }
+.month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { color: #c47b00; }
+.month-screen .day-cell .day-score.bad, .datepicker-calendar .day-cell .day-score.bad { color: #e3263d; }
+/* Shared final palette and month selection surface. */
+:root { --ink: #102b46; --muted: #506078; --blue: #0065cc; --teal: #0065cc; --teal-dark: #004f9f; --green: #008a3d; --orange: #c47b00; --danger: #e3263d; --line: #d6e0eb; }
+.month-tabs button.active, .picker-tabs button.active, .segmented button.active, .nav-btn.active, .month-screen .day-cell.selected, .day-cell.selected { background: var(--blue); color: #fff; }
+.legend-dot { background: var(--green); }
+.legend-dot.medium { background: #ffc400; }
+.legend-dot.bad { background: var(--danger); }
+.month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { background: #ffc400; color: #503b00; padding: 2px 4px; border-radius: 5px; }
+.score.medium { background: #ffc400; color: #503b00; border-radius: 7px; padding: 0 5px; display: inline-block; }
+.month-picker { background: #fff; border: 0; cursor: pointer; color: var(--ink); font: inherit; }
+.month-chooser { width: min(350px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; padding: 20px; border: 1px solid var(--line); border-radius: 22px; background: #fff; color: var(--ink); box-shadow: 0 20px 70px rgba(10,30,50,.3); }
+.month-chooser::backdrop { background: rgba(10,27,45,.5); backdrop-filter: blur(4px); }
+.month-chooser-heading, .month-chooser-year { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.month-chooser-heading h3 { margin: 0; font-size: 18px; }
+.month-chooser button { min-height: 44px; border: 0; border-radius: 12px; font: inherit; font-weight: 600; cursor: pointer; color: var(--ink); background: #edf2f7; }
+.month-chooser-heading button, .month-chooser-year button { width: 44px; font-size: 26px; }
+.month-chooser-year { margin: 16px 0; }
+.month-chooser-year strong { font-size: 20px; }
+.chooser-months { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+.chooser-months button { font-size: 13px; min-height: 48px; }
+.chooser-months button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+#homeActivityCards .activity-title h3 { min-height: 0; }
+#screen-compare .compare-date-pill { margin: 12px 0 8px; box-shadow: none !important; border-radius: 10px !important; background: #f0f5fb !important; padding: 10px 12px !important; }
+#comparePillA { border-left: 4px solid #0065cc !important; }
+#comparePillB { border-left: 4px solid #ff7e15 !important; }
+#screen-compare .compare-date-pill span { white-space: normal !important; color: var(--ink) !important; }
+/* Forecast percentages use text color only, without highlight fills. */
+.score.medium { background: transparent; color: #b87400; padding: 0; border-radius: 0; }
+.month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { background: transparent; color: #b87400; padding: 0; border-radius: 0; }
+.day-cell.selected .day-score { background: transparent; padding: 0; border-radius: 0; }
+.month-screen .day-cell.selected .day-score.good, .month-screen .day-cell.selected .day-score.medium, .month-screen .day-cell.selected .day-score.bad { color: #fff; }
+
+/* Consistent Vietnamese typography across controls, tables and charts. */
+html, body, button, input, select, textarea, svg text { font-family: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { -webkit-font-smoothing: antialiased; }
+.topbar h2, .month-screen .topbar h2, .activity-title h3, .section-title, .month-title, .datepicker-title { font-weight: 600; letter-spacing: -.2px; }
+#homeActivityCards .activity-title h3 { font-weight: 600; line-height: 20px; }
+.month-screen .day-num { font-weight: 600; }
+.month-screen .day-score, .nav-btn, .month-tabs button, .picker-tabs button, .segmented button { font-weight: 500; }
+.score, #homeActivityCards .score { font-weight: 600; letter-spacing: -.7px; }
+/* Maritime color system: brand, neutral surfaces and forecast semantics. */
+:root {
+ --color-brand: #007a9e; --color-brand-strong: #005d79; --color-navy: #092a3b;
+ --color-canvas: #f2f4f5; --color-surface: #ffffff; --color-border: #dce3e7;
+ --color-text: #172e3c; --color-text-secondary: #536571;
+ --color-good: #00804a; --color-medium: #996b00; --color-bad: #d52638;
+ --color-chart-a: #007a9e; --color-chart-b: #b95616;
+ --ink: var(--color-text); --muted: var(--color-text-secondary); --soft: var(--color-canvas);
+ --line: var(--color-border); --card: var(--color-surface); --blue: var(--color-brand); --teal: var(--color-brand); --teal-dark: var(--color-brand-strong);
+ --green: var(--color-good); --orange: var(--color-medium); --danger: var(--color-bad);
+}
+body { background: #e1e7ea; }
+.screen, .month-screen { background: var(--color-canvas); }
+.topbar, .month-screen .topbar { background: var(--color-navy); border-color: #244452; }
+.topbar .icon-btn, .month-screen .topbar .icon-btn { background: #193d4e; color: #fff; }
+.topbar h2, .month-screen .topbar h2 { color: #fff; }
+.section-title, .month-title, .datepicker-title, .date-pill, .activity-title h3, #homeActivityCards .activity-title h3 { color: var(--color-text); }
+.fit-text, #homeActivityCards .fit-text, .nav-btn, .month-tabs button, .picker-tabs button, .segmented button { color: var(--color-text-secondary); }
+.panel, .month-card, .month-calendar-card, .month-legend-card, .small-card, #homeActivityCards .activity-card { background: var(--color-surface); border-color: var(--color-border); box-shadow: 0 4px 14px rgba(9,42,59,.045); }
+.date-pill, .nav-date-btn, .month-picker { background: #fff; border-color: var(--color-border); }
+.month-step, .datepicker-step, .month-chooser button { background: #edf1f3; color: var(--color-brand-strong); }
+.month-tabs, .picker-tabs, .segmented { background: #e5ebee; }
+.month-tabs button.active, .picker-tabs button.active, .segmented button.active, .nav-btn.active, .month-screen .day-cell.selected, .day-cell.selected, .chooser-months button[aria-pressed="true"] { background: var(--color-brand); color: #fff; box-shadow: none; }
+.month-screen .day-cell { color: var(--color-text); }
+.month-screen .day-cell.muted { color: #81929c; }
+.month-screen .day-cell.selected { color: #fff; }
+.score.good, .day-cell .day-score.good, .month-screen .day-cell .day-score.good, .datepicker-calendar .day-cell .day-score.good { color: var(--color-good); }
+.score.medium, .day-cell .day-score.medium, .month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { color: var(--color-medium); background: transparent; padding: 0; }
+.score.bad, .day-cell .day-score.bad, .month-screen .day-cell .day-score.bad, .datepicker-calendar .day-cell .day-score.bad { color: var(--color-bad); }
+.month-screen .day-cell.selected .day-score.good, .month-screen .day-cell.selected .day-score.medium, .month-screen .day-cell.selected .day-score.bad, .day-cell.selected .day-score { color: #fff; background: transparent; }
+.legend-dot { background: var(--color-good); }
+.legend-dot.medium { background: var(--color-medium); }
+.legend-dot.bad { background: var(--color-bad); }
+#screen-compare .compare-date-pill { background: #f4f7f8 !important; }
+#comparePillA { border-left-color: var(--color-chart-a) !important; }
+#comparePillB { border-left-color: var(--color-chart-b) !important; }
+.legend-line-color.a { background: var(--color-chart-a); }
+.legend-line-color.b { background: var(--color-chart-b); }
+button:focus-visible, input:focus-visible { outline-color: var(--color-brand); }
+/* Single composed date control, retaining the existing three actions. */
+#screen-home .date-navigator { display: grid; grid-template-columns: 44px minmax(0,1fr) 44px; align-items: center; gap: 0; padding: 5px; border: 1px solid #d5e1e6; border-radius: 18px; background: #fff; box-shadow: 0 5px 18px rgba(9,42,59,.06); margin-bottom: 16px; }
+#screen-home .nav-date-btn { width: 44px; height: 44px; background: transparent; border: 0; border-radius: 12px; color: var(--color-brand-strong); box-shadow: none; }
+#screen-home .date-pill { min-width: 0; min-height: 44px; border: 0; border-left: 1px solid #e3eaee; border-right: 1px solid #e3eaee; border-radius: 0; padding: 8px 10px; background: transparent; box-shadow: none; color: var(--color-text); font-weight: 600; font-size: 12px; line-height: 18px; gap: 8px; }
+#screen-home .date-pill svg { width: 19px; height: 19px; color: var(--color-brand); flex-shrink: 0; }
+#screen-home .date-pill svg:last-child { width: 15px; height: 15px; }
+@media (hover: hover) { #screen-home .nav-date-btn:hover { background: #edf4f7; box-shadow: none; } #screen-home .date-pill:hover { background: #f5f9fa; box-shadow: none; } }
+/* Selected day always uses white text in every calendar surface. */
+.day-cell.selected .day-score,
+.day-cell.selected .day-score.good,
+.day-cell.selected .day-score.medium,
+.day-cell.selected .day-score.bad,
+.month-screen .day-cell.selected .day-score,
+.month-screen .day-cell.selected .day-score.good,
+.month-screen .day-cell.selected .day-score.medium,
+.month-screen .day-cell.selected .day-score.bad,
+.datepicker-calendar .day-cell.selected .day-score,
+.datepicker-calendar .day-cell.selected .day-score.good,
+.datepicker-calendar .day-cell.selected .day-score.medium,
+.datepicker-calendar .day-cell.selected .day-score.bad { color: #fff; background: transparent; }
+/* Flat chart surface: no inset card, rounded frame or elevation. */
+.panel:has(.tide-chart) { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: #fff; }
+.tide-chart { border: 0; border-radius: 0; box-shadow: none; background: #fff; }
+.tide-y-axis, .tide-corner { background: #fff; border-color: #dce3e7; }
+.tide-y-label, .tide-corner, .tide-time-row { color: var(--color-text-secondary); }
+.tide-plot { background: linear-gradient(90deg, #edf0f2 1px, transparent 1px) 0 0 / 48px 100%, linear-gradient(180deg, #e3e8eb 1px, transparent 1px) 0 0 / 100% 20%; }
+.tide-plot > path:not([stroke]) { fill: rgba(0,122,158,.07); }
+.tide-scroll { scrollbar-color: #8296a2 #f0f3f5; }
+.tide-scroll::-webkit-scrollbar-thumb { background: #8296a2; border-radius: 0; }
+#screen-compare .panel:has(.tide-chart) > .section-title { margin-bottom: 12px; }
+.tide-scroll { touch-action: pan-x pan-y; cursor: grab; -webkit-overflow-scrolling: touch; }
+.tide-scroll:active { cursor: grabbing; }
+.tide-inner, .tide-inner-compare-single { user-select: none; }
+/* Centered activity cards with a compact image-to-score hierarchy. */
+#homeActivityCards { gap: 12px; }
+#homeActivityCards .activity-card { border-radius: 14px; border: 1px solid var(--color-border); box-shadow: none; background: var(--color-surface); }
+#homeActivityCards .activity-photo { aspect-ratio: 4 / 3; }
+#homeActivityCards .activity-summary { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 14px 8px 16px; text-align: center; }
+#homeActivityCards .activity-title { display: block; width: 100%; margin: 0; }
+#homeActivityCards .activity-title h3 { margin: 0; font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 0; color: var(--color-text); }
+#homeActivityCards .score { display: block; font-size: 32px; line-height: 40px; font-weight: 600; letter-spacing: -1px; }
+/* Clear amber forecast text, without brown tint or highlight fill. */
+:root { --color-medium: #d99000; --orange: var(--color-medium); }
+.score.medium, .day-cell .day-score.medium, .month-screen .day-cell .day-score.medium, .datepicker-calendar .day-cell .day-score.medium { color: var(--color-medium); background: transparent; }
+.month-screen .day-cell.selected .day-score.medium, .datepicker-calendar .day-cell.selected .day-score.medium { color: #fff; }
+.legend-dot.medium { background: var(--color-medium); }
+/* Continuous page composition, without separate card surfaces. */
+.screen, .month-screen { background: #fff; }
+.topbar, .month-screen .topbar { background: #fff; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+.topbar h2, .month-screen .topbar h2 { color: var(--color-text); }
+.topbar .icon-btn, .month-screen .topbar .icon-btn { background: transparent; color: var(--color-brand-strong); }
+#homeActivityCards .activity-card, .activity-card, .activity-card.green, .activity-card.blue, .activity-card.orange,
+.panel, .month-card, .month-calendar-card, .month-legend-card, .small-card { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+#homeActivityCards { gap: 16px; margin-top: 8px; }
+#homeActivityCards .activity-card { overflow: visible; }
+#homeActivityCards .activity-photo { border-radius: 0; }
+#homeActivityCards .activity-summary { padding: 12px 0 20px; }
+#screen-home .date-navigator { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; margin-bottom: 16px; }
+#screen-home .date-pill { border: 0; background: transparent; }
+#screen-home .nav-date-btn { border-radius: 0; }
+#screen-home .section-title { padding-top: 16px; border-top: 1px solid var(--color-border); margin-top: 0; }
+.month-card { padding: 0; margin-bottom: 16px; }
+.month-tabs, .picker-tabs, .segmented { background: transparent; border-radius: 0; border-bottom: 1px solid var(--color-border); padding: 0; gap: 0; }
+.month-tabs button, .picker-tabs button, .segmented button { border-radius: 0; background: transparent; }
+.month-tabs button.active, .picker-tabs button.active, .segmented button.active { background: transparent; color: var(--color-brand-strong); box-shadow: inset 0 -2px var(--color-brand); }
+.month-calendar-card { padding: 12px 0; }
+.month-legend-card { border-top: 1px solid var(--color-border); padding: 16px 0; }
+.bottom-nav { background: #fff; border-top: 1px solid var(--color-border); box-shadow: none; backdrop-filter: none; }
+.nav-btn, .nav-btn.active { background: transparent; border-radius: 0; box-shadow: none; }
+.nav-btn.active { color: var(--color-brand-strong); }
+#screen-compare .compare-date-pill { background: transparent !important; border: 0 !important; border-radius: 0 !important; padding: 10px 0 !important; }
+#screen-compare .compare-list { border-top: 1px solid var(--color-border); }
+/* User-selected medium score color. */
+:root { --color-medium: #f57c00; --orange: var(--color-medium); }
+/* Reference lines stay subordinate to measured values. */
+.tide-plot > line[stroke-dasharray] { stroke-width: 1; opacity: .55; }
+.tide-plot > text { paint-order: stroke fill; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+/* Fine calendar dividers, without introducing card containers. */
+.month-screen .calendar { gap: 0; }
+.month-screen .calendar .weekday { padding-bottom: 8px; border-bottom: 1px solid #dce3e7; }
+.month-screen .calendar .day-cell { border-radius: 0; border: 0; border-right: 1px solid #e8edef; border-bottom: 1px solid #e8edef; min-height: 64px; }
+.month-screen .calendar .day-cell:nth-child(7n) { border-right: 0; }
+.month-screen .calendar .day-cell.selected { border-radius: 8px; }
+.tide-plot > line[stroke-dasharray] { stroke-width: 1; opacity: .5; }
+/* Photographic header only; existing page composition is preserved. */
+#screen-home { position: relative; isolation: isolate; }
+#screen-home::before { content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: 0; right: 0; height: 184px; background-image: linear-gradient(90deg, rgba(255,255,255,.9), rgba(255,255,255,.55) 56%, rgba(255,255,255,.12)), url('header-coast.jpg'); background-size: cover; background-position: center 42%; -webkit-mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 55%, transparent 100%); }
+#screen-home .topbar { background: transparent; border-bottom: 0; }
+#screen-home .date-navigator { background: transparent; }
+/* Selected calendar day fills the rectangular grid cell. */
+.month-screen .calendar .day-cell.selected { border-radius: 0; }
+/* Crisp header photograph; fade only at the bottom edge. */
+#screen-home::before { background-image: url('header-coast.jpg'); background-position: center 30%; -webkit-mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%); }
+#screen-home .topbar { backdrop-filter: none; -webkit-backdrop-filter: none; background: transparent; }
+/* Keep the date controls outside the photographic header. */
+#screen-home::before { height: 80px; -webkit-mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%); }
+#screen-home .date-navigator { position: relative; background: #fff; }
+/* Open sky behind the title, with the coastal horizon at the lower edge. */
+#screen-home::before { background-position: center 20%; background-size: cover; }
+/* Plain white header as requested. */
+#screen-home::before { content: none; }
+#screen-home .topbar { background: #fff; }
+/* Slightly stronger calendar percentages. */
+.month-screen .day-score { font-weight: 600; font-size: 12px; line-height: 15px; }
+/* Selected day reflects its forecast status. */
+.day-cell.selected:has(.day-score.good), .month-screen .day-cell.selected:has(.day-score.good) { background: var(--color-good); }
+.day-cell.selected:has(.day-score.medium), .month-screen .day-cell.selected:has(.day-score.medium) { background: var(--color-medium); }
+.day-cell.selected:has(.day-score.bad), .month-screen .day-cell.selected:has(.day-score.bad) { background: var(--color-bad); }
+/* Date picker calendar matches the monthly calendar. */
+.datepicker-calendar { gap: 0; }
+.datepicker-calendar .weekday { min-height: 28px; padding-bottom: 8px; border-bottom: 1px solid #dce3e7; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--muted); }
+.datepicker-calendar .day-cell { min-height: 64px; padding: 6px 0; gap: 4px; border-radius: 0; border: 0; border-right: 1px solid #e8edef; border-bottom: 1px solid #e8edef; color: var(--color-text); }
+.datepicker-calendar .day-cell:nth-child(7n) { border-right: 0; }
+.datepicker-calendar .day-cell.muted { color: #81929c; }
+.datepicker-calendar .day-num { font-size: 16px; line-height: 18px; font-weight: 600; }
+.datepicker-calendar .day-score { font-size: 12px; line-height: 15px; font-weight: 600; }
+.datepicker-calendar .day-cell.selected { border-radius: 0; color: #fff; }
+.custom-datepicker { border-radius: 0; box-shadow: none; border: 1px solid var(--color-border); }
+/* Compact balanced calendar legend. */
+.month-legend-card { border-top: 1px solid var(--color-border); border-bottom: 0; padding: 14px 0; margin-top: 8px; }
+.month-legend-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; border: 0; padding: 0; }
+.month-legend-item { display: flex; align-items: flex-start; justify-content: center; gap: 6px; font-size: 11px; line-height: 17px; font-weight: 500; color: var(--color-text); }
+.month-legend-item .legend-dot { width: 7px; height: 7px; flex-shrink: 0; margin-top: 5px; box-shadow: none; }
+.month-legend-item span:last-child { font-size: 10px; line-height: 15px; font-weight: 400; color: var(--color-text-secondary); }
