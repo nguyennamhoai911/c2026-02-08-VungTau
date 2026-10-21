@@ -467,3 +467,80 @@ button:focus-visible, input:focus-visible { outline-color: var(--color-brand); }
 .month-legend-item { display: flex; align-items: flex-start; justify-content: center; gap: 6px; font-size: 11px; line-height: 17px; font-weight: 500; color: var(--color-text); }
 .month-legend-item .legend-dot { width: 7px; height: 7px; flex-shrink: 0; margin-top: 5px; box-shadow: none; }
 .month-legend-item span:last-child { font-size: 10px; line-height: 15px; font-weight: 400; color: var(--color-text-secondary); }
+/* Beach name sits between the date and its percentage. */
+.month-screen .day-cell:has(.day-beach), .datepicker-calendar .day-cell:has(.day-beach) { min-height: 76px; gap: 3px; }
+.day-beach { font-size: 10px; line-height: 14px; font-weight: 500; white-space: nowrap; color: inherit; letter-spacing: -.2px; }
+/* Beach identity determines calendar text colors; percentages stay black. */
+.day-cell:has(.day-beach) .day-num, .day-cell:has(.day-beach) .day-beach { color: var(--color-good); }
+.day-cell:has(.day-beach[data-beach="sau"]) .day-num, .day-cell:has(.day-beach[data-beach="sau"]) .day-beach { color: var(--color-bad); }
+.month-screen .day-cell:has(.day-beach) .day-score, .datepicker-calendar .day-cell:has(.day-beach) .day-score { color: #111; }
+.month-screen .day-cell.selected:has(.day-beach), .datepicker-calendar .day-cell.selected:has(.day-beach) { background: #e7f5ed; box-shadow: inset 0 0 0 1px var(--color-good); }
+.month-screen .day-cell.selected:has(.day-beach[data-beach="sau"]), .datepicker-calendar .day-cell.selected:has(.day-beach[data-beach="sau"]) { background: #fdecee; box-shadow: inset 0 0 0 1px var(--color-bad); }
+/* Active beach cell: solid identity color and white content. */
+.month-screen .day-cell.selected:has(.day-beach), .datepicker-calendar .day-cell.selected:has(.day-beach) { background: var(--color-good); box-shadow: none; }
+.month-screen .day-cell.selected:has(.day-beach[data-beach="sau"]), .datepicker-calendar .day-cell.selected:has(.day-beach[data-beach="sau"]) { background: var(--color-bad); }
+.month-screen .day-cell.selected:has(.day-beach) .day-num,
+.month-screen .day-cell.selected:has(.day-beach) .day-beach,
+.month-screen .day-cell.selected:has(.day-beach) .day-score,
+.datepicker-calendar .day-cell.selected:has(.day-beach) .day-num,
+.datepicker-calendar .day-cell.selected:has(.day-beach) .day-beach,
+.datepicker-calendar .day-cell.selected:has(.day-beach) .day-score { color: #fff; }
+/* Medium percentages retain orange on inactive beach cells. */
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score.medium,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score.medium { color: var(--color-medium); }
+/* Balance beach labels and percentages within narrow calendar cells. */
+.month-screen .day-cell:has(.day-beach), .datepicker-calendar .day-cell:has(.day-beach) { min-width: 0; padding-left: 2px; padding-right: 2px; }
+.day-cell .day-beach { font-size: 10.5px; line-height: 15px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.month-screen .day-cell .day-score, .datepicker-calendar .day-cell .day-score { font-size: 11px; line-height: 14px; }
+/* All displayed percentages up to and including 70% are orange when inactive. */
+.month-screen .day-cell:not(.selected) .day-score.low-score,
+.datepicker-calendar .day-cell:not(.selected) .day-score.low-score,
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score.low-score,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score.low-score { color: var(--color-medium); }
+/* Softer neutral for inactive high-score beach percentages. */
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score:not(.low-score),
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score:not(.low-score) { color: #59636e; }
+/* Quiet magnitude cue beneath the exact calendar percentage. */
+.day-meter { display: block; width: 28px; height: 2px; margin: 2px auto 0; background: #e3e7eb; flex-shrink: 0; overflow: hidden; }
+.day-meter > span { display: block; height: 100%; background: #59636e; }
+.day-meter.low-score > span { background: var(--color-medium); }
+.day-cell.selected .day-meter { background: rgba(255,255,255,.3); }
+.day-cell.selected .day-meter > span { background: #fff; }
+.month-screen .day-cell:has(.day-beach), .datepicker-calendar .day-cell:has(.day-beach) { min-height: 82px; }
+/* Plain numeric percentages; selected cells retain white text. */
+.month-screen .day-cell:not(.selected) .day-score,
+.datepicker-calendar .day-cell:not(.selected) .day-score,
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score,
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score.low-score,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score.low-score,
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score:not(.low-score),
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score:not(.low-score) { color: #111; }
+.month-screen .day-cell:has(.day-beach), .datepicker-calendar .day-cell:has(.day-beach) { min-height: 76px; }
+/* Preserve the agreed orange threshold for inactive percentages. */
+.month-screen .day-cell:not(.selected) .day-score.low-score,
+.datepicker-calendar .day-cell:not(.selected) .day-score.low-score,
+.month-screen .day-cell:not(.selected):has(.day-beach) .day-score.low-score,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach) .day-score.low-score { color: var(--color-medium); }
+/* Restore the Dứa meter and match its percentage color to the threshold. */
+.month-screen .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score:not(.low-score),
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score:not(.low-score) { color: var(--color-good); }
+.day-cell:has(.day-beach[data-beach="dua"]) .day-meter > span { background: var(--color-good); }
+.day-cell:has(.day-beach[data-beach="dua"]) .day-meter.low-score > span { background: var(--color-medium); }
+.day-cell.selected:has(.day-beach[data-beach="dua"]) .day-meter > span { background: #fff; }
+/* Legend reflects the two agreed percentage ranges. */
+.month-legend-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.month-legend-row { grid-template-columns: repeat(3, minmax(0,1fr)); }
+/* Percentage colors match all three legend ranges. */
+.month-screen .day-cell:not(.selected) .day-score.good,
+.datepicker-calendar .day-cell:not(.selected) .day-score.good,
+.month-screen .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.good,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.good { color: var(--color-good); }
+.month-screen .day-cell:not(.selected) .day-score.medium,
+.datepicker-calendar .day-cell:not(.selected) .day-score.medium,
+.month-screen .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.medium,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.medium { color: var(--color-medium); }
+.month-screen .day-cell:not(.selected) .day-score.bad,
+.datepicker-calendar .day-cell:not(.selected) .day-score.bad,
+.month-screen .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.bad,
+.datepicker-calendar .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.bad { color: var(--color-bad); }

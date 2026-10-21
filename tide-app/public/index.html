@@ -1909,6 +1909,11 @@
             <button class="icon-btn" type="button" aria-label="Lọc"><i data-lucide="filter"></i></button>
           </div>
 
+          <div class="month-tabs" role="tablist" aria-label="Hoạt động trong tháng">
+            <button class="active" type="button" data-month-activity="football"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg> Đá banh</button>
+            <button type="button" data-month-activity="crab"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg> Bắt ghẹ</button>
+          </div>
+
           <div class="month-card">
             <button class="month-step" type="button" data-month-step="-1" aria-label="Tháng trước"><i data-lucide="chevron-left"></i></button>
             <button class="month-picker" id="openMonthChooser" type="button" aria-label="Chọn tháng" aria-haspopup="dialog">
@@ -1923,23 +1928,17 @@
             <div class="month-chooser-year"><button type="button" data-chooser-year="-1" aria-label="Năm trước">‹</button><strong id="chooserYear"></strong><button type="button" data-chooser-year="1" aria-label="Năm sau">›</button></div>
             <div id="chooserMonths" class="chooser-months"></div>
           </dialog>
-          <div class="month-tabs" role="tablist" aria-label="Hoạt động trong tháng">
-            <button class="active" type="button" data-month-activity="football"><svg class='activity-symbol icon-football' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><circle cx='16' cy='16' r='12'/><path d='m16 10 5.7 4.2-2.2 6.8h-7l-2.2-6.8Z M16 4v6 M27.4 12.3l-5.7 1.9 M23.1 25.7 19.5 21 M8.9 25.7l3.6-4.7 M4.6 12.3l5.7 1.9'/></svg> Đá banh</button>
-            <button type="button" data-month-activity="crab"><svg class='activity-symbol icon-crab' viewBox='0 0 32 32' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M8 20c0-5 3-8 8-8s8 3 8 8c0 4-4 6-8 6s-8-2-8-6Z M12 12v-2 M20 12v-2 M8 17 4 12 M24 17l4-5 M8 20H3 M24 20h5 M9 23l-5 4 M23 23l5 4 M12 25l-2 4 M20 25l2 4 M4 12C0 10 2 5 5 4v4l3-2c2 4 0 7-4 6Z M28 12c4-2 2-7-1-8v4l-3-2c-2 4 0 7 4 6Z'/></svg> Bắt ghẹ</button>
-          </div>
-
           <div class="month-calendar-card">
             <div class="calendar" id="monthCalendar"></div>
           </div>
-
-          <div class="month-legend-card">
+          <div class="month-legend-card" aria-label="Chú giải phần trăm Bãi Dứa">
             <div class="month-legend-row">
               <div class="month-legend-item"><span class="legend-dot"></span><div>Tốt<br><span>(từ 70%)</span></div></div>
-              <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(40-69%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(40–69%)</span></div></div>
               <div class="month-legend-item"><span class="legend-dot bad"></span><div>Kém<br><span>(dưới 40%)</span></div></div>
             </div>
-            <div class="month-wave" aria-hidden="true"></div>
           </div>
+
         </section>
 
         <section id="screen-activities" class="screen" data-screen="activities">
@@ -3306,6 +3305,18 @@
       });
     }
 
+    function calendarForecast(score, activity) {
+      if (score === null) return { label: "", score: null, status: "" };
+      const football = activity === "football";
+      const useDua = score > 25;
+      const displayedScore = football && !useDua ? 100 - score : score;
+      return {
+        label: football ? (useDua ? "Bãi Dứa" : "Bãi Sau") : "",
+        score: displayedScore,
+        status: displayedScore >= 70 ? "good" : displayedScore >= 40 ? "medium" : "bad"
+      };
+    }
+
     function renderMonth() {
       if (!state.selectedMonth) return;
       const [year, month] = state.selectedMonth.split("-").map(Number);
@@ -3326,11 +3337,13 @@
         const score = item ? monthScore(item) : null;
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
-        const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const forecast = calendarForecast(score, state.monthActivity);
+        const status = forecast.status;
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
-            <span class="day-score ${status}">${score !== null ? `${score}%` : "-"}</span>
+            ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
+            ${forecast.label !== "Bãi Sau" ? `<span class="day-score ${status}${forecast.score !== null && forecast.score <= 70 ? " low-score" : ""}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>` : ""}
           </button>
         `;
       }
@@ -3374,11 +3387,13 @@
         }
         const selected = iso === state.selectedDate ? " selected" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
-        const status = score >= 70 ? "good" : score >= 40 ? "medium" : "bad";
+        const forecast = calendarForecast(score, state.pickerActivity);
+        const status = forecast.status;
         html += `
           <button class="day-cell${selected}${muted}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
-            <span class="day-score ${status}">${score !== null ? `${score}%` : "-"}</span>
+            ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
+            ${forecast.label !== "Bãi Sau" ? `<span class="day-score ${status}${forecast.score !== null && forecast.score <= 70 ? " low-score" : ""}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>` : ""}
           </button>
         `;
       }
