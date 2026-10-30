@@ -3368,7 +3368,7 @@
     }
 
     function calendarScoreColor(forecast) {
-      if (forecast.score !== null && forecast.score < 10) return "var(--color-bad)";
+      if (forecast.score !== null && forecast.score < 25) return "var(--color-bad)";
       const color = forecast.score === null ? "inherit" : forecast.score > 50
         ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)";
       return `var(--calendar-score, ${color})`;
