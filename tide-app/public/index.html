@@ -3367,6 +3367,13 @@
       return Math.round(Math.max(0, Math.min(100, 100 - duaScore - heightPenalty + trend)));
     }
 
+    function calendarScoreColor(forecast) {
+      if (forecast.score !== null && forecast.score < 10) return "var(--color-bad)";
+      const color = forecast.score === null ? "inherit" : forecast.score > 50
+        ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)";
+      return `var(--calendar-score, ${color})`;
+    }
+
     function calendarForecast(score, activity, day) {
       if (score === null) return { label: "", score: null, status: "" };
       const football = activity === "football";
@@ -3406,7 +3413,7 @@
           <button class="day-cell${selected}${muted}${current}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
-            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: var(--calendar-score, ${forecast.score === null ? "inherit" : forecast.score > 50 ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)"})">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
+            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: ${calendarScoreColor(forecast)}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
           </button>
         `;
       }
@@ -3458,7 +3465,7 @@
           <button class="day-cell${selected}${muted}${current}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
-            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: var(--calendar-score, ${forecast.score === null ? "inherit" : forecast.score > 50 ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)"})">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
+            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: ${calendarScoreColor(forecast)}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
           </button>
         `;
       }
