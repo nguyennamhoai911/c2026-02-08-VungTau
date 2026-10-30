@@ -1,0 +1,19 @@
+{
+  "created": "2026-10-30",
+  "model": "TICON4_offset2025",
+  "formula": "Tide.is/TICON-4 harmonic model + fixed mean observation-minus-model offset estimated from 2025 UHSLC observations",
+  "offset_m": 0.012039285088561707,
+  "timezone": "Asia/Ho_Chi_Minh",
+  "datum": "empirically aligned to UHSLC 383 using 2025 mean; not a verified LAT/national datum conversion",
+  "validation": "2026-01-01 to 2026-08-31 UTC, 5786 observed hours",
+  "MAE_m": 0.08950763128481491,
+  "parameters_fitted_through": "2025-12-31",
+  "n": 8760,
+  "source_hashes": {
+    "tide-is-harmonic-source.js": "312ca458d8726c74fbbd7f8d15e3bc45dd6f09cd3a704b169f9c9601ace2b158",
+    "tide-is-vn-harmonics.json": "4cb5c11fde6183884af963241b61fb3a00c3b0917db9a06db68c0ac81fc757cd",
+    "tide-is-vung-tau-metadata.json": "f9be1207197e411df2abfb328c9d81be4826b6bf7fc52f034fda0d9ef0295ef7",
+    "uhslc-383-fast-hourly-raw.csv": "6842a0b2ff47ce9c820c0b538593346ae85b382b892d2f69c9aee2653889be88",
+    "du-bao-2027-theo-mo-hinh-da-kiem-chung.csv": "1640f3f54744e5490a3284a1ccebcce7bf5d34ff234b8fc1852a003283c2c40a"
+  }
+}

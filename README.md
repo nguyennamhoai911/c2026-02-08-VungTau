@@ -4,7 +4,7 @@
 
 ## Chạy
 
-- `npm --prefix tide-app run dev` → http://127.0.0.1:3133
+- `npm --prefix tide-app run dev` → http://127.0.0.1:3132
 - `npm --prefix tide-app run build`
 - `npm --prefix tide-app test`
 
@@ -12,7 +12,7 @@
 
 Import repository với Root Directory là thư mục gốc repository. `vercel.json` đã đặt build command và output directory `tide-app/dist`. Không dùng `public` hay thư mục gốc làm output. Không có function/serverless, chỉ static files.
 
-Build chỉ xuất 10 file trong danh sách cho phép, gồm mã giao diện, dữ liệu hiển thị và ảnh tài nguyên. Dữ liệu thủy triều cần cho việc hiển thị là public và có thể tải xuống; không thể giấu dữ liệu đã đưa vào trình duyệt.
+Build chỉ xuất 11 file trong danh sách cho phép, gồm mã giao diện, dữ liệu hiển thị và ảnh tài nguyên. Dữ liệu thủy triều cần cho việc hiển thị là public và có thể tải xuống; không thể giấu dữ liệu đã đưa vào trình duyệt.
 
 Tài liệu gốc tại thư mục gốc, `docs/`, và bản cũ tại `archive/` được giữ trong repository, không được đưa vào dist. Dữ liệu gốc được lưu trong archive; dữ liệu và quy tắc có trong mã giao diện public vẫn có thể được đọc từ trình duyệt. File untracked của người dùng được giữ nguyên. Cần commit/push các thay đổi thì phần lưu trữ mới có trên GitHub.
 
@@ -25,3 +25,7 @@ Nhãn tiếng Việt trực tiếp, 3 luồng tra cứu, bảng 24 giờ thay th
 Tham khảo: https://www.w3.org/WAI/WCAG21/Understanding/reflow và https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html ; cấu hình static deployment: https://vercel.com/docs/builds/configure-a-build .
 
 Cấu hình Vercel hỗ trợ Root Directory ở gốc repository hoặc `tide-app`: mỗi thư mục có vercel.json tương ứng và build bằng Node trực tiếp, không cần npm install.
+
+## Dữ liệu 2027
+
+Đã bổ sung đủ 12 tháng dự báo thiên văn Vũng Tàu 2027 từ Tide.is / TICON-4 (DGFI-TUM, CC BY 4.0): 365 ngày, 24 giá trị mỗi ngày, giờ Việt Nam; đã bù nền +1,20 cm theo quan trắc UHSLC 2025. Mô hình đạt MAE 8,95 cm trên 5.786 giờ thực đo tháng 1–8/2026, không phải cam kết sai số 2027. Đây không phải bảng 2027 chính thức của Việt Nam; mốc căn chỉnh thực nghiệm UHSLC chưa đối chiếu với bảng 2026, nên điểm hoạt động 2027 mang tính tham khảo. Dữ liệu 2026 giữ nguyên. Xem [nguồn, cách tái lập và kiểm chứng](docs/nguon-thuy-trieu-2027.md).

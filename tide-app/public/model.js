@@ -7,7 +7,7 @@
       return Number.isFinite(number) ? number : null;
     }
 
-    function parseTideCSV(text) {
+    function parseTideCSV(text, year = 2026) {
       const rows = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
       const result = [];
       let currentMonth = 0;
@@ -66,7 +66,7 @@
         if (low1Time) lowTides.push({ time: low1Time, height: low1Value });
         if (low2Time) lowTides.push({ time: low2Time, height: low2Value });
 
-        const date = `2026-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         result.push({ date, month, day, hours, highTides, lowTides });
       });
 

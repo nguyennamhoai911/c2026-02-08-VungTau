@@ -472,7 +472,7 @@ button:focus-visible, input:focus-visible { outline-color: var(--color-brand); }
 .day-beach { font-size: 10px; line-height: 14px; font-weight: 500; white-space: nowrap; color: inherit; letter-spacing: -.2px; }
 /* Beach identity determines calendar text colors; percentages stay black. */
 .day-cell:has(.day-beach) .day-num, .day-cell:has(.day-beach) .day-beach { color: var(--color-good); }
-.day-cell:has(.day-beach[data-beach="sau"]) .day-num, .day-cell:has(.day-beach[data-beach="sau"]) .day-beach { color: var(--color-bad); }
+.day-cell:has(.day-beach[data-beach="sau"]) .day-num, .day-cell:has(.day-beach[data-beach="sau"]) .day-beach { color: var(--color-sau); }
 .month-screen .day-cell:has(.day-beach) .day-score, .datepicker-calendar .day-cell:has(.day-beach) .day-score { color: #111; }
 .month-screen .day-cell.selected:has(.day-beach), .datepicker-calendar .day-cell.selected:has(.day-beach) { background: #e7f5ed; box-shadow: inset 0 0 0 1px var(--color-good); }
 .month-screen .day-cell.selected:has(.day-beach[data-beach="sau"]), .datepicker-calendar .day-cell.selected:has(.day-beach[data-beach="sau"]) { background: #fdecee; box-shadow: inset 0 0 0 1px var(--color-bad); }
@@ -544,3 +544,35 @@ button:focus-visible, input:focus-visible { outline-color: var(--color-brand); }
 .datepicker-calendar .day-cell:not(.selected) .day-score.bad,
 .month-screen .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.bad,
 .datepicker-calendar .day-cell:not(.selected):has(.day-beach[data-beach="dua"]) .day-score.bad { color: var(--color-bad); }
+
+/* Keep vertical scrolling native; horizontal gestures change the month. */
+#monthCalendar, #pickerCalendarGrid { touch-action: pan-y; }
+/* Today and selection are independent; beach colors apply to both calendars. */
+:root { --color-sau: #0E347C; }
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell {
+  --beach-color: var(--color-good);
+  border-radius: 0;
+}
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell:has([data-beach="sau"]) {
+  --beach-color: var(--color-sau);
+}
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.selected {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--beach-color);
+  border-radius: 0;
+}
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.selected .day-num,
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.selected .day-beach {
+  color: var(--beach-color);
+}
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.today {
+  --calendar-score: #fff;
+  background: var(--beach-color);
+  color: #fff;
+  opacity: 1;
+  border-radius: 0;
+}
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.today .day-num,
+:is(#monthCalendar, #pickerCalendarGrid) .day-cell.today .day-beach {
+  color: #fff;
+}

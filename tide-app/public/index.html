@@ -1783,6 +1783,45 @@
   </style>
   <link rel="stylesheet" href="brand-theme.css">
   <link rel="icon" type="image/png" href="logo-maritime.png">
+
+  <style>
+    /* Interaction feedback shares the same short, gentle timing throughout the app. */
+    button, .date-pill, .compare-date-pill, [data-open-detail] {
+      transition: transform 140ms ease, background-color 180ms ease, color 180ms ease,
+                  border-color 180ms ease, box-shadow 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active:not(:disabled), .date-pill:active, [data-open-detail]:active {
+      transform: scale(.96);
+    }
+    #monthCalendar, #pickerCalendarGrid { touch-action: pan-y; }
+    #monthCalendar, #pickerCalendarGrid, #screen-home {
+      transition: translate 180ms cubic-bezier(.22, 1, .36, 1);
+    }
+    #customDatePicker.active, #monthChooser[open] {
+      animation: picker-appear 200ms cubic-bezier(.22, 1, .36, 1) both;
+    }
+    #monthChooser::backdrop { animation: backdrop-appear 180ms ease-out both; }
+    #detailChartPanel:not([hidden]), #detailTablePanel:not([hidden]) {
+      animation: content-appear 180ms ease-out both;
+    }
+    @keyframes picker-appear {
+      from { opacity: 0; transform: translateY(10px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes backdrop-appear { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes content-appear {
+      from { opacity: .4; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .phone *, .phone *::before, .phone *::after, #monthChooser, #monthChooser::backdrop {
+        animation: none !important;
+        transition: none !important;
+      }
+      button:active:not(:disabled), .date-pill:active, [data-open-detail]:active { transform: none; }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
@@ -1861,6 +1900,7 @@
         </section>
 
         <section id="screen-detail" class="screen" data-screen="detail">
+          <p id="detailDataSource" hidden style="font-size: 11px; color: #607086;">2027: TICON-4, bù nền theo quan trắc UHSLC 2025 · giờ Việt Nam. Điểm hoạt động tham khảo.</p>
           <div class="topbar">
             <button class="icon-btn" type="button" data-action="go-month" aria-label="Quay lại lịch tháng"><i data-lucide="arrow-left"></i></button>
             <h2>Chi tiết ngày</h2>
@@ -2031,7 +2071,7 @@
           <div class="panel">
             <strong>Giới thiệu ứng dụng</strong>
             <p style="margin: 8px 0 0; color: #607086; font-size: 12px; line-height: 1.45;">
-              Dữ liệu thủy triều Vũng Tàu năm 2026, chuyển thành gợi ý nhanh cho các hoạt động ven biển.
+              Dữ liệu thủy triều Vũng Tàu 2026–2027. Năm 2026: bảng triều đã nhập. Năm 2027: dự báo thiên văn từ <a href="https://tide.is/en/tides/vietnam/vung-tau/" target="_blank" rel="noopener noreferrer">Tide.is</a>, dùng TICON-4 (DGFI-TUM, CC BY 4.0), bù nền +1,20 cm theo quan trắc UHSLC năm 2025, giờ Việt Nam. Đã kiểm tra với 5.786 giờ thực đo tháng 1–8/2026, sai số tuyệt đối trung bình 8,95 cm; đây không phải cam kết sai số năm 2027. Độ cao theo mốc căn chỉnh thực nghiệm UHSLC, chưa xác nhận tương đương mốc của bảng 2026; điểm hoạt động năm 2027 mang tính tham khảo.
             </p>
           </div>
         </section>
@@ -2190,7 +2230,7 @@
       return Number.isFinite(number) ? number : null;
     }
 
-    function parseTideCSV(text) {
+    function parseTideCSV(text, year = 2026) {
       const rows = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
       const result = [];
       let currentMonth = 0;
@@ -2249,7 +2289,7 @@
         if (low1Time) lowTides.push({ time: low1Time, height: low1Value });
         if (low2Time) lowTides.push({ time: low2Time, height: low2Value });
 
-        const date = `2026-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         result.push({ date, month, day, hours, highTides, lowTides });
       });
 
@@ -2265,13 +2305,13 @@
     }
 
     function getDay(date = state.selectedDate) {
-      return state.data.find(item => item.date === date) || state.data[0] || null;
+      return state.data.find(item => item.date === date) || null;
     }
 
-    function setSelectedDate(date) {
+    function setSelectedDate(date, preserveMonth = false) {
       if (!getDay(date)) return;
       state.selectedDate = date;
-      state.selectedMonth = date.slice(0, 7);
+      if (!preserveMonth) state.selectedMonth = date.slice(0, 7);
       localStorage.setItem("vungTauTideSelectedDate", state.selectedDate);
       localStorage.setItem("vungTauTideSelectedMonth", state.selectedMonth);
       
@@ -2833,6 +2873,7 @@
       $("#selectedDateInput").value = day.date;
       renderTideChart(day, "tideChart", "detailChart", true);
       renderHourTable(day);
+      $("#detailDataSource").hidden = !day.date.startsWith("2027-");
 
       $("#detailActivityCards").innerHTML = ["football", "crab"].map(id => {
         const meta = ACTIVITY_META[id];
@@ -3305,15 +3346,36 @@
       });
     }
 
-    function calendarForecast(score, activity) {
+    // Bãi Sau: complementary Dứa score, calibrated for the full 16:30–18:30 window.
+    // Calibration: 2026-10-29 (3.9m at 17:30, falling) scores 5%. No date-specific overrides.
+    function scoreSauFootball(day, duaScore) {
+      if (!day || !Number.isFinite(duaScore)) return null;
+      const samples = FOOTBALL_SAMPLE_MINUTES.map(minute => heightAtMinute(day, minute));
+      if (samples.some(value => !Number.isFinite(value))) return null;
+      const h1730 = samples[2];
+      let rise = 0, fall = 0;
+      for (let i = 1; i < samples.length; i += 1) {
+        const delta = samples[i] - samples[i - 1];
+        rise += Math.max(0, delta);
+        fall += Math.max(0, -delta);
+      }
+      // Small reversals (<=10cm over the window) carry no trend bonus/penalty.
+      // Each 10cm above 2.9m costs 10 points, before the window trend adjustment.
+      const heightPenalty = Math.max(0, h1730 - 2.9) * 100;
+      const trend = Math.min(20, Math.max(0, fall - 0.1) * 20)
+        - Math.min(20, Math.max(0, rise - 0.1) * 20);
+      return Math.round(Math.max(0, Math.min(100, 100 - duaScore - heightPenalty + trend)));
+    }
+
+    function calendarForecast(score, activity, day) {
       if (score === null) return { label: "", score: null, status: "" };
       const football = activity === "football";
       const useDua = score > 25;
-      const displayedScore = football && !useDua ? 100 - score : score;
+      const displayedScore = football && !useDua ? scoreSauFootball(day, score) : score;
       return {
         label: football ? (useDua ? "Bãi Dứa" : "Bãi Sau") : "",
         score: displayedScore,
-        status: displayedScore >= 70 ? "good" : displayedScore >= 40 ? "medium" : "bad"
+        status: displayedScore === null ? "" : displayedScore >= 70 ? "good" : displayedScore >= 40 ? "medium" : "bad"
       };
     }
 
@@ -3336,19 +3398,21 @@
         const item = getDay(iso);
         const score = item ? monthScore(item) : null;
         const selected = iso === state.selectedDate ? " selected" : "";
+        const current = iso === todayIso() ? " today" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
-        const forecast = calendarForecast(score, state.monthActivity);
+        const forecast = calendarForecast(score, state.monthActivity, item);
         const status = forecast.status;
         html += `
-          <button class="day-cell${selected}${muted}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
+          <button class="day-cell${selected}${muted}${current}" type="button" data-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
-            ${forecast.label !== "Bãi Sau" ? `<span class="day-score ${status}${forecast.score !== null && forecast.score <= 70 ? " low-score" : ""}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>` : ""}
+            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: var(--calendar-score, ${forecast.score === null ? "inherit" : forecast.score > 50 ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)"})">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
           </button>
         `;
       }
 
       $("#monthCalendar").innerHTML = html;
+      animateSurface($("#monthCalendar"), `${state.selectedMonth}:${state.monthActivity}`);
     }
 
     function monthScore(day) {
@@ -3386,19 +3450,21 @@
           }
         }
         const selected = iso === state.selectedDate ? " selected" : "";
+        const current = iso === todayIso() ? " today" : "";
         const muted = d.getMonth() !== month - 1 ? " muted" : "";
-        const forecast = calendarForecast(score, state.pickerActivity);
+        const forecast = calendarForecast(score, state.pickerActivity, item);
         const status = forecast.status;
         html += `
-          <button class="day-cell${selected}${muted}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
+          <button class="day-cell${selected}${muted}${current}" type="button" data-picker-date="${iso}" ${item ? "" : "disabled"}>
             <span class="day-num">${d.getDate()}</span>
             ${forecast.label ? `<span class="day-beach" data-beach="${forecast.label === "Bãi Sau" ? "sau" : "dua"}">${forecast.label}</span>` : ""}
-            ${forecast.label !== "Bãi Sau" ? `<span class="day-score ${status}${forecast.score !== null && forecast.score <= 70 ? " low-score" : ""}">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>` : ""}
+            <span class="day-score ${status}${forecast.score !== null && forecast.score <= 50 ? " low-score" : ""}" style="color: var(--calendar-score, ${forecast.score === null ? "inherit" : forecast.score > 50 ? (forecast.label === "Bãi Sau" ? "var(--color-sau)" : "var(--color-good)") : "var(--color-medium)"})">${forecast.score !== null ? `${forecast.score}%` : "-"}</span>
           </button>
         `;
       }
 
       $("#pickerCalendarGrid").innerHTML = html;
+      animateSurface($("#pickerCalendarGrid"), `${state.pickerMonth}:${state.pickerActivity}`);
     }
 
     function renderActivities() {
@@ -3455,6 +3521,23 @@
       });
     }
 
+    // Keep one animation per surface so rapid navigation never queues old transitions.
+    const motionSurfaces = new WeakMap();
+    function animateSurface(element, value) {
+      if (!element) return;
+      const previous = motionSurfaces.get(element);
+      motionSurfaces.set(element, { value, animation: previous?.animation });
+      if (!previous || previous.value === value) return;
+      previous.animation?.cancel();
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !element.animate) return;
+      const direction = value > previous.value ? 1 : -1;
+      const animation = element.animate([
+        { opacity: .35, transform: `translateX(${direction * 28}px)` },
+        { opacity: 1, transform: "translateX(0)" }
+      ], { duration: 240, easing: "cubic-bezier(.22, 1, .36, 1)" });
+      motionSurfaces.set(element, { value, animation });
+    }
+
     function renderAll() {
       renderHome();
       renderDetail();
@@ -3463,18 +3546,64 @@
       renderSettings();
       renderCompare();
       if (window.lucide) lucide.createIcons();
+      animateSurface($(".screen.active"), `${state.tab}:${state.selectedDate}`);
     }
 
     function setTab(tab) {
-      if (tab === "month") {
-        state.selectedDate = todayIso();
-        state.selectedMonth = state.selectedDate.slice(0, 7);
-      }
       state.tab = tab;
       localStorage.setItem("vungTauTideActiveTab", tab);
       $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === tab));
       $$(".nav-btn").forEach(button => button.classList.toggle("active", button.dataset.tab === tab));
       renderAll();
+    }
+
+    function shiftCalendarMonth(key, step) {
+      const [year, month] = state[key].split("-").map(Number);
+      const next = new Date(year, month - 1 + step, 1);
+      state[key] = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
+      if (key === "selectedMonth") {
+        localStorage.setItem("vungTauTideSelectedMonth", state[key]);
+        renderMonth();
+      } else {
+        renderCustomDatePicker();
+      }
+    }
+
+    function bindCalendarSwipe(calendar, onSwipe, ignoreSelector = "") {
+      let start = null;
+      let suppressClickUntil = 0;
+      const resetDrag = () => { if (calendar.style) calendar.style.translate = ""; };
+      calendar.addEventListener("pointerdown", event => {
+        if (!event.isPrimary || event.button !== 0) return;
+        if (ignoreSelector && event.target?.closest(ignoreSelector)) return;
+        start = { x: event.clientX, y: event.clientY, id: event.pointerId };
+      });
+      calendar.addEventListener("pointermove", event => {
+        if (!start || event.pointerId !== start.id || !calendar.style) return;
+        const dx = event.clientX - start.x, dy = event.clientY - start.y;
+        if (Math.abs(dx) < 10 || Math.abs(dx) <= Math.abs(dy) * 1.5) return;
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          calendar.style.translate = `${Math.max(-36, Math.min(36, dx * .22))}px 0`;
+        }
+      });
+      calendar.addEventListener("pointerup", event => {
+        if (!start || event.pointerId !== start.id) return;
+        const dx = event.clientX - start.x;
+        const dy = event.clientY - start.y;
+        start = null;
+        resetDrag();
+        if (Math.abs(dx) < 50 || Math.abs(dx) <= Math.abs(dy) * 1.5) return;
+        suppressClickUntil = Date.now() + 400;
+        onSwipe(dx < 0 ? 1 : -1);
+      });
+      calendar.addEventListener("pointercancel", () => { start = null; resetDrag(); });
+      calendar.addEventListener("pointerleave", () => { start = null; resetDrag(); });
+      calendar.addEventListener("click", event => {
+        if (Date.now() < suppressClickUntil) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
     }
 
     function bindEvents() {
@@ -3532,18 +3661,12 @@
 
       $("#prevPickerMonth").addEventListener("click", event => {
         event.stopPropagation();
-        const [year, month] = state.pickerMonth.split("-").map(Number);
-        const next = new Date(year, month - 2, 1);
-        state.pickerMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
-        renderCustomDatePicker();
+        shiftCalendarMonth("pickerMonth", -1);
       });
 
       $("#nextPickerMonth").addEventListener("click", event => {
         event.stopPropagation();
-        const [year, month] = state.pickerMonth.split("-").map(Number);
-        const next = new Date(year, month, 1);
-        state.pickerMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
-        renderCustomDatePicker();
+        shiftCalendarMonth("pickerMonth", 1);
       });
 
       $("#pickerCalendarGrid").addEventListener("click", event => {
@@ -3632,13 +3755,17 @@
       });
 
       $$("[data-month-step]").forEach(button => {
-        button.addEventListener("click", () => {
-          const [year, month] = state.selectedMonth.split("-").map(Number);
-          const next = new Date(year, month - 1 + Number(button.dataset.monthStep), 1);
-          state.selectedMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
-          renderMonth();
-        });
+        button.addEventListener("click", () => shiftCalendarMonth("selectedMonth", Number(button.dataset.monthStep)));
       });
+      bindCalendarSwipe($("#screen-home"), step => {
+        const index = state.data.findIndex(item => item.date === state.selectedDate);
+        const next = state.data[index + step];
+        if (!next) return;
+        setSelectedDate(next.date);
+        renderAll();
+      }, "#customDatePicker, button, input, select, a, [data-open-detail], .tide-scroll");
+      bindCalendarSwipe($("#monthCalendar"), step => shiftCalendarMonth("selectedMonth", step));
+      bindCalendarSwipe($("#pickerCalendarGrid"), step => shiftCalendarMonth("pickerMonth", step));
 
       $$("[data-month-activity]").forEach(button => {
         button.addEventListener("click", () => {
@@ -3651,7 +3778,7 @@
       $("#monthCalendar").addEventListener("click", event => {
         const cell = event.target.closest("[data-date]");
         if (!cell || !getDay(cell.dataset.date)) return;
-        setSelectedDate(cell.dataset.date);
+        setSelectedDate(cell.dataset.date, true);
         setTab("detail");
       });
 
@@ -3708,10 +3835,13 @@
     async function init() {
       bindEvents();
       try {
-        const response = await fetch("data.csv");
-        if (!response.ok) throw new Error("Không tải được data.csv");
-        const text = await response.text();
-        state.data = parseTideCSV(text);
+        const datasets = await Promise.all([2026, 2027].map(async year => {
+          const file = year === 2026 ? "data.csv" : `data-${year}.csv`;
+          const response = await fetch(file);
+          if (!response.ok) throw new Error(`Không tải được ${file}`);
+          return parseTideCSV(await response.text(), year);
+        }));
+        state.data = datasets.flat().sort((a, b) => a.date.localeCompare(b.date));
 
         // Prioritize today's date if it exists in the tide data, fallback to localStorage/first date
         const today = todayIso();
