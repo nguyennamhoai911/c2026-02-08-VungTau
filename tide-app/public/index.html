@@ -1973,9 +1973,9 @@
           </div>
           <div class="month-legend-card" aria-label="Chú giải phần trăm Bãi Dứa">
             <div class="month-legend-row">
-              <div class="month-legend-item"><span class="legend-dot"></span><div>Tốt<br><span>(từ 70%)</span></div></div>
-              <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(40–69%)</span></div></div>
-              <div class="month-legend-item"><span class="legend-dot bad"></span><div>Kém<br><span>(dưới 40%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot"></span><div>Tốt<br><span>(từ 50%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot medium"></span><div>Trung bình<br><span>(25–50%)</span></div></div>
+              <div class="month-legend-item"><span class="legend-dot bad"></span><div>Kém<br><span>(dưới 25%)</span></div></div>
             </div>
           </div>
 
@@ -3360,11 +3360,11 @@
         fall += Math.max(0, -delta);
       }
       // Small reversals (<=10cm over the window) carry no trend bonus/penalty.
-      // Each 10cm above 2.9m costs 10 points, before the window trend adjustment.
-      const heightPenalty = Math.max(0, h1730 - 2.9) * 100;
+      // Height penalty scales smoothly from 2.3m (0 penalty) to 3.9m (100 penalty).
+      const heightPenalty = Math.max(0, h1730 - 2.3) * 62.5;
       const trend = Math.min(20, Math.max(0, fall - 0.1) * 20)
         - Math.min(20, Math.max(0, rise - 0.1) * 20);
-      return Math.round(Math.max(0, Math.min(100, 100 - duaScore - heightPenalty + trend)));
+      return Math.round(Math.max(0, Math.min(100, 100 - heightPenalty + trend)));
     }
 
     function calendarScoreColor(forecast) {
