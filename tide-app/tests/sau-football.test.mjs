@@ -41,7 +41,7 @@ test('Bai Sau scores stay bounded and decrease as high water increases', () => {
   const nov2 = forecast(data.find(day => day.date === '2026-11-02'));
   const nov3 = forecast(data.find(day => day.date === '2026-11-03'));
   assert.equal(nov2.label, 'Bãi Sau');
-  assert.equal(nov3.label, 'Bãi Sau');
-  assert.ok(nov3.score > nov2.score);
+  assert.equal(nov3.label, 'Bãi Dứa');
+  assert.equal(nov3.score, 20);
   assert.equal(context.scoreSauFootball(null, 0), null);
 });

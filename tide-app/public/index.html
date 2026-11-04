@@ -3377,7 +3377,7 @@
     function calendarForecast(score, activity, day) {
       if (score === null) return { label: "", score: null, status: "" };
       const football = activity === "football";
-      const useDua = score > 25;
+      const useDua = score >= 15;
       const displayedScore = football && !useDua ? scoreSauFootball(day, score) : score;
       return {
         label: football ? (useDua ? "Bãi Dứa" : "Bãi Sau") : "",
