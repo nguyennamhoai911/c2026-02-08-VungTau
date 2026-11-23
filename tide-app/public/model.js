@@ -106,8 +106,8 @@
     }
 
     function scoreFallingFootball(h17, h1730, h18) {
-      // Nước còn quá cao ở 17h và 17h30: không đá được
-      if (h17 >= 3.10 && h1730 >= 3.00) return 0;
+      // Nước còn quá cao: cuối giờ vẫn >= 2.60m hoặc giữa giờ >= 2.75m: không đá được
+      if (h18 >= 2.60 || h1730 >= 2.75 || (h17 >= 3.00 && h1730 >= 2.70)) return 0;
 
       // Case hiệu chuẩn 03/07:
       // 17h khoảng 2.8m, 17h30 khoảng 2.55m, 18h bắt đầu đẹp nhưng quá muộn
