@@ -80,10 +80,10 @@
     }
 
     function scoreRisingFootball(h17, h1730, h18) {
-      // Case giống 22/06: 18h >= 2.70m, gần như không đá được
-      if (h18 >= 2.70) return 0;
+      // Case giống 22/06: 18h >= 2.70m và đầu trận đã cao (h17 >= 2.40 hoặc h1730 > 2.55) hoặc 18h >= 2.80m: không đá được
+      if (h18 >= 2.80 || (h18 >= 2.70 && (h17 >= 2.40 || h1730 > 2.55))) return 0;
 
-      // Case giống 08/07: 18h khoảng 2.6m, thực tế chỉ khoảng 20%
+      // Case giống 08/07 (18h ~2.6m) hoặc 19/11 (17h=2.3m, 17h30=2.5m, 18h=2.7m): đá vớt nửa đầu trận, khoảng 20%
       if (h18 >= 2.60) return 20;
 
       // Nếu 17:30 đã cao và 18h tiếp tục cao, rất rủi ro

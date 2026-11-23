@@ -156,5 +156,69 @@
         "description": "Thực tế đá bóng tốt (khoảng 60%), nước rút bãi cát dần lộ ra rộng rãi."
       }
     ]
+  },
+  {
+    "date": "2026-11-03",
+    "activity": "football",
+    "beach": "Bãi Dứa",
+    "score": 20,
+    "feedback_timestamp": "2026-11-03T18:38:15+07:00",
+    "tide_data_reference": {
+      "16:00": 1.7,
+      "17:00": 2.1,
+      "18:00": 2.6,
+      "19:00": 3.1
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 2.35,
+        "playability": "marginal",
+        "description": "Hiệu chuẩn Bãi Dứa đá được (20%), dưới 15% mới là Bãi Sau, 20% vẫn tính là Bãi Dứa."
+      }
+    ]
+  },
+  {
+    "date": "2026-11-19",
+    "activity": "football",
+    "beach": "Bãi Dứa",
+    "score": 20,
+    "feedback_timestamp": "2026-11-23T09:16:44+07:00",
+    "tide_data_reference": {
+      "16:00": 2.1,
+      "17:00": 2.3,
+      "18:00": 2.7,
+      "19:00": 3.0
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 2.5,
+        "playability": "marginal",
+        "description": "Thực tế thứ 5 bãi Dứa đá được khoảng 20% (đá được nửa đầu trận từ 17h đến trước khi nước lên 2.7m lúc 18h)."
+      }
+    ]
+  },
+  {
+    "date": "2026-11-23",
+    "activity": "football",
+    "beach": "Bãi Sau",
+    "score": 73,
+    "dua_score": 0,
+    "feedback_timestamp": "2026-11-23T09:04:30+07:00",
+    "tide_data_reference": {
+      "16:00": 3.3,
+      "17:00": 3.0,
+      "18:00": 2.7,
+      "19:00": 2.7
+    },
+    "observations": [
+      {
+        "time": "17:30",
+        "tide_height_interpolated_m": 2.85,
+        "playability": "bad",
+        "description": "Bãi Dứa thực tế hoàn toàn không đá được (0%) do nước cả trận >= 2.7m ngập chìm bãi cát; chuyển sang Bãi Sau đạt 73% đá tốt."
+      }
+    ]
   }
 ]
