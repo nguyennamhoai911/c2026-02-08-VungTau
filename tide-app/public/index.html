@@ -3767,13 +3767,15 @@
       $$("[data-month-step]").forEach(button => {
         button.addEventListener("click", () => shiftCalendarMonth("selectedMonth", Number(button.dataset.monthStep)));
       });
-      bindCalendarSwipe($("#screen-home"), step => {
+      const shiftSelectedDay = step => {
         const index = state.data.findIndex(item => item.date === state.selectedDate);
         const next = state.data[index + step];
         if (!next) return;
         setSelectedDate(next.date);
         renderAll();
-      }, "#customDatePicker, button, input, select, a, [data-open-detail], .tide-scroll");
+      };
+      bindCalendarSwipe($("#screen-home"), shiftSelectedDay, "#customDatePicker, button, input, select, a, [data-open-detail], .tide-scroll");
+      bindCalendarSwipe($("#screen-detail"), shiftSelectedDay, "button, input, select, a, .tide-scroll");
       bindCalendarSwipe($("#monthCalendar"), step => shiftCalendarMonth("selectedMonth", step));
       bindCalendarSwipe($("#pickerCalendarGrid"), step => shiftCalendarMonth("pickerMonth", step));
 

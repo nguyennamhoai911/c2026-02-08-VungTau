@@ -1,0 +1,20 @@
+# Cursor Rules - Vũng Tàu Tide App
+
+## Skills & References
+- Football Tide Calibration & Field Observations: Read `.agents/skills/football-tide-calibration/SKILL.md`
+- Long-term ground truth log: `docs/lich_su_thuc_te_da_banh.json`
+- Project data recovery: `.agents/skills/project-data-recovery/SKILL.md`
+- Test & verification commands:
+  - `node .agents/skills/football-tide-calibration/scripts/verify_calibration.mjs`
+  - `node --test tide-app/tests/calendar-navigation.test.mjs tide-app/tests/motion.test.mjs tide-app/tests/sau-football.test.mjs`
+
+## Beach Football Rules
+- Bai Dua vs Bai Sau: Score >= 15% picks Bai Dua. Score < 15% switches to Bai Sau.
+- Rising tide (17h-18h): 18h >= 2.8m or (18h >= 2.7m and 17h >= 2.4m) -> 0%. Early low water (17h <= 2.35m, 17h30 <= 2.5m) -> 20%.
+- Falling tide (17h-18h): 18h >= 2.6m or 17h30 >= 2.75m -> 0% (entire window submerged). End-of-window receding <= 2.45m -> 20%.
+
+## Mandatory Constraints
+- DO NOT delete any files or directories without explicit user confirmation ("được phép").
+- DO NOT run full build check commands (`npm run build`, `next build`, etc.) unnecessarily.
+- When modifying inline `<script>` in `tide-app/public/index.html`, always recompute the LF sha256 hash and update both `tide-app/vercel.json` and `vercel.json` Content-Security-Policy header.
+- Keep `tide-app/public/model.js` and `tide-app/public/index.html` logic in sync.

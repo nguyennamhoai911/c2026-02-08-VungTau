@@ -40,3 +40,23 @@ test('horizontal swipes navigate once, suppress clicks, and ignore taps or verti
   gesture(120, 220);
   assert.deepEqual(steps, [1, -1]);
 });
+
+test('detail screen horizontal swipes advance and retreat selected date', () => {
+  const c = setup();
+  c.state.data = [{ date: '2026-11-22' }, { date: '2026-11-23' }, { date: '2026-11-24' }];
+  c.state.selectedDate = '2026-11-23';
+  const shiftSelectedDay = step => {
+    const index = c.state.data.findIndex(item => item.date === c.state.selectedDate);
+    const next = c.state.data[index + step];
+    if (!next) return;
+    c.setSelectedDate(next.date);
+  };
+  shiftSelectedDay(1);
+  assert.equal(c.state.selectedDate, '2026-11-24');
+  shiftSelectedDay(-1);
+  assert.equal(c.state.selectedDate, '2026-11-23');
+  shiftSelectedDay(-1);
+  assert.equal(c.state.selectedDate, '2026-11-22');
+  shiftSelectedDay(-1);
+  assert.equal(c.state.selectedDate, '2026-11-22');
+});
